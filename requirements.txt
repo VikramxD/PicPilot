@@ -1,0 +1,12 @@
+diffusers
+datasets
+fastapi
+wandb
+lightning
+torchvision
+pandas
+numpy
+rich
+tqdm
+transformers
+opencv-python-headless

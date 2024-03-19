@@ -1,0 +1,1130 @@
+2024-03-17 09:38:30,661 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:03:31,098 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:04:18,258 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:05:30,826 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:06:16,536 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:08:54,239 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:08:54,345 [INFO] datautils - {'id': '1d74b94308b6ed746c4c1e848d9646bbf39d9ee60180773b47a1d50e2e70792f', 'image': <PIL.PngImagePlugin.PngImageFile image mode=RGB size=1024x1024 at 0x7F96D7984700>, 'image_mask': <PIL.PngImagePlugin.PngImageFile image mode=RGB size=1024x1024 at 0x7F96D7984430>, 'text': 'colorful tacos with fresh ingredients on a blue patterned ceramic plate, front and center on a wooden counter, amidst a lively market with hanging papel picado and ambient lighting, an overhead angled view capturing the festive vibe and the bustling crowd in the background'}
+2024-03-17 13:10:35,437 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:11:43,102 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:11:43,111 [INFO] datautils - {'id': Value(dtype='string', id=None), 'image': Image(decode=True, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 13:19:37,507 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:19:56,651 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:19:56,655 [INFO] datautils - {'id': Value(dtype='string', id=None), 'image': Image(decode=True, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 13:20:12,325 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:20:12,332 [INFO] datautils - {'id': Value(dtype='string', id=None), 'image': Image(decode=True, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 13:20:12,341 [INFO] datautils - {'id': Value(dtype='string', id=None), 'image': Image(decode=True, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 13:20:36,315 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:20:36,322 [INFO] datautils - {'id': Value(dtype='string', id=None), 'image': Image(decode=True, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 13:20:36,331 [INFO] datautils - {'image': Image(decode=True, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 13:22:52,574 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:23:56,762 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:24:19,651 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:24:47,952 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:25:48,675 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:26:15,674 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:26:51,526 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:26:51,586 [INFO] datautils - {'image': Image(decode=False, id=None), 'image_mask': Image(decode=False, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 13:31:18,337 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:38:51,491 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:44:33,279 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:49:05,014 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:51:10,211 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:51:10,259 [INFO] datautils - {'image': Image(decode=True, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 13:54:14,988 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:54:15,025 [INFO] datautils - {'image': Image(decode=True, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 13:55:43,694 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:55:43,756 [INFO] datautils - {'image': Image(decode=True, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 13:57:55,463 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:57:55,520 [INFO] datautils - {'image': Image(decode=False, id=None), 'image_mask': Image(decode=False, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 13:58:51,294 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 13:58:51,345 [INFO] datautils - {'image': Image(decode=False, id=None), 'image_mask': Image(decode=False, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 14:01:42,885 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 14:01:42,920 [INFO] datautils - {'image': Image(decode=False, id=None), 'image_mask': Image(decode=False, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 14:03:00,409 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 14:03:00,468 [INFO] datautils - {'image': Image(decode=True, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 14:09:05,056 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 14:09:05,092 [INFO] datautils - {'image': Image(decode=False, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 14:09:51,895 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 14:09:51,943 [INFO] datautils - {'image': Image(decode=False, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 14:18:43,105 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 14:18:43,160 [INFO] datautils - {'image': Image(decode=False, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 14:27:24,939 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 14:27:25,026 [INFO] datautils - {'image': Image(decode=False, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 14:43:27,682 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 14:43:27,808 [INFO] datautils - {'image': Image(decode=False, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 14:45:48,573 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 14:45:48,620 [INFO] datautils - {'image': Image(decode=False, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 14:53:40,844 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 14:53:40,891 [INFO] datautils - {'image': Image(decode=False, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 14:56:56,233 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 14:56:56,324 [INFO] datautils - {'image': Image(decode=False, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 15:04:17,000 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 15:04:17,049 [INFO] datautils - {'image': Image(decode=False, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 15:13:35,862 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 15:13:35,871 [INFO] datautils - {'image': Image(decode=True, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-17 15:24:02,618 [INFO] datautils - Initialized dataset: AlekseyKorshuk/product-photography-all
+2024-03-17 15:24:02,632 [INFO] datautils - {'image': Image(decode=True, id=None), 'image_mask': Image(decode=True, id=None), 'text': Value(dtype='string', id=None)}
+2024-03-18 08:25:52,098 [INFO] mask_generator - Generated 5 masks
+2024-03-18 08:25:52,107 [INFO] mask_generator - [ultralytics.engine.results.Results object with attributes:
+
+boxes: ultralytics.engine.results.Boxes object
+keypoints: None
+masks: ultralytics.engine.results.Masks object
+names: {0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10', 11: '11', 12: '12', 13: '13', 14: '14', 15: '15', 16: '16', 17: '17', 18: '18', 19: '19', 20: '20', 21: '21', 22: '22', 23: '23', 24: '24', 25: '25', 26: '26', 27: '27', 28: '28', 29: '29'}
+obb: None
+orig_img: array([[[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       ...,
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]]], dtype=uint8)
+orig_shape: (523, 679)
+path: 'image0.jpg'
+probs: None
+save_dir: 'runs/segment/predict'
+speed: {'preprocess': 31.74138069152832, 'inference': 3650.0487327575684, 'postprocess': 1.4531612396240234}]
+2024-03-18 08:43:24,186 [INFO] mask_generator - Generated 5 masks
+2024-03-18 08:44:04,507 [INFO] mask_generator - Generated 5 masks
+2024-03-18 08:51:11,413 [INFO] mask_generator - Generated 5 masks
+2024-03-18 08:51:11,419 [INFO] mask_generator - [ultralytics.engine.results.Results object with attributes:
+
+boxes: ultralytics.engine.results.Boxes object
+keypoints: None
+masks: ultralytics.engine.results.Masks object
+names: {0: 'person', 1: 'bicycle', 2: 'car', 3: 'motorcycle', 4: 'airplane', 5: 'bus', 6: 'train', 7: 'truck', 8: 'boat', 9: 'traffic light', 10: 'fire hydrant', 11: 'stop sign', 12: 'parking meter', 13: 'bench', 14: 'bird', 15: 'cat', 16: 'dog', 17: 'horse', 18: 'sheep', 19: 'cow', 20: 'elephant', 21: 'bear', 22: 'zebra', 23: 'giraffe', 24: 'backpack', 25: 'umbrella', 26: 'handbag', 27: 'tie', 28: 'suitcase', 29: 'frisbee', 30: 'skis', 31: 'snowboard', 32: 'sports ball', 33: 'kite', 34: 'baseball bat', 35: 'baseball glove', 36: 'skateboard', 37: 'surfboard', 38: 'tennis racket', 39: 'bottle', 40: 'wine glass', 41: 'cup', 42: 'fork', 43: 'knife', 44: 'spoon', 45: 'bowl', 46: 'banana', 47: 'apple', 48: 'sandwich', 49: 'orange', 50: 'broccoli', 51: 'carrot', 52: 'hot dog', 53: 'pizza', 54: 'donut', 55: 'cake', 56: 'chair', 57: 'couch', 58: 'potted plant', 59: 'bed', 60: 'dining table', 61: 'toilet', 62: 'tv', 63: 'laptop', 64: 'mouse', 65: 'remote', 66: 'keyboard', 67: 'cell phone', 68: 'microwave', 69: 'oven', 70: 'toaster', 71: 'sink', 72: 'refrigerator', 73: 'book', 74: 'clock', 75: 'vase', 76: 'scissors', 77: 'teddy bear', 78: 'hair drier', 79: 'toothbrush'}
+obb: None
+orig_img: array([[[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       ...,
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]]], dtype=uint8)
+orig_shape: (523, 679)
+path: 'image0.jpg'
+probs: None
+save_dir: 'runs/segment/predict'
+speed: {'preprocess': 188.57908248901367, 'inference': 143.46075057983398, 'postprocess': 599.8485088348389}]
+2024-03-18 08:54:25,891 [INFO] mask_generator - Generated 5 masks
+2024-03-18 08:54:25,896 [INFO] mask_generator - [[ultralytics.engine.results.Results object with attributes:
+
+boxes: ultralytics.engine.results.Boxes object
+keypoints: None
+masks: ultralytics.engine.results.Masks object
+names: {0: 'person', 1: 'bicycle', 2: 'car', 3: 'motorcycle', 4: 'airplane', 5: 'bus', 6: 'train', 7: 'truck', 8: 'boat', 9: 'traffic light', 10: 'fire hydrant', 11: 'stop sign', 12: 'parking meter', 13: 'bench', 14: 'bird', 15: 'cat', 16: 'dog', 17: 'horse', 18: 'sheep', 19: 'cow', 20: 'elephant', 21: 'bear', 22: 'zebra', 23: 'giraffe', 24: 'backpack', 25: 'umbrella', 26: 'handbag', 27: 'tie', 28: 'suitcase', 29: 'frisbee', 30: 'skis', 31: 'snowboard', 32: 'sports ball', 33: 'kite', 34: 'baseball bat', 35: 'baseball glove', 36: 'skateboard', 37: 'surfboard', 38: 'tennis racket', 39: 'bottle', 40: 'wine glass', 41: 'cup', 42: 'fork', 43: 'knife', 44: 'spoon', 45: 'bowl', 46: 'banana', 47: 'apple', 48: 'sandwich', 49: 'orange', 50: 'broccoli', 51: 'carrot', 52: 'hot dog', 53: 'pizza', 54: 'donut', 55: 'cake', 56: 'chair', 57: 'couch', 58: 'potted plant', 59: 'bed', 60: 'dining table', 61: 'toilet', 62: 'tv', 63: 'laptop', 64: 'mouse', 65: 'remote', 66: 'keyboard', 67: 'cell phone', 68: 'microwave', 69: 'oven', 70: 'toaster', 71: 'sink', 72: 'refrigerator', 73: 'book', 74: 'clock', 75: 'vase', 76: 'scissors', 77: 'teddy bear', 78: 'hair drier', 79: 'toothbrush'}
+obb: None
+orig_img: array([[[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       ...,
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]]], dtype=uint8)
+orig_shape: (523, 679)
+path: 'image0.jpg'
+probs: None
+save_dir: 'runs/segment/predict'
+speed: {'preprocess': 4.889011383056641, 'inference': 92.71430969238281, 'postprocess': 522.0129489898682}], [ultralytics.engine.results.Results object with attributes:
+
+boxes: ultralytics.engine.results.Boxes object
+keypoints: None
+masks: ultralytics.engine.results.Masks object
+names: {0: 'person', 1: 'bicycle', 2: 'car', 3: 'motorcycle', 4: 'airplane', 5: 'bus', 6: 'train', 7: 'truck', 8: 'boat', 9: 'traffic light', 10: 'fire hydrant', 11: 'stop sign', 12: 'parking meter', 13: 'bench', 14: 'bird', 15: 'cat', 16: 'dog', 17: 'horse', 18: 'sheep', 19: 'cow', 20: 'elephant', 21: 'bear', 22: 'zebra', 23: 'giraffe', 24: 'backpack', 25: 'umbrella', 26: 'handbag', 27: 'tie', 28: 'suitcase', 29: 'frisbee', 30: 'skis', 31: 'snowboard', 32: 'sports ball', 33: 'kite', 34: 'baseball bat', 35: 'baseball glove', 36: 'skateboard', 37: 'surfboard', 38: 'tennis racket', 39: 'bottle', 40: 'wine glass', 41: 'cup', 42: 'fork', 43: 'knife', 44: 'spoon', 45: 'bowl', 46: 'banana', 47: 'apple', 48: 'sandwich', 49: 'orange', 50: 'broccoli', 51: 'carrot', 52: 'hot dog', 53: 'pizza', 54: 'donut', 55: 'cake', 56: 'chair', 57: 'couch', 58: 'potted plant', 59: 'bed', 60: 'dining table', 61: 'toilet', 62: 'tv', 63: 'laptop', 64: 'mouse', 65: 'remote', 66: 'keyboard', 67: 'cell phone', 68: 'microwave', 69: 'oven', 70: 'toaster', 71: 'sink', 72: 'refrigerator', 73: 'book', 74: 'clock', 75: 'vase', 76: 'scissors', 77: 'teddy bear', 78: 'hair drier', 79: 'toothbrush'}
+obb: None
+orig_img: array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       ...,
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], dtype=uint8)
+orig_shape: (492, 679)
+path: 'image0.jpg'
+probs: None
+save_dir: 'runs/segment/predict'
+speed: {'preprocess': 3.2563209533691406, 'inference': 91.84670448303223, 'postprocess': 5.931854248046875}], [ultralytics.engine.results.Results object with attributes:
+
+boxes: ultralytics.engine.results.Boxes object
+keypoints: None
+masks: ultralytics.engine.results.Masks object
+names: {0: 'person', 1: 'bicycle', 2: 'car', 3: 'motorcycle', 4: 'airplane', 5: 'bus', 6: 'train', 7: 'truck', 8: 'boat', 9: 'traffic light', 10: 'fire hydrant', 11: 'stop sign', 12: 'parking meter', 13: 'bench', 14: 'bird', 15: 'cat', 16: 'dog', 17: 'horse', 18: 'sheep', 19: 'cow', 20: 'elephant', 21: 'bear', 22: 'zebra', 23: 'giraffe', 24: 'backpack', 25: 'umbrella', 26: 'handbag', 27: 'tie', 28: 'suitcase', 29: 'frisbee', 30: 'skis', 31: 'snowboard', 32: 'sports ball', 33: 'kite', 34: 'baseball bat', 35: 'baseball glove', 36: 'skateboard', 37: 'surfboard', 38: 'tennis racket', 39: 'bottle', 40: 'wine glass', 41: 'cup', 42: 'fork', 43: 'knife', 44: 'spoon', 45: 'bowl', 46: 'banana', 47: 'apple', 48: 'sandwich', 49: 'orange', 50: 'broccoli', 51: 'carrot', 52: 'hot dog', 53: 'pizza', 54: 'donut', 55: 'cake', 56: 'chair', 57: 'couch', 58: 'potted plant', 59: 'bed', 60: 'dining table', 61: 'toilet', 62: 'tv', 63: 'laptop', 64: 'mouse', 65: 'remote', 66: 'keyboard', 67: 'cell phone', 68: 'microwave', 69: 'oven', 70: 'toaster', 71: 'sink', 72: 'refrigerator', 73: 'book', 74: 'clock', 75: 'vase', 76: 'scissors', 77: 'teddy bear', 78: 'hair drier', 79: 'toothbrush'}
+obb: None
+orig_img: array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       ...,
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], dtype=uint8)
+orig_shape: (495, 679)
+path: 'image0.jpg'
+probs: None
+save_dir: 'runs/segment/predict'
+speed: {'preprocess': 2.3126602172851562, 'inference': 6.824731826782227, 'postprocess': 1.6677379608154297}], [ultralytics.engine.results.Results object with attributes:
+
+boxes: ultralytics.engine.results.Boxes object
+keypoints: None
+masks: ultralytics.engine.results.Masks object
+names: {0: 'person', 1: 'bicycle', 2: 'car', 3: 'motorcycle', 4: 'airplane', 5: 'bus', 6: 'train', 7: 'truck', 8: 'boat', 9: 'traffic light', 10: 'fire hydrant', 11: 'stop sign', 12: 'parking meter', 13: 'bench', 14: 'bird', 15: 'cat', 16: 'dog', 17: 'horse', 18: 'sheep', 19: 'cow', 20: 'elephant', 21: 'bear', 22: 'zebra', 23: 'giraffe', 24: 'backpack', 25: 'umbrella', 26: 'handbag', 27: 'tie', 28: 'suitcase', 29: 'frisbee', 30: 'skis', 31: 'snowboard', 32: 'sports ball', 33: 'kite', 34: 'baseball bat', 35: 'baseball glove', 36: 'skateboard', 37: 'surfboard', 38: 'tennis racket', 39: 'bottle', 40: 'wine glass', 41: 'cup', 42: 'fork', 43: 'knife', 44: 'spoon', 45: 'bowl', 46: 'banana', 47: 'apple', 48: 'sandwich', 49: 'orange', 50: 'broccoli', 51: 'carrot', 52: 'hot dog', 53: 'pizza', 54: 'donut', 55: 'cake', 56: 'chair', 57: 'couch', 58: 'potted plant', 59: 'bed', 60: 'dining table', 61: 'toilet', 62: 'tv', 63: 'laptop', 64: 'mouse', 65: 'remote', 66: 'keyboard', 67: 'cell phone', 68: 'microwave', 69: 'oven', 70: 'toaster', 71: 'sink', 72: 'refrigerator', 73: 'book', 74: 'clock', 75: 'vase', 76: 'scissors', 77: 'teddy bear', 78: 'hair drier', 79: 'toothbrush'}
+obb: None
+orig_img: array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       ...,
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], dtype=uint8)
+orig_shape: (1050, 679)
+path: 'image0.jpg'
+probs: None
+save_dir: 'runs/segment/predict'
+speed: {'preprocess': 1.9350051879882812, 'inference': 92.09370613098145, 'postprocess': 1.6734600067138672}], [ultralytics.engine.results.Results object with attributes:
+
+boxes: ultralytics.engine.results.Boxes object
+keypoints: None
+masks: ultralytics.engine.results.Masks object
+names: {0: 'person', 1: 'bicycle', 2: 'car', 3: 'motorcycle', 4: 'airplane', 5: 'bus', 6: 'train', 7: 'truck', 8: 'boat', 9: 'traffic light', 10: 'fire hydrant', 11: 'stop sign', 12: 'parking meter', 13: 'bench', 14: 'bird', 15: 'cat', 16: 'dog', 17: 'horse', 18: 'sheep', 19: 'cow', 20: 'elephant', 21: 'bear', 22: 'zebra', 23: 'giraffe', 24: 'backpack', 25: 'umbrella', 26: 'handbag', 27: 'tie', 28: 'suitcase', 29: 'frisbee', 30: 'skis', 31: 'snowboard', 32: 'sports ball', 33: 'kite', 34: 'baseball bat', 35: 'baseball glove', 36: 'skateboard', 37: 'surfboard', 38: 'tennis racket', 39: 'bottle', 40: 'wine glass', 41: 'cup', 42: 'fork', 43: 'knife', 44: 'spoon', 45: 'bowl', 46: 'banana', 47: 'apple', 48: 'sandwich', 49: 'orange', 50: 'broccoli', 51: 'carrot', 52: 'hot dog', 53: 'pizza', 54: 'donut', 55: 'cake', 56: 'chair', 57: 'couch', 58: 'potted plant', 59: 'bed', 60: 'dining table', 61: 'toilet', 62: 'tv', 63: 'laptop', 64: 'mouse', 65: 'remote', 66: 'keyboard', 67: 'cell phone', 68: 'microwave', 69: 'oven', 70: 'toaster', 71: 'sink', 72: 'refrigerator', 73: 'book', 74: 'clock', 75: 'vase', 76: 'scissors', 77: 'teddy bear', 78: 'hair drier', 79: 'toothbrush'}
+obb: None
+orig_img: array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       ...,
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], dtype=uint8)
+orig_shape: (398, 679)
+path: 'image0.jpg'
+probs: None
+save_dir: 'runs/segment/predict'
+speed: {'preprocess': 2.300262451171875, 'inference': 89.23768997192383, 'postprocess': 1.8310546875}]]
+2024-03-18 09:03:29,412 [INFO] mask_generator - Generated 5 masks
+2024-03-18 09:03:29,417 [INFO] mask_generator - [[ultralytics.engine.results.Results object with attributes:
+
+boxes: ultralytics.engine.results.Boxes object
+keypoints: None
+masks: ultralytics.engine.results.Masks object
+names: {0: 'person', 1: 'bicycle', 2: 'car', 3: 'motorcycle', 4: 'airplane', 5: 'bus', 6: 'train', 7: 'truck', 8: 'boat', 9: 'traffic light', 10: 'fire hydrant', 11: 'stop sign', 12: 'parking meter', 13: 'bench', 14: 'bird', 15: 'cat', 16: 'dog', 17: 'horse', 18: 'sheep', 19: 'cow', 20: 'elephant', 21: 'bear', 22: 'zebra', 23: 'giraffe', 24: 'backpack', 25: 'umbrella', 26: 'handbag', 27: 'tie', 28: 'suitcase', 29: 'frisbee', 30: 'skis', 31: 'snowboard', 32: 'sports ball', 33: 'kite', 34: 'baseball bat', 35: 'baseball glove', 36: 'skateboard', 37: 'surfboard', 38: 'tennis racket', 39: 'bottle', 40: 'wine glass', 41: 'cup', 42: 'fork', 43: 'knife', 44: 'spoon', 45: 'bowl', 46: 'banana', 47: 'apple', 48: 'sandwich', 49: 'orange', 50: 'broccoli', 51: 'carrot', 52: 'hot dog', 53: 'pizza', 54: 'donut', 55: 'cake', 56: 'chair', 57: 'couch', 58: 'potted plant', 59: 'bed', 60: 'dining table', 61: 'toilet', 62: 'tv', 63: 'laptop', 64: 'mouse', 65: 'remote', 66: 'keyboard', 67: 'cell phone', 68: 'microwave', 69: 'oven', 70: 'toaster', 71: 'sink', 72: 'refrigerator', 73: 'book', 74: 'clock', 75: 'vase', 76: 'scissors', 77: 'teddy bear', 78: 'hair drier', 79: 'toothbrush'}
+obb: None
+orig_img: array([[[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       ...,
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]]], dtype=uint8)
+orig_shape: (523, 679)
+path: 'image0.jpg'
+probs: None
+save_dir: 'runs/segment/predict'
+speed: {'preprocess': 4.418849945068359, 'inference': 86.46440505981445, 'postprocess': 559.128999710083}], [ultralytics.engine.results.Results object with attributes:
+
+boxes: ultralytics.engine.results.Boxes object
+keypoints: None
+masks: ultralytics.engine.results.Masks object
+names: {0: 'person', 1: 'bicycle', 2: 'car', 3: 'motorcycle', 4: 'airplane', 5: 'bus', 6: 'train', 7: 'truck', 8: 'boat', 9: 'traffic light', 10: 'fire hydrant', 11: 'stop sign', 12: 'parking meter', 13: 'bench', 14: 'bird', 15: 'cat', 16: 'dog', 17: 'horse', 18: 'sheep', 19: 'cow', 20: 'elephant', 21: 'bear', 22: 'zebra', 23: 'giraffe', 24: 'backpack', 25: 'umbrella', 26: 'handbag', 27: 'tie', 28: 'suitcase', 29: 'frisbee', 30: 'skis', 31: 'snowboard', 32: 'sports ball', 33: 'kite', 34: 'baseball bat', 35: 'baseball glove', 36: 'skateboard', 37: 'surfboard', 38: 'tennis racket', 39: 'bottle', 40: 'wine glass', 41: 'cup', 42: 'fork', 43: 'knife', 44: 'spoon', 45: 'bowl', 46: 'banana', 47: 'apple', 48: 'sandwich', 49: 'orange', 50: 'broccoli', 51: 'carrot', 52: 'hot dog', 53: 'pizza', 54: 'donut', 55: 'cake', 56: 'chair', 57: 'couch', 58: 'potted plant', 59: 'bed', 60: 'dining table', 61: 'toilet', 62: 'tv', 63: 'laptop', 64: 'mouse', 65: 'remote', 66: 'keyboard', 67: 'cell phone', 68: 'microwave', 69: 'oven', 70: 'toaster', 71: 'sink', 72: 'refrigerator', 73: 'book', 74: 'clock', 75: 'vase', 76: 'scissors', 77: 'teddy bear', 78: 'hair drier', 79: 'toothbrush'}
+obb: None
+orig_img: array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       ...,
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], dtype=uint8)
+orig_shape: (492, 679)
+path: 'image0.jpg'
+probs: None
+save_dir: 'runs/segment/predict'
+speed: {'preprocess': 2.415180206298828, 'inference': 84.3350887298584, 'postprocess': 5.3863525390625}], [ultralytics.engine.results.Results object with attributes:
+
+boxes: ultralytics.engine.results.Boxes object
+keypoints: None
+masks: ultralytics.engine.results.Masks object
+names: {0: 'person', 1: 'bicycle', 2: 'car', 3: 'motorcycle', 4: 'airplane', 5: 'bus', 6: 'train', 7: 'truck', 8: 'boat', 9: 'traffic light', 10: 'fire hydrant', 11: 'stop sign', 12: 'parking meter', 13: 'bench', 14: 'bird', 15: 'cat', 16: 'dog', 17: 'horse', 18: 'sheep', 19: 'cow', 20: 'elephant', 21: 'bear', 22: 'zebra', 23: 'giraffe', 24: 'backpack', 25: 'umbrella', 26: 'handbag', 27: 'tie', 28: 'suitcase', 29: 'frisbee', 30: 'skis', 31: 'snowboard', 32: 'sports ball', 33: 'kite', 34: 'baseball bat', 35: 'baseball glove', 36: 'skateboard', 37: 'surfboard', 38: 'tennis racket', 39: 'bottle', 40: 'wine glass', 41: 'cup', 42: 'fork', 43: 'knife', 44: 'spoon', 45: 'bowl', 46: 'banana', 47: 'apple', 48: 'sandwich', 49: 'orange', 50: 'broccoli', 51: 'carrot', 52: 'hot dog', 53: 'pizza', 54: 'donut', 55: 'cake', 56: 'chair', 57: 'couch', 58: 'potted plant', 59: 'bed', 60: 'dining table', 61: 'toilet', 62: 'tv', 63: 'laptop', 64: 'mouse', 65: 'remote', 66: 'keyboard', 67: 'cell phone', 68: 'microwave', 69: 'oven', 70: 'toaster', 71: 'sink', 72: 'refrigerator', 73: 'book', 74: 'clock', 75: 'vase', 76: 'scissors', 77: 'teddy bear', 78: 'hair drier', 79: 'toothbrush'}
+obb: None
+orig_img: array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       ...,
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], dtype=uint8)
+orig_shape: (495, 679)
+path: 'image0.jpg'
+probs: None
+save_dir: 'runs/segment/predict'
+speed: {'preprocess': 2.4137496948242188, 'inference': 7.173299789428711, 'postprocess': 1.8916130065917969}], [ultralytics.engine.results.Results object with attributes:
+
+boxes: ultralytics.engine.results.Boxes object
+keypoints: None
+masks: ultralytics.engine.results.Masks object
+names: {0: 'person', 1: 'bicycle', 2: 'car', 3: 'motorcycle', 4: 'airplane', 5: 'bus', 6: 'train', 7: 'truck', 8: 'boat', 9: 'traffic light', 10: 'fire hydrant', 11: 'stop sign', 12: 'parking meter', 13: 'bench', 14: 'bird', 15: 'cat', 16: 'dog', 17: 'horse', 18: 'sheep', 19: 'cow', 20: 'elephant', 21: 'bear', 22: 'zebra', 23: 'giraffe', 24: 'backpack', 25: 'umbrella', 26: 'handbag', 27: 'tie', 28: 'suitcase', 29: 'frisbee', 30: 'skis', 31: 'snowboard', 32: 'sports ball', 33: 'kite', 34: 'baseball bat', 35: 'baseball glove', 36: 'skateboard', 37: 'surfboard', 38: 'tennis racket', 39: 'bottle', 40: 'wine glass', 41: 'cup', 42: 'fork', 43: 'knife', 44: 'spoon', 45: 'bowl', 46: 'banana', 47: 'apple', 48: 'sandwich', 49: 'orange', 50: 'broccoli', 51: 'carrot', 52: 'hot dog', 53: 'pizza', 54: 'donut', 55: 'cake', 56: 'chair', 57: 'couch', 58: 'potted plant', 59: 'bed', 60: 'dining table', 61: 'toilet', 62: 'tv', 63: 'laptop', 64: 'mouse', 65: 'remote', 66: 'keyboard', 67: 'cell phone', 68: 'microwave', 69: 'oven', 70: 'toaster', 71: 'sink', 72: 'refrigerator', 73: 'book', 74: 'clock', 75: 'vase', 76: 'scissors', 77: 'teddy bear', 78: 'hair drier', 79: 'toothbrush'}
+obb: None
+orig_img: array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       ...,
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], dtype=uint8)
+orig_shape: (1050, 679)
+path: 'image0.jpg'
+probs: None
+save_dir: 'runs/segment/predict'
+speed: {'preprocess': 1.9054412841796875, 'inference': 91.08471870422363, 'postprocess': 1.6489028930664062}], [ultralytics.engine.results.Results object with attributes:
+
+boxes: ultralytics.engine.results.Boxes object
+keypoints: None
+masks: ultralytics.engine.results.Masks object
+names: {0: 'person', 1: 'bicycle', 2: 'car', 3: 'motorcycle', 4: 'airplane', 5: 'bus', 6: 'train', 7: 'truck', 8: 'boat', 9: 'traffic light', 10: 'fire hydrant', 11: 'stop sign', 12: 'parking meter', 13: 'bench', 14: 'bird', 15: 'cat', 16: 'dog', 17: 'horse', 18: 'sheep', 19: 'cow', 20: 'elephant', 21: 'bear', 22: 'zebra', 23: 'giraffe', 24: 'backpack', 25: 'umbrella', 26: 'handbag', 27: 'tie', 28: 'suitcase', 29: 'frisbee', 30: 'skis', 31: 'snowboard', 32: 'sports ball', 33: 'kite', 34: 'baseball bat', 35: 'baseball glove', 36: 'skateboard', 37: 'surfboard', 38: 'tennis racket', 39: 'bottle', 40: 'wine glass', 41: 'cup', 42: 'fork', 43: 'knife', 44: 'spoon', 45: 'bowl', 46: 'banana', 47: 'apple', 48: 'sandwich', 49: 'orange', 50: 'broccoli', 51: 'carrot', 52: 'hot dog', 53: 'pizza', 54: 'donut', 55: 'cake', 56: 'chair', 57: 'couch', 58: 'potted plant', 59: 'bed', 60: 'dining table', 61: 'toilet', 62: 'tv', 63: 'laptop', 64: 'mouse', 65: 'remote', 66: 'keyboard', 67: 'cell phone', 68: 'microwave', 69: 'oven', 70: 'toaster', 71: 'sink', 72: 'refrigerator', 73: 'book', 74: 'clock', 75: 'vase', 76: 'scissors', 77: 'teddy bear', 78: 'hair drier', 79: 'toothbrush'}
+obb: None
+orig_img: array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       ...,
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], dtype=uint8)
+orig_shape: (398, 679)
+path: 'image0.jpg'
+probs: None
+save_dir: 'runs/segment/predict'
+speed: {'preprocess': 2.020120620727539, 'inference': 93.5208797454834, 'postprocess': 2.0580291748046875}]]
+2024-03-18 09:04:05,461 [INFO] mask_generator - Generated 5 masks
+2024-03-18 09:04:05,465 [INFO] mask_generator - [[ultralytics.engine.results.Results object with attributes:
+
+boxes: ultralytics.engine.results.Boxes object
+keypoints: None
+masks: ultralytics.engine.results.Masks object
+names: {0: 'person', 1: 'bicycle', 2: 'car', 3: 'motorcycle', 4: 'airplane', 5: 'bus', 6: 'train', 7: 'truck', 8: 'boat', 9: 'traffic light', 10: 'fire hydrant', 11: 'stop sign', 12: 'parking meter', 13: 'bench', 14: 'bird', 15: 'cat', 16: 'dog', 17: 'horse', 18: 'sheep', 19: 'cow', 20: 'elephant', 21: 'bear', 22: 'zebra', 23: 'giraffe', 24: 'backpack', 25: 'umbrella', 26: 'handbag', 27: 'tie', 28: 'suitcase', 29: 'frisbee', 30: 'skis', 31: 'snowboard', 32: 'sports ball', 33: 'kite', 34: 'baseball bat', 35: 'baseball glove', 36: 'skateboard', 37: 'surfboard', 38: 'tennis racket', 39: 'bottle', 40: 'wine glass', 41: 'cup', 42: 'fork', 43: 'knife', 44: 'spoon', 45: 'bowl', 46: 'banana', 47: 'apple', 48: 'sandwich', 49: 'orange', 50: 'broccoli', 51: 'carrot', 52: 'hot dog', 53: 'pizza', 54: 'donut', 55: 'cake', 56: 'chair', 57: 'couch', 58: 'potted plant', 59: 'bed', 60: 'dining table', 61: 'toilet', 62: 'tv', 63: 'laptop', 64: 'mouse', 65: 'remote', 66: 'keyboard', 67: 'cell phone', 68: 'microwave', 69: 'oven', 70: 'toaster', 71: 'sink', 72: 'refrigerator', 73: 'book', 74: 'clock', 75: 'vase', 76: 'scissors', 77: 'teddy bear', 78: 'hair drier', 79: 'toothbrush'}
+obb: None
+orig_img: array([[[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       ...,
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]],
+
+       [[254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254],
+        ...,
+        [254, 254, 254],
+        [254, 254, 254],
+        [254, 254, 254]]], dtype=uint8)
+orig_shape: (523, 679)
+path: 'image0.jpg'
+probs: None
+save_dir: 'runs/segment/predict'
+speed: {'preprocess': 4.465579986572266, 'inference': 87.31579780578613, 'postprocess': 623.7039566040039}], [ultralytics.engine.results.Results object with attributes:
+
+boxes: ultralytics.engine.results.Boxes object
+keypoints: None
+masks: ultralytics.engine.results.Masks object
+names: {0: 'person', 1: 'bicycle', 2: 'car', 3: 'motorcycle', 4: 'airplane', 5: 'bus', 6: 'train', 7: 'truck', 8: 'boat', 9: 'traffic light', 10: 'fire hydrant', 11: 'stop sign', 12: 'parking meter', 13: 'bench', 14: 'bird', 15: 'cat', 16: 'dog', 17: 'horse', 18: 'sheep', 19: 'cow', 20: 'elephant', 21: 'bear', 22: 'zebra', 23: 'giraffe', 24: 'backpack', 25: 'umbrella', 26: 'handbag', 27: 'tie', 28: 'suitcase', 29: 'frisbee', 30: 'skis', 31: 'snowboard', 32: 'sports ball', 33: 'kite', 34: 'baseball bat', 35: 'baseball glove', 36: 'skateboard', 37: 'surfboard', 38: 'tennis racket', 39: 'bottle', 40: 'wine glass', 41: 'cup', 42: 'fork', 43: 'knife', 44: 'spoon', 45: 'bowl', 46: 'banana', 47: 'apple', 48: 'sandwich', 49: 'orange', 50: 'broccoli', 51: 'carrot', 52: 'hot dog', 53: 'pizza', 54: 'donut', 55: 'cake', 56: 'chair', 57: 'couch', 58: 'potted plant', 59: 'bed', 60: 'dining table', 61: 'toilet', 62: 'tv', 63: 'laptop', 64: 'mouse', 65: 'remote', 66: 'keyboard', 67: 'cell phone', 68: 'microwave', 69: 'oven', 70: 'toaster', 71: 'sink', 72: 'refrigerator', 73: 'book', 74: 'clock', 75: 'vase', 76: 'scissors', 77: 'teddy bear', 78: 'hair drier', 79: 'toothbrush'}
+obb: None
+orig_img: array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       ...,
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], dtype=uint8)
+orig_shape: (492, 679)
+path: 'image0.jpg'
+probs: None
+save_dir: 'runs/segment/predict'
+speed: {'preprocess': 2.6531219482421875, 'inference': 89.33091163635254, 'postprocess': 6.353139877319336}], [ultralytics.engine.results.Results object with attributes:
+
+boxes: ultralytics.engine.results.Boxes object
+keypoints: None
+masks: ultralytics.engine.results.Masks object
+names: {0: 'person', 1: 'bicycle', 2: 'car', 3: 'motorcycle', 4: 'airplane', 5: 'bus', 6: 'train', 7: 'truck', 8: 'boat', 9: 'traffic light', 10: 'fire hydrant', 11: 'stop sign', 12: 'parking meter', 13: 'bench', 14: 'bird', 15: 'cat', 16: 'dog', 17: 'horse', 18: 'sheep', 19: 'cow', 20: 'elephant', 21: 'bear', 22: 'zebra', 23: 'giraffe', 24: 'backpack', 25: 'umbrella', 26: 'handbag', 27: 'tie', 28: 'suitcase', 29: 'frisbee', 30: 'skis', 31: 'snowboard', 32: 'sports ball', 33: 'kite', 34: 'baseball bat', 35: 'baseball glove', 36: 'skateboard', 37: 'surfboard', 38: 'tennis racket', 39: 'bottle', 40: 'wine glass', 41: 'cup', 42: 'fork', 43: 'knife', 44: 'spoon', 45: 'bowl', 46: 'banana', 47: 'apple', 48: 'sandwich', 49: 'orange', 50: 'broccoli', 51: 'carrot', 52: 'hot dog', 53: 'pizza', 54: 'donut', 55: 'cake', 56: 'chair', 57: 'couch', 58: 'potted plant', 59: 'bed', 60: 'dining table', 61: 'toilet', 62: 'tv', 63: 'laptop', 64: 'mouse', 65: 'remote', 66: 'keyboard', 67: 'cell phone', 68: 'microwave', 69: 'oven', 70: 'toaster', 71: 'sink', 72: 'refrigerator', 73: 'book', 74: 'clock', 75: 'vase', 76: 'scissors', 77: 'teddy bear', 78: 'hair drier', 79: 'toothbrush'}
+obb: None
+orig_img: array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       ...,
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], dtype=uint8)
+orig_shape: (495, 679)
+path: 'image0.jpg'
+probs: None
+save_dir: 'runs/segment/predict'
+speed: {'preprocess': 2.4454593658447266, 'inference': 6.887197494506836, 'postprocess': 1.6412734985351562}], [ultralytics.engine.results.Results object with attributes:
+
+boxes: ultralytics.engine.results.Boxes object
+keypoints: None
+masks: ultralytics.engine.results.Masks object
+names: {0: 'person', 1: 'bicycle', 2: 'car', 3: 'motorcycle', 4: 'airplane', 5: 'bus', 6: 'train', 7: 'truck', 8: 'boat', 9: 'traffic light', 10: 'fire hydrant', 11: 'stop sign', 12: 'parking meter', 13: 'bench', 14: 'bird', 15: 'cat', 16: 'dog', 17: 'horse', 18: 'sheep', 19: 'cow', 20: 'elephant', 21: 'bear', 22: 'zebra', 23: 'giraffe', 24: 'backpack', 25: 'umbrella', 26: 'handbag', 27: 'tie', 28: 'suitcase', 29: 'frisbee', 30: 'skis', 31: 'snowboard', 32: 'sports ball', 33: 'kite', 34: 'baseball bat', 35: 'baseball glove', 36: 'skateboard', 37: 'surfboard', 38: 'tennis racket', 39: 'bottle', 40: 'wine glass', 41: 'cup', 42: 'fork', 43: 'knife', 44: 'spoon', 45: 'bowl', 46: 'banana', 47: 'apple', 48: 'sandwich', 49: 'orange', 50: 'broccoli', 51: 'carrot', 52: 'hot dog', 53: 'pizza', 54: 'donut', 55: 'cake', 56: 'chair', 57: 'couch', 58: 'potted plant', 59: 'bed', 60: 'dining table', 61: 'toilet', 62: 'tv', 63: 'laptop', 64: 'mouse', 65: 'remote', 66: 'keyboard', 67: 'cell phone', 68: 'microwave', 69: 'oven', 70: 'toaster', 71: 'sink', 72: 'refrigerator', 73: 'book', 74: 'clock', 75: 'vase', 76: 'scissors', 77: 'teddy bear', 78: 'hair drier', 79: 'toothbrush'}
+obb: None
+orig_img: array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       ...,
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], dtype=uint8)
+orig_shape: (1050, 679)
+path: 'image0.jpg'
+probs: None
+save_dir: 'runs/segment/predict'
+speed: {'preprocess': 2.025127410888672, 'inference': 88.19222450256348, 'postprocess': 1.6901493072509766}], [ultralytics.engine.results.Results object with attributes:
+
+boxes: ultralytics.engine.results.Boxes object
+keypoints: None
+masks: ultralytics.engine.results.Masks object
+names: {0: 'person', 1: 'bicycle', 2: 'car', 3: 'motorcycle', 4: 'airplane', 5: 'bus', 6: 'train', 7: 'truck', 8: 'boat', 9: 'traffic light', 10: 'fire hydrant', 11: 'stop sign', 12: 'parking meter', 13: 'bench', 14: 'bird', 15: 'cat', 16: 'dog', 17: 'horse', 18: 'sheep', 19: 'cow', 20: 'elephant', 21: 'bear', 22: 'zebra', 23: 'giraffe', 24: 'backpack', 25: 'umbrella', 26: 'handbag', 27: 'tie', 28: 'suitcase', 29: 'frisbee', 30: 'skis', 31: 'snowboard', 32: 'sports ball', 33: 'kite', 34: 'baseball bat', 35: 'baseball glove', 36: 'skateboard', 37: 'surfboard', 38: 'tennis racket', 39: 'bottle', 40: 'wine glass', 41: 'cup', 42: 'fork', 43: 'knife', 44: 'spoon', 45: 'bowl', 46: 'banana', 47: 'apple', 48: 'sandwich', 49: 'orange', 50: 'broccoli', 51: 'carrot', 52: 'hot dog', 53: 'pizza', 54: 'donut', 55: 'cake', 56: 'chair', 57: 'couch', 58: 'potted plant', 59: 'bed', 60: 'dining table', 61: 'toilet', 62: 'tv', 63: 'laptop', 64: 'mouse', 65: 'remote', 66: 'keyboard', 67: 'cell phone', 68: 'microwave', 69: 'oven', 70: 'toaster', 71: 'sink', 72: 'refrigerator', 73: 'book', 74: 'clock', 75: 'vase', 76: 'scissors', 77: 'teddy bear', 78: 'hair drier', 79: 'toothbrush'}
+obb: None
+orig_img: array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       ...,
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]],
+
+       [[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], dtype=uint8)
+orig_shape: (398, 679)
+path: 'image0.jpg'
+probs: None
+save_dir: 'runs/segment/predict'
+speed: {'preprocess': 1.9655227661132812, 'inference': 86.20810508728027, 'postprocess': 1.8157958984375}]]
+2024-03-18 09:56:51,819 [INFO] mask_generator - Segmented image 0_0 saved in the mask folder.
+2024-03-18 09:56:51,831 [INFO] mask_generator - Segmented image 1_0 saved in the mask folder.
+2024-03-18 09:56:51,838 [INFO] mask_generator - Segmented image 1_1 saved in the mask folder.
+2024-03-18 09:56:51,846 [INFO] mask_generator - Segmented image 2_0 saved in the mask folder.
+2024-03-18 09:56:51,852 [INFO] mask_generator - Segmented image 2_1 saved in the mask folder.
+2024-03-18 09:56:51,864 [INFO] mask_generator - Segmented image 3_0 saved in the mask folder.
+2024-03-18 09:56:51,870 [INFO] mask_generator - Segmented image 4_0 saved in the mask folder.
+2024-03-18 09:58:26,908 [INFO] mask_generator - Segmented image 0_0 saved in the mask folder.
+2024-03-18 09:58:26,921 [INFO] mask_generator - Segmented image 1_0 saved in the mask folder.
+2024-03-18 09:58:26,927 [INFO] mask_generator - Segmented image 1_1 saved in the mask folder.
+2024-03-18 09:58:26,936 [INFO] mask_generator - Segmented image 2_0 saved in the mask folder.
+2024-03-18 09:58:26,942 [INFO] mask_generator - Segmented image 2_1 saved in the mask folder.
+2024-03-18 09:58:26,955 [INFO] mask_generator - Segmented image 3_0 saved in the mask folder.
+2024-03-18 09:58:26,962 [INFO] mask_generator - Segmented image 4_0 saved in the mask folder.
+2024-03-18 10:00:04,780 [INFO] mask_generator - Segmented image 0_0 saved in the mask folder.
+2024-03-18 10:00:04,793 [INFO] mask_generator - Segmented image 1_0 saved in the mask folder.
+2024-03-18 10:00:04,800 [INFO] mask_generator - Segmented image 1_1 saved in the mask folder.
+2024-03-18 10:00:04,808 [INFO] mask_generator - Segmented image 2_0 saved in the mask folder.
+2024-03-18 10:00:04,814 [INFO] mask_generator - Segmented image 2_1 saved in the mask folder.
+2024-03-18 10:00:04,827 [INFO] mask_generator - Segmented image 3_0 saved in the mask folder.
+2024-03-18 10:00:04,834 [INFO] mask_generator - Segmented image 4_0 saved in the mask folder.
+2024-03-18 10:00:14,923 [INFO] mask_generator - Segmented image 0 saved in the mask folder.
+2024-03-18 10:00:14,936 [INFO] mask_generator - Segmented image 1 saved in the mask folder.
+2024-03-18 10:00:14,944 [INFO] mask_generator - Segmented image 2 saved in the mask folder.
+2024-03-18 10:00:14,958 [INFO] mask_generator - Segmented image 3 saved in the mask folder.
+2024-03-18 10:00:14,965 [INFO] mask_generator - Segmented image 4 saved in the mask folder.
+2024-03-18 10:00:35,536 [INFO] mask_generator - Segmented image 0 saved in the mask folder.
+2024-03-18 10:00:35,549 [INFO] mask_generator - Segmented image 1 saved in the mask folder.
+2024-03-18 10:00:35,557 [INFO] mask_generator - Segmented image 2 saved in the mask folder.
+2024-03-18 10:00:35,571 [INFO] mask_generator - Segmented image 3 saved in the mask folder.
+2024-03-18 10:00:35,578 [INFO] mask_generator - Segmented image 4 saved in the mask folder.

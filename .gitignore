@@ -1,0 +1,4 @@
+.venv
+data
+scripts/yolov8s-seg.pt
+models
