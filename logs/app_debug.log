@@ -1128,3 +1128,201 @@ speed: {'preprocess': 1.9655227661132812, 'inference': 86.20810508728027, 'postp
 2024-03-18 10:00:35,557 [INFO] mask_generator - Segmented image 2 saved in the mask folder.
 2024-03-18 10:00:35,571 [INFO] mask_generator - Segmented image 3 saved in the mask folder.
 2024-03-18 10:00:35,578 [INFO] mask_generator - Segmented image 4 saved in the mask folder.
+2024-03-19 16:21:51,598 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-19 16:22:22,911 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 02:42:25,744 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 02:43:44,812 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 02:56:08,862 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 02:56:11,147 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 10:38:32,329 [INFO] clear_memory - Memory Cleared
+2024-03-20 10:40:01,921 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 10:41:30,440 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 10:41:30,444 [INFO] models - Inferencers initialized
+2024-03-20 10:42:11,660 [INFO] clear_memory - Memory Cleared
+2024-03-20 10:42:19,871 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 10:42:23,619 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 10:42:23,622 [INFO] models - Inferencers initialized
+2024-03-20 10:55:18,465 [INFO] clear_memory - Memory Cleared
+2024-03-20 10:55:25,336 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 10:55:28,411 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 10:55:28,413 [INFO] models - Inferencers initialized
+2024-03-20 10:56:51,674 [INFO] clear_memory - Memory Cleared
+2024-03-20 10:56:58,253 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 10:57:01,388 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 10:57:01,391 [INFO] models - Inferencers initialized
+2024-03-20 10:57:59,104 [INFO] clear_memory - Memory Cleared
+2024-03-20 10:58:06,658 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 10:58:10,792 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 10:58:10,794 [INFO] models - Inferencers initialized
+2024-03-20 11:19:25,720 [INFO] clear_memory - Memory Cleared
+2024-03-20 11:19:31,886 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 11:19:34,271 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 11:19:34,273 [INFO] models - Inferencers initialized
+2024-03-20 11:22:23,098 [INFO] clear_memory - Memory Cleared
+2024-03-20 11:22:30,208 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 11:22:32,810 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 11:22:32,816 [INFO] models - Inferencers initialized
+2024-03-20 11:24:00,227 [INFO] clear_memory - Memory Cleared
+2024-03-20 11:24:09,904 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 11:24:12,432 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 11:24:12,434 [INFO] models - Inferencers initialized
+2024-03-20 11:25:16,562 [INFO] clear_memory - Memory Cleared
+2024-03-20 11:25:22,986 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 11:25:25,468 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 11:25:25,470 [INFO] models - Inferencers initialized
+2024-03-20 11:26:05,393 [INFO] clear_memory - Memory Cleared
+2024-03-20 11:26:12,835 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 11:26:15,322 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 11:26:15,324 [INFO] models - Inferencers initialized
+2024-03-20 11:28:02,510 [INFO] clear_memory - Memory Cleared
+2024-03-20 11:28:09,082 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 11:28:12,138 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 11:28:12,140 [INFO] models - Inferencers initialized
+2024-03-20 11:30:00,417 [INFO] clear_memory - Memory Cleared
+2024-03-20 11:30:10,075 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 11:30:13,193 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 11:30:13,195 [INFO] models - Inferencers initialized
+2024-03-20 11:31:09,394 [INFO] clear_memory - Memory Cleared
+2024-03-20 11:31:17,250 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 11:31:21,524 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 11:31:21,526 [INFO] models - Inferencers initialized
+2024-03-20 11:35:08,035 [INFO] clear_memory - Memory Cleared
+2024-03-20 11:35:14,954 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 11:35:17,989 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 11:35:17,991 [INFO] models - Inferencers initialized
+2024-03-20 11:36:39,721 [INFO] clear_memory - Memory Cleared
+2024-03-20 11:36:47,941 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 11:36:50,750 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 11:36:50,754 [INFO] models - Inferencers initialized
+2024-03-20 11:39:05,892 [INFO] clear_memory - Memory Cleared
+2024-03-20 11:39:12,522 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 11:39:16,221 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 11:39:16,225 [INFO] models - Inferencers initialized
+2024-03-20 11:47:31,153 [INFO] mask_generator - Memory Cleared
+2024-03-20 11:53:21,318 [INFO] mask_generator - Memory Cleared
+2024-03-20 11:54:26,182 [INFO] mask_generator - Memory Cleared
+2024-03-20 11:55:53,548 [INFO] mask_generator - Memory Cleared
+2024-03-20 11:56:59,724 [INFO] mask_generator - Memory Cleared
+2024-03-20 11:58:24,546 [INFO] mask_generator - Memory Cleared
+2024-03-20 12:22:46,335 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 12:22:49,307 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 12:22:49,309 [INFO] models - Inferencers initialized
+2024-03-20 12:24:43,513 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 12:24:46,607 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 12:24:46,609 [INFO] models - Inferencers initialized
+2024-03-20 12:30:52,791 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 12:30:56,540 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 12:30:56,542 [INFO] models - Inferencers initialized
+2024-03-20 12:34:45,035 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 12:34:49,750 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 12:34:49,752 [INFO] models - Inferencers initialized
+2024-03-20 12:35:23,559 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 12:35:26,118 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 12:35:26,119 [INFO] models - Inferencers initialized
+2024-03-20 12:36:43,460 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 12:36:46,852 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 12:36:46,855 [INFO] models - Inferencers initialized
+2024-03-20 12:42:00,556 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 12:42:04,338 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 12:42:04,344 [INFO] models - Inferencers initialized
+2024-03-20 12:42:38,211 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 12:42:41,170 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 12:42:41,172 [INFO] models - Inferencers initialized
+2024-03-20 13:41:54,179 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 13:41:57,017 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 13:41:57,019 [INFO] models - Inferencers initialized
+2024-03-20 13:44:04,422 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 13:44:07,139 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 13:44:07,141 [INFO] models - Inferencers initialized
+2024-03-20 13:46:25,331 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 13:46:27,936 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 13:46:27,938 [INFO] models - Inferencers initialized
+2024-03-20 13:47:06,813 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 13:47:09,623 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 13:47:09,625 [INFO] models - Inferencers initialized
+2024-03-20 13:47:37,535 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 13:47:40,252 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 13:47:40,254 [INFO] models - Inferencers initialized
+2024-03-20 13:48:35,425 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 13:48:38,307 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 13:48:38,312 [INFO] models - Inferencers initialized
+2024-03-20 13:50:48,735 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 13:50:51,801 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 13:50:51,805 [INFO] models - Inferencers initialized
+2024-03-20 13:51:24,249 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 13:51:28,192 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 13:51:28,198 [INFO] models - Inferencers initialized
+2024-03-20 13:55:08,230 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 13:55:10,645 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 13:55:10,647 [INFO] models - Inferencers initialized
+2024-03-20 13:55:50,797 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 13:55:54,600 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 13:55:54,602 [INFO] models - Inferencers initialized
+2024-03-20 13:57:04,195 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 13:57:06,633 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 13:57:06,635 [INFO] models - Inferencers initialized
+2024-03-20 14:01:03,804 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:01:06,295 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 14:01:06,297 [INFO] models - Inferencers initialized
+2024-03-20 14:02:26,320 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:02:29,742 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 14:02:29,746 [INFO] models - Inferencers initialized
+2024-03-20 14:04:39,507 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:04:42,180 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 14:04:42,184 [INFO] models - Inferencers initialized
+2024-03-20 14:10:27,388 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:10:30,038 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 14:10:30,040 [INFO] models - Inferencers initialized
+2024-03-20 14:18:22,594 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:18:25,364 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 14:18:25,369 [INFO] models - Inferencers initialized
+2024-03-20 14:23:36,396 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:23:38,981 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 14:23:38,985 [INFO] models - Inferencers initialized
+2024-03-20 14:30:42,487 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:30:44,732 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 14:30:44,736 [INFO] models - Inferencers initialized
+2024-03-20 14:33:08,425 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:33:10,763 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 14:33:40,278 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:33:43,138 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 14:42:52,447 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:42:55,325 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 14:43:53,817 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:43:56,436 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 14:45:15,158 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:45:17,668 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 14:47:17,389 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:47:19,932 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 14:49:27,306 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:49:30,392 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 14:50:57,968 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:51:00,601 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 14:51:36,287 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:51:38,790 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 14:57:38,141 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:57:41,881 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 14:58:36,535 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 14:58:40,114 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 15:00:27,677 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 15:00:30,158 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 15:01:15,550 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 15:01:19,435 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 15:06:07,192 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 15:06:09,637 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 15:08:38,745 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 15:08:41,349 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 15:15:47,402 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 15:15:49,983 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 15:17:00,769 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 15:17:04,001 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 15:17:43,382 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 15:17:46,223 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 15:27:45,777 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 15:27:48,514 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 15:30:41,667 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 15:30:44,567 [INFO] pipelineutils - Stable Diffusion Inpainting Pipeline initialized successfully
+2024-03-20 16:38:38,658 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 16:39:19,333 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 16:39:50,404 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-20 16:45:37,037 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
