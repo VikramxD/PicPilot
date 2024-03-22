@@ -26,6 +26,7 @@ python run.py --image_path /path/to/image.jpg --prompt 'prompt' --negative_promp
 Here are some of my experiments with controlnet inpaint runway stable diffusion models and finally Kandinsky 2.2 Inpaint Model
 https://wandb.ai/vikramxd/product_placement_api/reports/Generated-Image-Pipeline-Call-1-24-03-22-21-45-35---Vmlldzo3MjYxMzcy
 
-![Generated Image Pipeline Call 1](https://github.com/VikramxD/product_diffusion_api/assets/72499426/44a91907-40c3-4f8c-9e42-979c09f58da2)
-![Pipeline Call 1](https://github.com/VikramxD/product_diffusion_api/assets/72499426/0b94879f-0f30-49ed-be30-005ed3c0452f)
-![Generated Image Pipeline Call ](https://github.com/VikramxD/product_diffusion_api/assets/72499426/a507ece4-c5e2-44db-a0f5-a08fa4224856)
+![Image](https://github.com/VikramxD/product_diffusion_api/assets/72499426/44a91907-40c3-4f8c-9e42-979c09f58da2)
+![Image](https://github.com/VikramxD/product_diffusion_api/assets/72499426/0b94879f-0f30-49ed-be30-005ed3c0452f)
+![Generated Image](https://github.com/VikramxD/product_diffusion_api/assets/72499426/e02ae767-97b3-404d-a27a-56bcbb249d93)
+
