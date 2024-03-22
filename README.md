@@ -24,5 +24,4 @@ python run.py --image_path /path/to/image.jpg --prompt 'prompt' --negative_promp
 ```
 ### Some Experiments
 Here are some of my experiments with controlnet inpaint runway stable diffusion models and finally Kandinsky 2.2 Inpaint Model
-https://wandb.ai/vikramxd/product_placement_api/reports/Weave-Result-Table-Pipeline-Call-1-24-03-22-21-36-40---Vmlldzo3MjYxMjU4
-
+https://wandb.ai/vikramxd/product_placement_api/reports Generated-Image-Pipeline-Call-1-24-03-22-21-45-35---Vmlldzo3MjYxMzcy
