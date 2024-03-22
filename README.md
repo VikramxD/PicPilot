@@ -1,6 +1,6 @@
 # Kandinsky Inpainting Project
 
-This project uses the Kandinsky inpainting pipeline and a mask generation script to perform inpainting on an image. The mask is generated using the YOLO model from the Ultralytics library for object detection. The mask is then inverted and used in the Kandinsky inpainting pipeline.
+This project uses the Kandinsky inpainting pipeline and a mask generation script to perform inpainting on an image. The mask is generated using the YOLOv8s seg model from the Ultralytics library for object detection. The mask is then inverted and used in the Kandinsky inpainting pipeline.
 
 ## Installation
 
@@ -23,7 +23,10 @@ python run.py --image_path /path/to/image.jpg --prompt 'prompt' --negative_promp
 
 ```
 ### Some Experiments
-Here are some of my experiments with controlnet inpaint runway stable diffusion models and finally Kandinsky 2.2 Inpaint Model
+Here are some of my experiments with the following models
+ - https://huggingface.co/runwayml/stable-diffusion-inpainting
+ - https://huggingface.co/lllyasviel/sd-controlnet-seg
+ - kandinsky-community/kandinsky-2-2-decoder-inpaint
 https://wandb.ai/vikramxd/product_placement_api/reports/Generated-Image-Pipeline-Call-1-24-03-22-21-45-35---Vmlldzo3MjYxMzcy
 
 ![Image](https://github.com/VikramxD/product_diffusion_api/assets/72499426/44a91907-40c3-4f8c-9e42-979c09f58da2)
