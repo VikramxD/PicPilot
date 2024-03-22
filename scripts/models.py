@@ -5,13 +5,13 @@ from clear_memory import clear_memory
 from typing import List
 import numpy as np
 import torch
-from PIL import Image
+from PIL import Image,ImageFilter,ImageOps
 from mask_generator import invert_mask
 from diffusers.utils import load_image
 from pipeline import fetch_control_pipeline,fetch_kandinsky_pipeline,fetch_kandinsky_prior_pipeline,fetch_kandinsky_img2img_pipeline
 from config import controlnet_adapter_model_name,controlnet_base_model_name,kandinsky_model_name
 import cv2 
-import PIL.ImageOps
+
 from transformers import pipeline
 
 
@@ -126,13 +126,11 @@ def kandinsky_inpainting_inference(prompt, negative_prompt, image, mask_image):
     Returns:
         PIL.Image.Image: The output inpainted image.
     """
-    pipe = fetch_kandinsky_pipeline(controlnet_adapter_model_name, controlnet_base_model_name, kandinsky_model_name, image)
-    output_image = pipe(prompt=prompt, negative_prompt=negative_prompt, image=image, mask_image=mask_image).images[0]
-    return output_image
-def kandinsky_inpainting_inference(prompt,negative_prompt,image,mask_image):
     pipe = fetch_kandinsky_pipeline(controlnet_adapter_model_name, controlnet_base_model_name,kandinsky_model_name, image)
-    output_image = pipe(prompt=prompt,negative_prompt=negative_prompt,image=image,mask_image=mask_image).images[0]
+    output_image = pipe(prompt=prompt,negative_prompt=negative_prompt,image=image,mask_image=mask_image,num_inference_steps=200,strength=1.0).images[0]
     return output_image
+
+    
 
 def kandinsky_controlnet_inpainting_inference(prompt, negative_prompt, image, hint, generator=torch.Generator(device="cuda").manual_seed(43)):
     """
@@ -150,28 +148,15 @@ def kandinsky_controlnet_inpainting_inference(prompt, negative_prompt, image, hi
 
     """
     prior_pipe = fetch_kandinsky_prior_pipeline(controlnet_adapter_model_name, controlnet_base_model_name, kandinsky_model_name, image)
-    img_embed = prior_pipe(prompt=prompt, image=image, strength=0.85, generator=generator)
+    img_embed = prior_pipe(prompt=prompt, image=image, strength=1.0, generator=generator)
     negative_embed = prior_pipe(prompt=negative_prompt, image=image, strength=1, generator=generator)
     controlnet_pipe = fetch_kandinsky_img2img_pipeline(controlnet_adapter_model_name, controlnet_base_model_name, kandinsky_model_name, image)
-    image = controlnet_pipe(image=image, strength=0.5, image_embeds=img_embed.image_embeds, negative_image_embeds=negative_embed.image_embeds, hint=hint, num_inference_steps=50, generator=generator, height=768, width=768).images[0]
+    image = controlnet_pipe(image=image, strength=1.0, image_embeds=img_embed.image_embeds, negative_image_embeds=negative_embed.image_embeds, hint=hint, num_inference_steps=200, generator=generator, height=768, width=768).images[0]
     return image
 
   
 
-if __name__ == '__main__':
-    l.info("Kandinsky Inpainting Inference")
-    image = load_image('/home/product_diffusion_api/sample_data/example2.jpg')
-    image = image.resize((768, 768))
-    mask_image = load_image('/home/product_diffusion_api/scripts/invert_mask.jpg')
-    mask_image = mask_image.resize((768,768))
-    prompt = "Product in a GYM 8k ultrarealistic "
-    negative_prompt="lowres, text, error, cropped, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, out of frame, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, username, watermark, signature"
-    output_image = kandinsky_inpainting_inference(prompt,negative_prompt,image,mask_image)
-    output_image=output_image.resize((768,768))
-    depth_estimator = pipeline("depth-estimation")
-    hint = make_hint(output_image, depth_estimator).unsqueeze(0).half().to("cuda")
-    final_output_image = kandinsky_controlnet_inpainting_inference(prompt,negative_prompt,image, hint)
-    
+
     
     
     

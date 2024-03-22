@@ -4,10 +4,8 @@ from logger import rich_logger as l
 from ultralytics import YOLO
 import cv2
 from config import yolo_model
-
-
-
-
+from pathlib import Path
+import PIL.ImageOps
 
 
 
@@ -15,43 +13,31 @@ from config import yolo_model
 def generate_mask(image_path: str) -> np.ndarray:
     """Method to segment image
     Args:
-        image (Image): input image
+        image_path (str): path to input image
     Returns:
-        Image: segmented image
+        np.ndarray: segmented image mask
     """
-    model = YOLO(model=yolo_model)
-    results = model(image_path)
+    model = YOLO(model=yolo_model)  # Initialize YOLO model
+    results = model(image_path)  # Perform object detection
     for result in results:
         orig_img = result.orig_img
         masks = result.masks.xy
         height, width = result.orig_img.shape[:2]
-        background = np.ones((height, width, 3), dtype=np.uint8) * 255
+        mask_img = np.ones((height, width), dtype=np.uint8) * 255  # Initialize mask with white background
         
         for mask in masks:
-           mask = mask.astype(int)
-           mask_img = np.zeros_like(orig_img)
-           cv2.fillPoly(mask_img, [mask], (255, 255, 255))
-           mask_img = np.array(mask_img)
-           orig_img = np.array(orig_img)
-           
-    return mask_img, orig_img
+            mask = mask.astype(int)
+            cv2.fillPoly(mask_img, [mask], 0)  # Fill mask with detected object areas
 
-def invert_mask(mask_image: np.ndarray) -> np.ndarray:
+    return mask_img
+
+def invert_mask(mask_image: Image) -> np.ndarray:
     """Method to invert mask
     Args:
         mask_image (np.ndarray): input mask image
     Returns:
         np.ndarray: inverted mask image
     """
-    inverted_mask_image = cv2.bitwise_not(mask_image)
-    cv2.imwrite('invert_mask.jpg', inverted_mask_image)
+    inverted_mask_image =PIL.ImageOps.invert(mask_image)
     return inverted_mask_image
-
- 
-if __name__ == "__main__":
-    image = Image.open("../sample_data/example1.jpg")
-    mask_img,orig_image = generate_mask(image_path='../sample_data/example1.jpg')
-    invert_mask(mask_image=mask_img)
-    
-    
 
