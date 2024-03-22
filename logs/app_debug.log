@@ -1326,3 +1326,48 @@ speed: {'preprocess': 1.9655227661132812, 'inference': 86.20810508728027, 'postp
 2024-03-20 16:39:19,333 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
 2024-03-20 16:39:50,404 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
 2024-03-20 16:45:37,037 [INFO] pipelineutils - Controlnet Pipeline initialized successfully
+2024-03-22 03:55:40,678 [INFO] models - Inpainting Inference
+2024-03-22 03:55:41,174 [INFO] clear_memory - Memory Cleared
+2024-03-22 03:58:06,886 [INFO] models - Inpainting Inference
+2024-03-22 03:58:07,066 [INFO] clear_memory - Memory Cleared
+2024-03-22 04:01:27,172 [INFO] models - Inpainting Inference
+2024-03-22 04:01:27,418 [INFO] clear_memory - Memory Cleared
+2024-03-22 04:06:38,680 [INFO] models - Inpainting Inference
+2024-03-22 04:06:38,889 [INFO] clear_memory - Memory Cleared
+2024-03-22 04:11:41,673 [INFO] models - Inpainting Inference
+2024-03-22 04:11:41,874 [INFO] clear_memory - Memory Cleared
+2024-03-22 04:20:36,838 [INFO] models - Inpainting Inference Completed
+2024-03-22 04:30:50,234 [INFO] models - Inpainting Inference
+2024-03-22 04:30:50,522 [INFO] clear_memory - Memory Cleared
+2024-03-22 04:34:30,860 [INFO] models - Inpainting Inference Completed
+2024-03-22 04:37:41,028 [INFO] models - Inpainting Inference
+2024-03-22 04:38:16,111 [INFO] models - Inpainting Inference
+2024-03-22 04:38:16,367 [INFO] clear_memory - Memory Cleared
+2024-03-22 04:40:29,119 [INFO] models - Inpainting Inference Completed
+2024-03-22 05:00:56,937 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 05:02:34,916 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 05:13:44,547 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 05:18:53,623 [INFO] models - Inpainting Inference Completed
+2024-03-22 05:20:06,892 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 05:20:26,852 [INFO] models - Inpainting Inference Completed
+2024-03-22 05:25:49,956 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 05:26:09,324 [INFO] models - Inpainting Inference Completed
+2024-03-22 05:26:58,013 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 05:27:17,153 [INFO] models - Inpainting Inference Completed
+2024-03-22 05:32:55,633 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 05:33:14,930 [INFO] models - Inpainting Inference Completed
+2024-03-22 05:33:47,613 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 05:34:06,803 [INFO] models - Inpainting Inference Completed
+2024-03-22 05:34:56,622 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 05:35:16,304 [INFO] models - Inpainting Inference Completed
+2024-03-22 05:37:23,678 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 05:37:46,172 [INFO] models - Inpainting Inference Completed
+2024-03-22 06:04:47,683 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 06:09:12,886 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 06:12:29,146 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 06:24:32,044 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 06:27:52,332 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 06:35:16,527 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 06:39:26,709 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 06:43:26,086 [INFO] models - Kandinsky Inpainting Inference
+2024-03-22 06:53:54,562 [INFO] models - Kandinsky Inpainting Inference
