@@ -1,6 +1,11 @@
-# Kandinsky Inpainting Project
+# Outpainting Pipeline
 
-This project uses the Kandinsky inpainting pipeline and a mask generation script to perform inpainting on an image. The mask is generated using the YOLOv8s seg model from the Ultralytics library for mask generation. The mask is then inverted and used in the Kandinsky inpainting pipeline
+- Intial Version of the project used a combination of Yolov8s Segmentation model to provide a rough mask , which was then inverted for Outpainting to use with Models like stable diffusion inpainting model from Runway along with ControlNet to control the outpainted generated output , 
+- There were blockers in that approach as first the mask , was of a poor quality with rough edges which were messing with the outpainting output , even with techniques like blurring the mask the output quality was poor initailly with stable diffusion models
+- To address this , changes like detecting the ROI of the object in focus in addition to extending and resizing the image was done , the model for segmentation was upgraded to Segment Anything VIT Huge with yolov8l model , providing the bounding boxes for the Box prompt which was then inverted for outpainting 
+- The model was changed kandinsky-v2.2-decoder-inpaint with 800 inference steps , a guidence scale of 5.0 to 7.5 and then the following results were achieved 
+
+
 
 ## Installation
 
@@ -45,4 +50,7 @@ Here are some of my experiments with the following models
 ![Generated Image Pipeline Call 1](https://github.com/VikramxD/product_diffusion_api/assets/72499426/dd6af644-1c07-424a-8ba6-0715a5611094)
 ![Generated Image Pipeline Call (1)](https://github.com/VikramxD/product_diffusion_api/assets/72499426/b1b8c745-deb4-41ff-a93a-77fa06f55cc3)
 
-
+## Some Improvements 
+- Working on API to deploy this model in batch mode adding loggers from prompt and generated output 
+- Implementation of UI in Gradio / Streamlit for checking the model out in visual way
+- Experimenting with image to video model pipeline to generate a video output thinking of using ![Stable video image to text model ](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt)
