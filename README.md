@@ -13,12 +13,19 @@ huggingface-cli login
 cd scripts
 ```
 
-This will install all necessary libraries for this project, including PIL, numpy, Ultralytics wandb, diffuser etc.
+This will install all necessary libraries for this project, including PIL , Diffusers , Segment Anything, wandb ,
 
-### cd in to scripts
-specify/create the folders manually before this
 ```bash
 python run.py --image_path /path/to/image.jpg --prompt 'prompt' --negative_prompt 'negative prompt' --output_dir /path/to/output --mask_dir /path/to/mask --uid unique_id
+```
+
+
+
+
+
+
+
+
 
 
 ```
@@ -26,9 +33,16 @@ python run.py --image_path /path/to/image.jpg --prompt 'prompt' --negative_promp
 Here are some of my experiments with the following models
  - https://huggingface.co/runwayml/stable-diffusion-inpainting
  - https://huggingface.co/lllyasviel/sd-controlnet-seg
- - kandinsky-community/kandinsky-2-2-decoder-inpaint
- - https://wandb.ai/vikramxd/product_placement_api/reports/Generated-Image-Pipeline-Call-1-24-03-22-21-45-35---Vmlldzo3MjYxMzcy
+ - https://huggingface.co/kandinsky-community/kandinsky-2-2-decoder-inpaint
+
+
+
 
 ![cooker_output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/1228718b-5ef7-44a1-81f6-2953ffdc767c)
 ![toaster_output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/06e12aea-cdc2-4ab8-97e0-be77bc49a238)
-![tent_output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/bb4a6af4-7652-4722-8bf6-88f6fbceefff)
+!![Generated Image Pipeline Call 1](https://github.com/VikramxD/product_diffusion_api/assets/72499426/2e7a804f-482c-4807-897e-1aa02b2fd37f)
+![chair](https://github.com/VikramxD/product_diffusion_api/assets/72499426/65bcd04f-a715-43c3-8928-a9669f8eda85)
+![Generated Image Pipeline Call 1](https://github.com/VikramxD/product_diffusion_api/assets/72499426/dd6af644-1c07-424a-8ba6-0715a5611094)
+![Generated Image Pipeline Call (1)](https://github.com/VikramxD/product_diffusion_api/assets/72499426/b1b8c745-deb4-41ff-a93a-77fa06f55cc3)
+
+
