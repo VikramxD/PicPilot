@@ -17,7 +17,7 @@ This will install all necessary libraries for this project, including PIL , Diff
 
 ```bash
 python run.py --image_path /path/to/image.jpg --prompt 'prompt' --negative_prompt 'negative prompt' --output_dir /path/to/output --mask_dir /path/to/mask --uid unique_id
-```
+
 
 
 
