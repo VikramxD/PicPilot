@@ -3,7 +3,8 @@
 - Intial Version of the project used a combination of Yolov8s Segmentation model to provide a rough mask , which was then inverted for Outpainting to use with Models like stable diffusion inpainting model from Runway along with ControlNet to control the outpainted generated output , 
 - There were blockers in that approach as first the mask , was of a poor quality with rough edges which were messing with the outpainting output , even with techniques like blurring the mask the output quality was poor initailly with stable diffusion models
 - To address this , changes like detecting the ROI of the object in focus in addition to extending and resizing the image was done , the model for segmentation was upgraded to Segment Anything VIT Huge with yolov8l model , providing the bounding boxes for the Box prompt which was then inverted for outpainting 
-- The model was changed kandinsky-v2.2-decoder-inpaint with 800 inference steps , a guidence scale of 5.0 to 7.5 and then the following results were achieved 
+- The model was changed kandinsky-v2.2-decoder-inpaint with 800 inference steps , a guidence scale of 5.0 to 7.5 and then the following results were achieved
+- GPU used Nvidia A100 40GB 
 
 
 
