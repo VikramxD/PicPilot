@@ -29,6 +29,6 @@ Here are some of my experiments with the following models
  - kandinsky-community/kandinsky-2-2-decoder-inpaint
  - https://wandb.ai/vikramxd/product_placement_api/reports/Generated-Image-Pipeline-Call-1-24-03-22-21-45-35---Vmlldzo3MjYxMzcy
 
-![Image](https://github.com/VikramxD/product_diffusion_api/assets/72499426/44a91907-40c3-4f8c-9e42-979c09f58da2)
-![Generated Image](https://github.com/VikramxD/product_diffusion_api/assets/72499426/e02ae767-97b3-404d-a27a-56bcbb249d93)
-![Generated Image Pipeline Call ](https://github.com/VikramxD/product_diffusion_api/assets/72499426/895823d9-0060-4666-962c-45c2b36a8993)
+![cooker_output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/1228718b-5ef7-44a1-81f6-2953ffdc767c)
+![toaster_output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/06e12aea-cdc2-4ab8-97e0-be77bc49a238)
+![tent_output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/bb4a6af4-7652-4722-8bf6-88f6fbceefff)
