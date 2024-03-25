@@ -8,6 +8,4 @@ mask_dir = '../masks'
 controlnet_adapter_model_name= 'lllyasviel/control_v11p_sd15_inpaint'
 controlnet_base_model_name = "runwayml/stable-diffusion-inpainting"
 kandinsky_model_name = 'kandinsky-community/kandinsky-2-2-decoder-inpaint'
-width = 512
-height = 512
-yolo_model = 'yolov8s-seg.pt'
+
