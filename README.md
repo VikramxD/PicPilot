@@ -42,4 +42,4 @@ Here are some of my experiments with the following models
 ## Some Improvements 
 - Working on API to deploy this model in batch mode adding loggers from prompt and generated output 
 - Implementation of UI in Gradio / Streamlit for checking the model out in visual way
-- Experimenting with image to video model pipeline to generate a video output thinking of using ![Stable video image to text model ](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt)
+- Experimenting with image to video model pipeline to generate a video output thinking of using (https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt) model for this
