@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 MODEL_NAME:str="stabilityai/stable-diffusion-xl-base-1.0"
 ADAPTER_NAME:str = "VikramSingh178/sdxl-lora-finetune-product-caption"
@@ -72,3 +73,16 @@ class Config:
         self.debug_loss = False
 
 
+=======
+LOGS_DIR = '../logs'
+Dataset_Name = "AlekseyKorshuk/product-photography-all"
+DATA_DIR = '../data'
+Project_Name = 'product_placement_api'
+entity = 'vikramxd'
+image_dir = '../sample_data'
+mask_dir = '../masks'
+controlnet_adapter_model_name= 'lllyasviel/control_v11p_sd15_inpaint'
+controlnet_base_model_name = "runwayml/stable-diffusion-inpainting"
+kandinsky_model_name = 'kandinsky-community/kandinsky-2-2-decoder-inpaint'
+video_model_name = 'stabilityai/stable-video-diffusion-img2vid-xt'
+>>>>>>> 83cb224 (Update image and video pipelines)
