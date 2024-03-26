@@ -7,6 +7,10 @@
 - GPU used Nvidia A100 40GB 
 
 
+##ARCHITECTURE
+
+![Architecture drawio](https://github.com/VikramxD/product_diffusion_api/assets/72499426/5a2e8b47-5a77-485b-b20c-0bca0928cb8a)
+
 
 ## Installation
 
@@ -25,14 +29,15 @@ This will install all necessary libraries for this project, including PIL , Diff
 python run.py --image_path /path/to/image.jpg --prompt 'prompt' --negative_prompt 'negative prompt' --output_dir /path/to/output --mask_dir /path/to/mask --uid unique_id
 
 ```
-### Some Experiments
-Here are some of my experiments with the following models
+### MODELS USED 
+EXPERIMENTATION WITH THE FOLLOWING models
  - https://huggingface.co/runwayml/stable-diffusion-inpainting
  - https://huggingface.co/lllyasviel/sd-controlnet-seg
  - https://huggingface.co/kandinsky-community/kandinsky-2-2-decoder-inpaint
 
+### WEIGHTS AND BIASES EXPERIMENTATION REPORT 
 
-
+[](https://wandb.ai/vikramxd/product_placement_api/reports/Experimentation-Report---Vmlldzo3Mjg1MjQw)
 
 ![cooker_output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/1228718b-5ef7-44a1-81f6-2953ffdc767c)
 ![toaster_output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/06e12aea-cdc2-4ab8-97e0-be77bc49a238)
