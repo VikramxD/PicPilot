@@ -37,7 +37,7 @@ EXPERIMENTATION WITH THE FOLLOWING models
 
 ### WEIGHTS AND BIASES EXPERIMENTATION REPORT 
 
-[](https://wandb.ai/vikramxd/product_placement_api/reports/Experimentation-Report---Vmlldzo3Mjg1MjQw)
+[WANDB REPORT](https://wandb.ai/vikramxd/product_placement_api/reports/Experimentation-Report---Vmlldzo3Mjg1MjQw)
 
 ![cooker_output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/1228718b-5ef7-44a1-81f6-2953ffdc767c)
 ![toaster_output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/06e12aea-cdc2-4ab8-97e0-be77bc49a238)
