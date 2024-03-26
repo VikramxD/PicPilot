@@ -1464,3 +1464,7 @@ speed: {'preprocess': 1.9655227661132812, 'inference': 86.20810508728027, 'postp
 2024-03-24 21:44:47,907 [INFO] clear_memory - Memory Cleared
 2024-03-24 21:48:43,724 [INFO] clear_memory - Memory Cleared
 2024-03-24 21:52:50,583 [INFO] clear_memory - Memory Cleared
+2024-03-26 19:58:18,622 [INFO] clear_memory - Memory Cleared
+2024-03-26 19:58:18,633 [INFO] models - I2VGenXL pipeline Inference ->
+2024-03-26 20:22:04,466 [INFO] clear_memory - Memory Cleared
+2024-03-26 20:22:04,471 [INFO] models - Stable Video Diffusion Image 2 Video pipeline Inference ->
