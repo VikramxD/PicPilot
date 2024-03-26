@@ -7,7 +7,7 @@
 - GPU used Nvidia A100 40GB 
 
 
-##ARCHITECTURE
+## ARCHITECTURE
 
 ![Architecture drawio](https://github.com/VikramxD/product_diffusion_api/assets/72499426/5a2e8b47-5a77-485b-b20c-0bca0928cb8a)
 
