@@ -53,5 +53,5 @@ EXPERIMENTATION WITH THE FOLLOWING models
 
 ## Short Video 
 
-![Short Video Output][https://github.com/VikramxD/product_diffusion_api/assets/72499426/c935ec2d-cb76-49dd-adae-8aa4feac211e]
+![Short Video Output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/c935ec2d-cb76-49dd-adae-8aa4feac211e)
 
