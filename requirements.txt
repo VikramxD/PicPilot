@@ -10,3 +10,6 @@ rich
 tqdm
 transformers
 opencv-python-headless
+fastapi
+uvicorn
+matplotlib
