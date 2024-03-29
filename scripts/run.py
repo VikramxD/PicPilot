@@ -4,8 +4,6 @@ from mask_generator import  invert_mask
 from segment_everything import generate_mask_from_bbox
 from models import kandinsky_inpainting_inference, load_image
 from PIL import Image
-from pipeline import fetch_kandinsky_pipeline
-from config import controlnet_adapter_model_name, controlnet_base_model_name, kandinsky_model_name
 from mask_generator import extend_image
 
 
@@ -15,7 +13,7 @@ def main(args):
     os.makedirs(args.mask_dir, exist_ok=True)
 
     # Extend image
-    extended_image = extend_image(image_path=args.image_path, target_width=2560, target_height=1440, roi_scale=0.6)
+    extended_image = extend_image(image_path=args.image_path, target_width=2560, target_height=1440, roi_scale=0.7)
     extended_image_path = os.path.join(args.output_dir, f'{args.uid}_extended.jpg')
     extended_image.save(extended_image_path)
 
