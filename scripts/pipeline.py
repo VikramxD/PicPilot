@@ -6,6 +6,7 @@ import torch
 
 
 
+
 class PipelineFetcher:
     """
     A class that fetches different pipelines for image processing.
@@ -49,8 +50,14 @@ class PipelineFetcher:
 
         """
         pipe = AutoPipelineForInpainting.from_pretrained(self.kandinsky_model_name, torch_dtype=torch.float16)
-        pipe.to('cuda')
+        pipe = pipe.to('cuda')
+        pipe.unet = torch.compile(pipe.unet)
+        
         return pipe
+
+
+
+
 
 
 def fetch_control_pipeline(controlnet_adapter_model_name, controlnet_base_model_name, kandinsky_model_name, image):
@@ -86,6 +93,8 @@ def fetch_kandinsky_pipeline(controlnet_adapter_model_name, controlnet_base_mode
     """
     pipe_fetcher = PipelineFetcher(controlnet_adapter_model_name, controlnet_base_model_name, kandinsky_model_name, image)
     pipe = pipe_fetcher.KandinskyPipeline()
+    pipe = pipe.to('cuda')
+    
     return pipe
 
 
