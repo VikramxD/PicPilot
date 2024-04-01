@@ -51,7 +51,7 @@ def make_inpaint_condition(init_image, mask_image):
 
 
 
-def kandinsky_inpainting_inference(prompt, negative_prompt, image, mask_image):
+def kandinsky_inpainting_inference(prompt, negative_prompt, image, mask_image,num_inference_steps=800,strength=1.0,guidance_scale = 7.8):
     """
     Perform Kandinsky inpainting inference on the given image.
 
@@ -65,8 +65,9 @@ def kandinsky_inpainting_inference(prompt, negative_prompt, image, mask_image):
         PIL.Image.Image: The output inpainted image.
     """
     clear_memory()
+    l.info("Kandinsky Inpainting Inference ->")
     pipe = fetch_kandinsky_pipeline(controlnet_adapter_model_name, controlnet_base_model_name,kandinsky_model_name, image)
-    output_image = pipe(prompt=prompt,negative_prompt=negative_prompt,image=image,mask_image=mask_image,num_inference_steps=800,strength=1.0,guidance_scale = 7.8,height = 1472, width = 2560).images[0]
+    output_image = pipe(prompt=prompt,negative_prompt=negative_prompt,image=image,mask_image=mask_image,num_inference_steps=num_inference_steps,strength=strength,guidance_scale = guidance_scale,height = 1472, width = 2560).images[0]
     return output_image
 
     
