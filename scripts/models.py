@@ -9,15 +9,8 @@ from pipeline import fetch_kandinsky_pipeline
 from config import controlnet_adapter_model_name,controlnet_base_model_name,kandinsky_model_name
 from diffusers import StableDiffusionInpaintPipeline, DPMSolverMultistepScheduler
 from video_pipeline import fetch_video_pipeline
-from diffusers.utils import export_to_gif,load_image
 from config import video_model_name
 
-
-
-
-
-
-autolog(init=dict(project=Project_Name))
 
 
 
@@ -26,6 +19,19 @@ autolog(init=dict(project=Project_Name))
 
 
 def make_inpaint_condition(init_image, mask_image):
+    """
+    Preprocesses the initial image and mask image for inpainting.
+
+    Args:
+        init_image (PIL.Image.Image): The initial image.
+        mask_image (PIL.Image.Image): The mask image.
+
+    Returns:
+        torch.Tensor: The preprocessed image tensor.
+
+    Raises:
+        AssertionError: If the image and mask image have different sizes.
+    """
     init_image = np.array(init_image.convert("RGB")).astype(np.float32) / 255.0
     mask_image = np.array(mask_image.convert("L")).astype(np.float32) / 255.0
 
@@ -45,7 +51,7 @@ def make_inpaint_condition(init_image, mask_image):
 
 
 
-def kandinsky_inpainting_inference(prompt, negative_prompt, image, mask_image):
+def kandinsky_inpainting_inference(prompt, negative_prompt, image, mask_image,num_inference_steps=800,strength=1.0,guidance_scale = 7.8):
     """
     Perform Kandinsky inpainting inference on the given image.
 
@@ -59,8 +65,9 @@ def kandinsky_inpainting_inference(prompt, negative_prompt, image, mask_image):
         PIL.Image.Image: The output inpainted image.
     """
     clear_memory()
+    l.info("Kandinsky Inpainting Inference ->")
     pipe = fetch_kandinsky_pipeline(controlnet_adapter_model_name, controlnet_base_model_name,kandinsky_model_name, image)
-    output_image = pipe(prompt=prompt,negative_prompt=negative_prompt,image=image,mask_image=mask_image,num_inference_steps=800,strength=1.0,guidance_scale = 7.8,height = 1472, width = 2560).images[0]
+    output_image = pipe(prompt=prompt,negative_prompt=negative_prompt,image=image,mask_image=mask_image,num_inference_steps=num_inference_steps,strength=strength,guidance_scale = guidance_scale,height = 1472, width = 2560).images[0]
     return output_image
 
     
@@ -84,9 +91,7 @@ def sd2_inpainting_inference(prompt, img, mask, repo_id="stabilityai/stable-diff
     """
     init_image = load_image(img)
     mask_image = load_image(mask)
-    pipe = StableDiffusionInpaintPipeline.from_pretrained(
-    repo_id,
-    torch_dtype=torch.float16)
+    pipe = StableDiffusionInpaintPipeline.from_pretrained(repo_id,torch_dtype=torch.float16)
     pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
     pipe = pipe.to("cuda")
     image = pipe(prompt=prompt, image=init_image, mask_image=mask_image, num_inference_steps=400,guidence_scale=7.5).images[0]
@@ -114,10 +119,7 @@ def image_to_video_pipeline(image, video_model_name, decode_chunk_size, motion_b
     return frames
 
 
-if __name__ == "__main__":
-    image = load_image("https://github.com/VikramxD/product_diffusion_api/assets/72499426/dd6af644-1c07-424a-8ba6-0715a5611094")
-    frames = image_to_video_pipeline(image, video_model_name,decode_chunk_size=8,motion_bucket_id=180)
-    export_to_video(frames, "output.mp4")
+
     
     
     

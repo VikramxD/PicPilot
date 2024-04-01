@@ -1,6 +1,5 @@
 import torch
 from diffusers import StableVideoDiffusionPipeline
-from diffusers.utils import load_image
 
 
 
@@ -19,7 +18,10 @@ def fetch_video_pipeline(video_model_name):
 
     """
     pipe = StableVideoDiffusionPipeline.from_pretrained(
-        video_model_name, torch_dtype=torch.float16, variant="fp16"
+        video_model_name, torch_dtype=torch.float16, 
     )
-    pipe.to('cuda')
+    pipe = pipe.to('cuda')
+    pipe.unet= torch.compile(pipe.unet)
+    
+    
     return pipe
