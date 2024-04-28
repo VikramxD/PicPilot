@@ -4,7 +4,7 @@ from config import Project_Name
 from clear_memory import clear_memory
 import numpy as np
 import torch
-from diffusers.utils import load_image,export_to_video
+from diffusers.utils import load_image
 from pipeline import fetch_kandinsky_pipeline
 from config import controlnet_adapter_model_name,controlnet_base_model_name,kandinsky_model_name
 from diffusers import StableDiffusionInpaintPipeline, DPMSolverMultistepScheduler
