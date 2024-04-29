@@ -34,6 +34,7 @@ def make_controlnet_condition(image: Image.Image) -> Image.Image:
     image = Image.fromarray(image)
     return image
 
+<<<<<<< HEAD
 def make_inpaint_condition(init_image, mask_image):
     """
     Prepare the initial image for inpainting by applying a mask.
@@ -70,6 +71,8 @@ def make_hint(image, depth_estimator):
     return hint
 
 
+=======
+>>>>>>> aaed2f5 (Refactor config.py and models.py, and add new functions in segment_everything.py and video_pipeline.py)
     
 
 
@@ -150,6 +153,33 @@ def kandinsky_controlnet_inpainting_inference(prompt, negative_prompt, image, hi
 
   
 
+<<<<<<< HEAD
+=======
+
+
+    
+def image_to_video_pipeline(image, video_model_name, decode_chunk_size, motion_bucket_id, generator=torch.manual_seed(42)):
+    """
+    Converts an image to a video using a specified video model.
+
+    Args:
+        image (Image): The input image to convert to video.
+        video_model_name (str): The name of the video model to use.
+        decode_chunk_size (int): The size of the chunks to decode.
+        motion_bucket_id (str): The ID of the motion bucket.
+        generator (torch.Generator, optional): The random number generator. Defaults to torch.manual_seed(42).
+
+    Returns:
+        list: The frames of the generated video.
+    """
+    clear_memory()
+    l.info("Stable Video Diffusion Image 2 Video pipeline Inference ->")
+    pipe = fetch_video_pipeline(video_model_name)
+    frames = pipe(image=image, decode_chunk_size=decode_chunk_size, motion_bucket_id=motion_bucket_id, generator=generator).frames[0]
+    return frames
+
+
+>>>>>>> aaed2f5 (Refactor config.py and models.py, and add new functions in segment_everything.py and video_pipeline.py)
 
     
     

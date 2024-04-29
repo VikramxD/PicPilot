@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import torch
 from diffusers import StableVideoDiffusionPipeline
 from diffusers.utils import load_image
@@ -23,3 +24,5 @@ def fetch_video_pipeline(video_model_name):
     )
     pipe.to('cuda')
     return pipe
+=======
+>>>>>>> aaed2f5 (Refactor config.py and models.py, and add new functions in segment_everything.py and video_pipeline.py)
