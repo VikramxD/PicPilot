@@ -1,4 +1,5 @@
 .venv
+<<<<<<< HEAD
 /scripts/wandb
 variables.tf
 .terraform
@@ -6,3 +7,6 @@ config.env
 /scripts/yolov8s*
 /scripts/*jpg
 /scripts/outputs
+=======
+scripts/wandb
+>>>>>>> bc53421 (Refactor .gitignore, config.py, and wandb scripts, and update requirements.txt)
