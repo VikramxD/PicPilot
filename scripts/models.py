@@ -18,31 +18,6 @@ from config import video_model_name
 
 
 
-def make_inpaint_condition(init_image, mask_image):
-    """
-    Preprocesses the initial image and mask image for inpainting.
-
-    Args:
-        init_image (PIL.Image.Image): The initial image.
-        mask_image (PIL.Image.Image): The mask image.
-
-    Returns:
-        torch.Tensor: The preprocessed image tensor.
-
-    Raises:
-        AssertionError: If the image and mask image have different sizes.
-    """
-    init_image = np.array(init_image.convert("RGB")).astype(np.float32) / 255.0
-    mask_image = np.array(mask_image.convert("L")).astype(np.float32) / 255.0
-
-    assert init_image.shape[0:1] == mask_image.shape[0:1], "image and image_mask must have the same image size"
-    init_image[mask_image > 0.5] = -1.0  # set as masked pixel
-    init_image = np.expand_dims(init_image, 0).transpose(0, 3, 1, 2)
-    init_image = torch.from_numpy(init_image)
-    return init_image
-    
-
-
     
 
 
@@ -75,27 +50,7 @@ def kandinsky_inpainting_inference(prompt, negative_prompt, image, mask_image,nu
 
   
 
-def sd2_inpainting_inference(prompt, img, mask, repo_id="stabilityai/stable-diffusion-2-inpainting", revision="fp16"):
-    """
-    Generate an image based on a prompt using a pretrained model.
 
-    Args:
-        prompt (str): The prompt for the image generation.
-        img_url (str): The URL of the initial image.
-        mask_url (str): The URL of the mask image.
-        repo_id (str, optional): The ID of the repository of the pretrained model. Defaults to "stabilityai/stable-diffusion-2-inpainting".
-        revision (str, optional): The revision of the pretrained model. Defaults to "fp16".
-
-    Returns:
-        Image: The generated image.
-    """
-    init_image = load_image(img)
-    mask_image = load_image(mask)
-    pipe = StableDiffusionInpaintPipeline.from_pretrained(repo_id,torch_dtype=torch.float16)
-    pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
-    pipe = pipe.to("cuda")
-    image = pipe(prompt=prompt, image=init_image, mask_image=mask_image, num_inference_steps=400,guidence_scale=7.5).images[0]
-    return image
 
     
 def image_to_video_pipeline(image, video_model_name, decode_chunk_size, motion_bucket_id, generator=torch.manual_seed(42)):

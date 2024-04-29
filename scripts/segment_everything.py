@@ -4,6 +4,16 @@ import torch
 from diffusers.utils import load_image
 from PIL import Image, ImageOps
 import numpy as np
+import torch
+from diffusers import StableVideoDiffusionPipeline
+
+
+
+
+
+
+
+
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -20,7 +30,7 @@ def extend_image(image, target_width, target_height, roi_scale=0.5):
     Extends an image to fit within the specified target dimensions while maintaining the aspect ratio.
     
     Args:
-        image_path (str): The path to the image file.
+        image (PIL.Image.Image): The image to be extended.
         target_width (int): The desired width of the extended image.
         target_height (int): The desired height of the extended image.
         roi_scale (float, optional): The scale factor applied to the resized image. Defaults to 0.5.
@@ -73,6 +83,9 @@ def generate_mask_from_bbox(image: Image, segmentation_model: str ,detection_mod
 
 
 
+
+
+
 def invert_mask(mask_image: Image) -> np.ndarray:
     """Method to invert mask
     Args:
@@ -84,4 +97,29 @@ def invert_mask(mask_image: Image) -> np.ndarray:
     return inverted_mask_image
 
 
+
+
+
+
+
+
+def fetch_video_pipeline(video_model_name):
+    """
+    Fetches the video pipeline for image processing.
+
+    Args:
+        video_model_name (str): The name of the video model.
+
+    Returns:
+        pipe (StableVideoDiffusionPipeline): The video pipeline.
+
+    """
+    pipe = StableVideoDiffusionPipeline.from_pretrained(
+        video_model_name, torch_dtype=torch.float16, 
+    )
+    pipe = pipe.to('cuda')
+    pipe.unet= torch.compile(pipe.unet)
+    
+    
+    return pipe
 
