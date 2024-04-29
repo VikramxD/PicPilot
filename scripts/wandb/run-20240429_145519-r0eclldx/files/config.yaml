@@ -1,0 +1,201 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    code_path: code/scripts/sdxl_lora_tuner.py
+    python_version: 3.10.12
+    cli_version: 0.16.6
+    framework: huggingface
+    huggingface_version: 4.40.1
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1714402519.0
+    t:
+      1:
+      - 1
+      - 11
+      - 41
+      - 49
+      - 51
+      - 55
+      - 71
+      - 83
+      - 98
+      2:
+      - 1
+      - 11
+      - 41
+      - 49
+      - 51
+      - 55
+      - 71
+      - 83
+      - 98
+      3:
+      - 23
+      4: 3.10.12
+      5: 0.16.6
+      6: 4.40.1
+      8:
+      - 5
+      13: linux-x86_64
+pretrained_model_name_or_path:
+  desc: null
+  value: stabilityai/stable-diffusion-xl-base-1.0
+pretrained_vae_model_name_or_path:
+  desc: null
+  value: madebyollin/sdxl-vae-fp16-fix
+revision:
+  desc: null
+  value: null
+variant:
+  desc: null
+  value: null
+dataset_name:
+  desc: null
+  value: hahminlew/kream-product-blip-captions
+dataset_config_name:
+  desc: null
+  value: null
+train_data_dir:
+  desc: null
+  value: null
+image_column:
+  desc: null
+  value: image
+caption_column:
+  desc: null
+  value: text
+validation_prompt:
+  desc: null
+  value: null
+num_validation_images:
+  desc: null
+  value: 4
+validation_epochs:
+  desc: null
+  value: 1
+max_train_samples:
+  desc: null
+  value: null
+output_dir:
+  desc: null
+  value: output
+cache_dir:
+  desc: null
+  value: null
+seed:
+  desc: null
+  value: null
+resolution:
+  desc: null
+  value: 1024
+center_crop:
+  desc: null
+  value: false
+random_flip:
+  desc: null
+  value: false
+train_text_encoder:
+  desc: null
+  value: false
+train_batch_size:
+  desc: null
+  value: 16
+num_train_epochs:
+  desc: null
+  value: 200
+max_train_steps:
+  desc: null
+  value: 186400
+checkpointing_steps:
+  desc: null
+  value: 500
+checkpoints_total_limit:
+  desc: null
+  value: null
+resume_from_checkpoint:
+  desc: null
+  value: null
+gradient_accumulation_steps:
+  desc: null
+  value: 1
+gradient_checkpointing:
+  desc: null
+  value: false
+learning_rate:
+  desc: null
+  value: 0.0001
+scale_lr:
+  desc: null
+  value: false
+lr_scheduler:
+  desc: null
+  value: constant
+lr_warmup_steps:
+  desc: null
+  value: 500
+snr_gamma:
+  desc: null
+  value: null
+allow_tf32:
+  desc: null
+  value: false
+dataloader_num_workers:
+  desc: null
+  value: 0
+use_8bit_adam:
+  desc: null
+  value: true
+adam_beta1:
+  desc: null
+  value: 0.9
+adam_beta2:
+  desc: null
+  value: 0.999
+adam_weight_decay:
+  desc: null
+  value: 0.01
+adam_epsilon:
+  desc: null
+  value: 1.0e-08
+max_grad_norm:
+  desc: null
+  value: 1.0
+push_to_hub:
+  desc: null
+  value: false
+hub_token:
+  desc: null
+  value: null
+prediction_type:
+  desc: null
+  value: null
+hub_model_id:
+  desc: null
+  value: null
+logging_dir:
+  desc: null
+  value: logs
+report_to:
+  desc: null
+  value: wandb
+mixed_precision:
+  desc: null
+  value: null
+local_rank:
+  desc: null
+  value: -1
+enable_xformers_memory_efficient_attention:
+  desc: null
+  value: false
+noise_offset:
+  desc: null
+  value: 0
+rank:
+  desc: null
+  value: 4
+debug_loss:
+  desc: null
+  value: false

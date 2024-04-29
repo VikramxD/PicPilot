@@ -1,5 +1,1 @@
 .venv
-data
-scripts/wandb
-models
-scripts/yolov8*
