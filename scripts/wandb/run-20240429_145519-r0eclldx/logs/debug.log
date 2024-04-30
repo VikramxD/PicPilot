@@ -1,0 +1,29 @@
+2024-04-29 14:55:19,803 INFO    MainThread:4560 [wandb_setup.py:_flush():76] Current SDK version is 0.16.6
+2024-04-29 14:55:19,803 INFO    MainThread:4560 [wandb_setup.py:_flush():76] Configure stats pid to 4560
+2024-04-29 14:55:19,803 INFO    MainThread:4560 [wandb_setup.py:_flush():76] Loading settings from /home/.config/wandb/settings
+2024-04-29 14:55:19,804 INFO    MainThread:4560 [wandb_setup.py:_flush():76] Loading settings from /home/product_diffusion_api/scripts/wandb/settings
+2024-04-29 14:55:19,804 INFO    MainThread:4560 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2024-04-29 14:55:19,804 INFO    MainThread:4560 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2024-04-29 14:55:19,804 INFO    MainThread:4560 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': 'scripts/sdxl_lora_tuner.py', 'program_abspath': '/home/product_diffusion_api/scripts/sdxl_lora_tuner.py', 'program': '/home/product_diffusion_api/scripts/sdxl_lora_tuner.py'}
+2024-04-29 14:55:19,804 INFO    MainThread:4560 [wandb_setup.py:_flush():76] Applying login settings: {}
+2024-04-29 14:55:19,804 INFO    MainThread:4560 [wandb_init.py:_log_setup():521] Logging user logs to /home/product_diffusion_api/scripts/wandb/run-20240429_145519-r0eclldx/logs/debug.log
+2024-04-29 14:55:19,804 INFO    MainThread:4560 [wandb_init.py:_log_setup():522] Logging internal logs to /home/product_diffusion_api/scripts/wandb/run-20240429_145519-r0eclldx/logs/debug-internal.log
+2024-04-29 14:55:19,804 INFO    MainThread:4560 [wandb_init.py:init():561] calling init triggers
+2024-04-29 14:55:19,804 INFO    MainThread:4560 [wandb_init.py:init():568] wandb.init called with sweep_config: {}
+config: {}
+2024-04-29 14:55:19,804 INFO    MainThread:4560 [wandb_init.py:init():611] starting backend
+2024-04-29 14:55:19,804 INFO    MainThread:4560 [wandb_init.py:init():615] setting up manager
+2024-04-29 14:55:19,806 INFO    MainThread:4560 [backend.py:_multiprocessing_setup():105] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2024-04-29 14:55:19,811 INFO    MainThread:4560 [wandb_init.py:init():623] backend started and connected
+2024-04-29 14:55:19,814 INFO    MainThread:4560 [wandb_init.py:init():715] updated telemetry
+2024-04-29 14:55:19,821 INFO    MainThread:4560 [wandb_init.py:init():748] communicating run to backend with 90.0 second timeout
+2024-04-29 14:55:20,569 INFO    MainThread:4560 [wandb_run.py:_on_init():2357] communicating current version
+2024-04-29 14:55:20,817 INFO    MainThread:4560 [wandb_run.py:_on_init():2366] got version response 
+2024-04-29 14:55:20,818 INFO    MainThread:4560 [wandb_init.py:init():799] starting run threads in backend
+2024-04-29 14:55:21,118 INFO    MainThread:4560 [wandb_run.py:_console_start():2335] atexit reg
+2024-04-29 14:55:21,118 INFO    MainThread:4560 [wandb_run.py:_redirect():2190] redirect: wrap_raw
+2024-04-29 14:55:21,118 INFO    MainThread:4560 [wandb_run.py:_redirect():2255] Wrapping output streams.
+2024-04-29 14:55:21,118 INFO    MainThread:4560 [wandb_run.py:_redirect():2280] Redirects installed.
+2024-04-29 14:55:21,119 INFO    MainThread:4560 [wandb_init.py:init():842] run started, returning control to user process
+2024-04-29 14:55:21,120 INFO    MainThread:4560 [wandb_run.py:_config_callback():1347] config_cb None None {'pretrained_model_name_or_path': 'stabilityai/stable-diffusion-xl-base-1.0', 'pretrained_vae_model_name_or_path': 'madebyollin/sdxl-vae-fp16-fix', 'revision': None, 'variant': None, 'dataset_name': 'hahminlew/kream-product-blip-captions', 'dataset_config_name': None, 'train_data_dir': None, 'image_column': 'image', 'caption_column': 'text', 'validation_prompt': None, 'num_validation_images': 4, 'validation_epochs': 1, 'max_train_samples': None, 'output_dir': 'output', 'cache_dir': None, 'seed': None, 'resolution': 1024, 'center_crop': False, 'random_flip': False, 'train_text_encoder': False, 'train_batch_size': 16, 'num_train_epochs': 200, 'max_train_steps': 186400, 'checkpointing_steps': 500, 'checkpoints_total_limit': None, 'resume_from_checkpoint': None, 'gradient_accumulation_steps': 1, 'gradient_checkpointing': False, 'learning_rate': 0.0001, 'scale_lr': False, 'lr_scheduler': 'constant', 'lr_warmup_steps': 500, 'snr_gamma': None, 'allow_tf32': False, 'dataloader_num_workers': 0, 'use_8bit_adam': True, 'adam_beta1': 0.9, 'adam_beta2': 0.999, 'adam_weight_decay': 0.01, 'adam_epsilon': 1e-08, 'max_grad_norm': 1.0, 'push_to_hub': False, 'hub_token': None, 'prediction_type': None, 'hub_model_id': None, 'logging_dir': 'logs', 'report_to': 'wandb', 'mixed_precision': None, 'local_rank': -1, 'enable_xformers_memory_efficient_attention': False, 'noise_offset': 0, 'rank': 4, 'debug_loss': False}
+2024-04-29 14:55:32,175 WARNING MsgRouterThr:4560 [router.py:message_loop():77] message_loop has been closed
