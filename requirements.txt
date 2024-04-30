@@ -9,7 +9,14 @@ numpy
 rich
 tqdm
 transformers
-opencv-python-headless
 fastapi
 uvicorn
 matplotlib
+accelerate
+torchvision
+ftfy
+tensorboard
+Jinja2
+datasets
+peft
+async-batcher

@@ -26,4 +26,3 @@ for level in log_levels:
     file_handler.setLevel(level)
     file_handler.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s] %(module)s - %(message)s'))
     rich_logger.addHandler(file_handler)
-

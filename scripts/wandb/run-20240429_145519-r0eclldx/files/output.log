@@ -1,0 +1,43 @@
+04/29/2024 14:55:21 - INFO - __main__ - ***** Running training *****
+04/29/2024 14:55:21 - INFO - __main__ -   Num examples = 14904
+04/29/2024 14:55:21 - INFO - __main__ -   Num Epochs = 200
+04/29/2024 14:55:21 - INFO - __main__ -   Instantaneous batch size per device = 16
+04/29/2024 14:55:21 - INFO - __main__ -   Total train batch size (w. parallel, distributed & accumulation) = 16
+04/29/2024 14:55:21 - INFO - __main__ -   Gradient Accumulation steps = 1
+04/29/2024 14:55:21 - INFO - __main__ -   Total optimization steps = 186400
+Steps:   0%|                                                                                                                | 0/186400 [00:00<?, ?it/s]Traceback (most recent call last):
+  File "/home/product_diffusion_api/scripts/sdxl_lora_tuner.py", line 1175, in <module>
+    main()
+  File "/home/product_diffusion_api/scripts/sdxl_lora_tuner.py", line 814, in main
+    model_input = vae.encode(pixel_values).latent_dist.sample()
+  File "/home/product_diffusion_api/.venv/lib/python3.10/site-packages/diffusers/utils/accelerate_utils.py", line 46, in wrapper
+    return method(self, *args, **kwargs)
+  File "/home/product_diffusion_api/.venv/lib/python3.10/site-packages/diffusers/models/autoencoders/autoencoder_kl.py", line 260, in encode
+    h = self.encoder(x)
+  File "/home/product_diffusion_api/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/product_diffusion_api/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/product_diffusion_api/.venv/lib/python3.10/site-packages/diffusers/models/autoencoders/vae.py", line 172, in forward
+    sample = down_block(sample)
+  File "/home/product_diffusion_api/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/product_diffusion_api/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/product_diffusion_api/.venv/lib/python3.10/site-packages/diffusers/models/unets/unet_2d_blocks.py", line 1465, in forward
+    hidden_states = resnet(hidden_states, temb=None)
+  File "/home/product_diffusion_api/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/product_diffusion_api/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/product_diffusion_api/.venv/lib/python3.10/site-packages/diffusers/models/resnet.py", line 332, in forward
+    hidden_states = self.norm1(hidden_states)
+  File "/home/product_diffusion_api/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/product_diffusion_api/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/product_diffusion_api/.venv/lib/python3.10/site-packages/torch/nn/modules/normalization.py", line 287, in forward
+    return F.group_norm(
+  File "/home/product_diffusion_api/.venv/lib/python3.10/site-packages/torch/nn/functional.py", line 2588, in group_norm
+    return torch.group_norm(input, num_groups, weight, bias, eps, torch.backends.cudnn.enabled)
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 8.00 GiB. GPU

@@ -1,0 +1,590 @@
+diff --git a/.gitignore b/.gitignore
+index 5bbee1b..1d17dae 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,5 +1 @@
+ .venv
+-data
+-scripts/wandb
+-models
+-scripts/yolov8*
+diff --git a/requirements.txt b/requirements.txt
+index d1c8048..85f0bbc 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -9,7 +9,13 @@ numpy
+ rich
+ tqdm
+ transformers
+-opencv-python-headless
+ fastapi
+ uvicorn
+ matplotlib
++accelerate
++torchvision
++ftfy
++tensorboard
++Jinja2
++datasets
++peft
+diff --git a/scripts/clear_memory.py b/scripts/clear_memory.py
+deleted file mode 100644
+index 7b6010e..0000000
+--- a/scripts/clear_memory.py
++++ /dev/null
+@@ -1,18 +0,0 @@
+-import gc
+-import torch
+-from logger import rich_logger as l
+-
+-def clear_memory():
+-    """
+-    Clears the memory by collecting garbage and emptying the CUDA cache.
+-
+-    This function is useful when dealing with memory-intensive operations in Python, especially when using libraries like PyTorch.
+-
+-    Note:
+-        This function requires the `gc` and `torch` modules to be imported.
+-
+-    """
+-    gc.collect()
+-    torch.cuda.empty_cache()
+-    l.info("Memory Cleared")
+-    
+\ No newline at end of file
+diff --git a/scripts/config.py b/scripts/config.py
+index b620197..10947d3 100644
+--- a/scripts/config.py
++++ b/scripts/config.py
+@@ -1,13 +1,60 @@
+-LOGS_DIR = '../logs'
+-DATA_DIR = '../data'
+-Project_Name = 'product_placement_api'
+-entity = 'vikramxd'
+-image_dir = '../sample_data'
+-mask_dir = '../masks'
+-segmentation_model = 'facebook/sam-vit-large'
+-detection_model = 'yolov8l'
+-kandinsky_model_name = 'kandinsky-community/kandinsky-2-2-decoder-inpaint'
+-video_model_name = 'stabilityai/stable-video-diffusion-img2vid-xt'
+-target_width = 2560
+-target_height = 1440
+-roi_scale = 0.6
++MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
++VAE_NAME= "madebyollin/sdxl-vae-fp16-fix"
++DATASET_NAME= "hahminlew/kream-product-blip-captions"
++PROJECT_NAME = "Product Photography"
++
++class Config:
++    def __init__(self):
++        self.pretrained_model_name_or_path = MODEL_NAME
++        self.pretrained_vae_model_name_or_path = VAE_NAME
++        self.revision = None
++        self.variant = None
++        self.dataset_name = DATASET_NAME
++        self.dataset_config_name = None
++        self.train_data_dir = None
++        self.image_column = 'image'
++        self.caption_column = 'text'
++        self.validation_prompt = None
++        self.num_validation_images = 4
++        self.validation_epochs = 1
++        self.max_train_samples = None
++        self.output_dir = "output"
++        self.cache_dir = None
++        self.seed = None
++        self.resolution = 1024
++        self.center_crop = False
++        self.random_flip = False
++        self.train_text_encoder = False
++        self.train_batch_size = 16
++        self.num_train_epochs = 200
++        self.max_train_steps = None
++        self.checkpointing_steps = 500
++        self.checkpoints_total_limit = None
++        self.resume_from_checkpoint = None
++        self.gradient_accumulation_steps = 1
++        self.gradient_checkpointing = False
++        self.learning_rate = 1e-4
++        self.scale_lr = False
++        self.lr_scheduler = "constant"
++        self.lr_warmup_steps = 500
++        self.snr_gamma = None
++        self.allow_tf32 = False
++        self.dataloader_num_workers = 0
++        self.use_8bit_adam = True
++        self.adam_beta1 = 0.9
++        self.adam_beta2 = 0.999
++        self.adam_weight_decay = 1e-2
++        self.adam_epsilon = 1e-08
++        self.max_grad_norm = 1.0
++        self.push_to_hub = False
++        self.hub_token = None
++        self.prediction_type = None
++        self.hub_model_id = None
++        self.logging_dir = "logs"
++        self.report_to = "wandb"
++        self.mixed_precision = None
++        self.local_rank = -1
++        self.enable_xformers_memory_efficient_attention = False
++        self.noise_offset = 0
++        self.rank = 4
++        self.debug_loss = False
+diff --git a/scripts/endpoint.py b/scripts/endpoint.py
+deleted file mode 100644
+index cbb9ebe..0000000
+--- a/scripts/endpoint.py
++++ /dev/null
+@@ -1,65 +0,0 @@
+-from fastapi import FastAPI,HTTPException
+-from fastapi.responses import FileResponse
+-from fastapi.middleware.cors import CORSMiddleware
+-from models import kandinsky_inpainting_inference
+-from segment_everything import extend_image, generate_mask_from_bbox, invert_mask
+-from video_pipeline import fetch_video_pipeline 
+-from diffusers.utils import load_image
+-from logger import rich_logger as l
+-from fastapi import UploadFile, File
+-from config import segmentation_model, detection_model,target_height, target_width, roi_scale
+-from PIL import Image
+-import io
+-import tempfile
+-
+-
+-
+-
+-
+-
+-app = FastAPI(title="Product Diffusion API",
+-              description="API for Product Diffusion", 
+-              version="0.1.0",
+-              openapi_url="/api/v1/openapi.json")
+-
+-
+-app.add_middleware(
+-    CORSMiddleware,
+-    allow_origins=["*"],
+-    allow_methods=["*"],
+-    allow_headers=["*"],
+-    allow_credentials=True
+-    
+-)
+-
+-@app.post("/api/v1/image_outpainting")
+-async def image_outpainting(image: UploadFile, prompt: str, negative_prompt: str,num_inference_steps:int=30):
+-    """
+-    Perform Outpainting on an image.
+-
+-    Args:
+-        image (UploadFile): The input image file.
+-        prompt (str): The prompt for the outpainting.
+-        negative_prompt (str): The negative prompt for the outpainting.
+-
+-    Returns:
+-        JSONResponse: The output image path.
+-    """
+-    image_data = await image.read()
+-    image = Image.open(io.BytesIO(image_data))
+-    image = load_image(image)
+-    image = extend_image(image, target_width=target_width, target_height=target_height, roi_scale=roi_scale)
+-    mask_image = generate_mask_from_bbox(image, segmentation_model, detection_model)
+-    mask_image = Image.fromarray(mask_image)
+-    mask_image = invert_mask(mask_image)
+-    output_image = kandinsky_inpainting_inference(prompt, negative_prompt, image, mask_image,num_inference_steps=num_inference_steps)
+-    with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as temp_file:
+-        output_image.save(temp_file, format='JPEG')
+-        temp_file_path = temp_file.name
+-    return FileResponse(temp_file_path, media_type='image/jpeg', filename='output_image.jpg')
+-    
+-
+-
+-
+-  
+-    
+\ No newline at end of file
+diff --git a/scripts/logger.py b/scripts/logger.py
+index 2e0f42f..c493b93 100644
+--- a/scripts/logger.py
++++ b/scripts/logger.py
+@@ -25,5 +25,4 @@ for level in log_levels:
+     file_handler = RotatingFileHandler(log_file, maxBytes=10 * 1024 * 1024, backupCount=5)
+     file_handler.setLevel(level)
+     file_handler.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s] %(module)s - %(message)s'))
+-    rich_logger.addHandler(file_handler)
+-
++    rich_logger.addHandler(file_handler)
+\ No newline at end of file
+diff --git a/scripts/models.py b/scripts/models.py
+deleted file mode 100644
+index 2ca9eea..0000000
+--- a/scripts/models.py
++++ /dev/null
+@@ -1,82 +0,0 @@
+-from logger import rich_logger as l
+-from wandb.integration.diffusers import autolog
+-from config import Project_Name
+-from clear_memory import clear_memory
+-import numpy as np
+-import torch
+-from diffusers.utils import load_image
+-from pipeline import fetch_kandinsky_pipeline
+-from config import controlnet_adapter_model_name,controlnet_base_model_name,kandinsky_model_name
+-from diffusers import StableDiffusionInpaintPipeline, DPMSolverMultistepScheduler
+-from video_pipeline import fetch_video_pipeline
+-from config import video_model_name
+-
+-
+-
+-
+-
+-
+-
+-
+-    
+-
+-
+-
+-
+-
+-
+-
+-def kandinsky_inpainting_inference(prompt, negative_prompt, image, mask_image,num_inference_steps=800,strength=1.0,guidance_scale = 7.8):
+-    """
+-    Perform Kandinsky inpainting inference on the given image.
+-
+-    Args:
+-        prompt (str): The prompt for the inpainting process.
+-        negative_prompt (str): The negative prompt for the inpainting process.
+-        image (PIL.Image.Image): The input image to be inpainted.
+-        mask_image (PIL.Image.Image): The mask image indicating the areas to be inpainted.
+-
+-    Returns:
+-        PIL.Image.Image: The output inpainted image.
+-    """
+-    clear_memory()
+-    l.info("Kandinsky Inpainting Inference ->")
+-    pipe = fetch_kandinsky_pipeline(controlnet_adapter_model_name, controlnet_base_model_name,kandinsky_model_name, image)
+-    output_image = pipe(prompt=prompt,negative_prompt=negative_prompt,image=image,mask_image=mask_image,num_inference_steps=num_inference_steps,strength=strength,guidance_scale = guidance_scale,height = 1472, width = 2560).images[0]
+-    return output_image
+-
+-    
+-
+-
+-  
+-
+-
+-
+-    
+-def image_to_video_pipeline(image, video_model_name, decode_chunk_size, motion_bucket_id, generator=torch.manual_seed(42)):
+-    """
+-    Converts an image to a video using a specified video model.
+-
+-    Args:
+-        image (Image): The input image to convert to video.
+-        video_model_name (str): The name of the video model to use.
+-        decode_chunk_size (int): The size of the chunks to decode.
+-        motion_bucket_id (str): The ID of the motion bucket.
+-        generator (torch.Generator, optional): The random number generator. Defaults to torch.manual_seed(42).
+-
+-    Returns:
+-        list: The frames of the generated video.
+-    """
+-    clear_memory()
+-    l.info("Stable Video Diffusion Image 2 Video pipeline Inference ->")
+-    pipe = fetch_video_pipeline(video_model_name)
+-    frames = pipe(image=image, decode_chunk_size=decode_chunk_size, motion_bucket_id=motion_bucket_id, generator=generator).frames[0]
+-    return frames
+-
+-
+-
+-    
+-    
+-    
+-    
+-
+diff --git a/scripts/pipeline.py b/scripts/pipeline.py
+deleted file mode 100644
+index af0e6bf..0000000
+--- a/scripts/pipeline.py
++++ /dev/null
+@@ -1,100 +0,0 @@
+-from diffusers import ControlNetModel,StableDiffusionControlNetInpaintPipeline,AutoPipelineForInpainting
+-import torch
+-
+-
+-
+-
+-
+-
+-
+-class PipelineFetcher:
+-    """
+-    A class that fetches different pipelines for image processing.
+-
+-    Args:
+-        controlnet_adapter_model_name (str): The name of the controlnet adapter model.
+-        controlnet_base_model_name (str): The name of the controlnet base model.
+-        kandinsky_model_name (str): The name of the Kandinsky model.
+-        image (str): The image to be processed.
+-
+-    """
+-
+-    def __init__(self, controlnet_adapter_model_name, controlnet_base_model_name, kandinsky_model_name, image: str):
+-        self.controlnet_adapter_model_name = controlnet_adapter_model_name
+-        self.controlnet_base_model_name = controlnet_base_model_name
+-        self.kandinsky_model_name = kandinsky_model_name
+-        self.image = image
+-
+-    def ControlNetInpaintPipeline(self):
+-        """
+-        Fetches the ControlNet inpainting pipeline.
+-
+-        Returns:
+-            pipe (StableDiffusionControlNetInpaintPipeline): The ControlNet inpainting pipeline.
+-
+-        """
+-        controlnet = ControlNetModel.from_pretrained(self.controlnet_adapter_model_name, torch_dtype=torch.float16)
+-        pipe = StableDiffusionControlNetInpaintPipeline.from_pretrained(
+-            self.controlnet_base_model_name, controlnet=controlnet, torch_dtype=torch.float16
+-        )
+-        pipe.to('cuda')
+-
+-        return pipe
+-
+-    def KandinskyPipeline(self):
+-        """
+-        Fetches the Kandinsky pipeline.
+-
+-        Returns:
+-            pipe (AutoPipelineForInpainting): The Kandinsky pipeline.
+-
+-        """
+-        pipe = AutoPipelineForInpainting.from_pretrained(self.kandinsky_model_name, torch_dtype=torch.float16)
+-        pipe = pipe.to('cuda')
+-        pipe.unet = torch.compile(pipe.unet)
+-        
+-        return pipe
+-
+-
+-
+-
+-
+-
+-def fetch_control_pipeline(controlnet_adapter_model_name, controlnet_base_model_name, kandinsky_model_name, image):
+-    """
+-    Fetches the control pipeline for image processing.
+-
+-    Args:
+-        controlnet_adapter_model_name (str): The name of the controlnet adapter model.
+-        controlnet_base_model_name (str): The name of the controlnet base model.
+-        kandinsky_model_name (str): The name of the Kandinsky model.
+-        image: The input image for processing.
+-
+-    Returns:
+-        pipe: The control pipeline for image processing.
+-    """
+-    pipe_fetcher = PipelineFetcher(controlnet_adapter_model_name, controlnet_base_model_name, kandinsky_model_name, image)
+-    pipe = pipe_fetcher.ControlNetInpaintPipeline()
+-    return pipe
+-
+-
+-def fetch_kandinsky_pipeline(controlnet_adapter_model_name, controlnet_base_model_name, kandinsky_model_name, image):
+-    """
+-    Fetches the Kandinsky pipeline.
+-
+-    Args:
+-        controlnet_adapter_model_name (str): The name of the controlnet adapter model.
+-        controlnet_base_model_name (str): The name of the controlnet base model.
+-        kandinsky_model_name (str): The name of the Kandinsky model.
+-        image: The input image.
+-
+-    Returns:
+-        pipe: The Kandinsky pipeline.
+-    """
+-    pipe_fetcher = PipelineFetcher(controlnet_adapter_model_name, controlnet_base_model_name, kandinsky_model_name, image)
+-    pipe = pipe_fetcher.KandinskyPipeline()
+-    pipe = pipe.to('cuda')
+-    
+-    return pipe
+-
+-
+diff --git a/scripts/run.py b/scripts/run.py
+deleted file mode 100644
+index cccc06a..0000000
+--- a/scripts/run.py
++++ /dev/null
+@@ -1,39 +0,0 @@
+-import argparse
+-import os
+-from segment_everything import generate_mask_from_bbox, extend_image, invert_mask
+-from models import kandinsky_inpainting_inference, load_image
+-from PIL import Image
+-from config import segmentation_model, detection_model,target_height, target_width, roi_scale
+-
+-def main(args):
+-    """
+-    Main function that performs the product diffusion process.
+-
+-    Args:
+-        args (Namespace): Command-line arguments.
+-
+-    Returns:
+-        None
+-    """
+-    os.makedirs(args.output_dir, exist_ok=True)
+-    os.makedirs(args.mask_dir, exist_ok=True)
+-    output_image_path = os.path.join(args.output_dir, f'{args.uid}_output.jpg')
+-    image = load_image(args.image_path)
+-    extended_image = extend_image(image, target_width=target_width, target_height=target_height, roi_scale=roi_scale)
+-    mask = generate_mask_from_bbox(extended_image, segmentation_model, detection_model)
+-    mask_image = Image.fromarray(mask)
+-    inverted_mask = invert_mask(mask_image)
+-    #inverted_mask = Image.fromarray(inverted_mask)
+-    output_image = kandinsky_inpainting_inference(args.prompt, args.negative_prompt, extended_image, inverted_mask)
+-    output_image.save(output_image_path)
+-    
+-if __name__ == "__main__":
+-    parser = argparse.ArgumentParser(description='Perform Outpainting on an image.')
+-    parser.add_argument('--image_path', type=str, required=True, help='Path to the input image.')
+-    parser.add_argument('--prompt', type=str, required=True, help='Prompt for the Kandinsky inpainting.')
+-    parser.add_argument('--negative_prompt', type=str, required=True, help='Negative prompt for the Kandinsky inpainting.')
+-    parser.add_argument('--output_dir', type=str, required=True, help='Directory to save the output image.')
+-    parser.add_argument('--mask_dir', type=str, required=True, help='Directory to save the mask image.')
+-    parser.add_argument('--uid', type=str, required=True, help='Unique identifier for the image and mask.')
+-    args = parser.parse_args()
+-    main(args)
+\ No newline at end of file
+diff --git a/scripts/segment_everything.py b/scripts/segment_everything.py
+deleted file mode 100644
+index c2e9532..0000000
+--- a/scripts/segment_everything.py
++++ /dev/null
+@@ -1,125 +0,0 @@
+-from ultralytics import YOLO
+-from transformers import SamModel, SamProcessor
+-import torch
+-from diffusers.utils import load_image
+-from PIL import Image, ImageOps
+-import numpy as np
+-import torch
+-from diffusers import StableVideoDiffusionPipeline
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-def extend_image(image, target_width, target_height, roi_scale=0.5):
+-    """
+-    Extends an image to fit within the specified target dimensions while maintaining the aspect ratio.
+-    
+-    Args:
+-        image (PIL.Image.Image): The image to be extended.
+-        target_width (int): The desired width of the extended image.
+-        target_height (int): The desired height of the extended image.
+-        roi_scale (float, optional): The scale factor applied to the resized image. Defaults to 0.5.
+-    
+-    Returns:
+-        PIL.Image.Image: The extended image.
+-    """
+-    original_image = image
+-    original_width, original_height = original_image.size
+-    scale = min(target_width / original_width, target_height / original_height)
+-    new_width = int(original_width * scale * roi_scale)
+-    new_height = int(original_height * scale * roi_scale)
+-    original_image_resized = original_image.resize((new_width, new_height))
+-    extended_image = Image.new("RGB", (target_width, target_height), "white")
+-    paste_x = (target_width - new_width) // 2
+-    paste_y = (target_height - new_height) // 2
+-    extended_image.paste(original_image_resized, (paste_x, paste_y))
+-    return extended_image
+-
+-
+-
+-
+-
+-def generate_mask_from_bbox(image: Image, segmentation_model: str ,detection_model) -> Image:
+-    """
+-    Generates a mask from the bounding box of an image using YOLO and SAM-ViT models.
+-
+-    Args:
+-        image_path (str): The path to the input image.
+-
+-    Returns:
+-        numpy.ndarray: The generated mask as a NumPy array.
+-    """
+-   
+-    yolo = YOLO(detection_model)
+-    processor = SamProcessor.from_pretrained(segmentation_model)
+-    model = SamModel.from_pretrained(segmentation_model).to(device)
+-    results = yolo(image)
+-    bboxes = results[0].boxes.xyxy.tolist()
+-    input_boxes = [[[bboxes[0]]]]
+-    inputs = processor(load_image(image), input_boxes=input_boxes, return_tensors="pt").to("cuda")
+-    with torch.no_grad():
+-        outputs = model(**inputs)
+-    mask = processor.image_processor.post_process_masks(
+-        outputs.pred_masks.cpu(),
+-        inputs["original_sizes"].cpu(),
+-        inputs["reshaped_input_sizes"].cpu()
+-    )[0][0][0].numpy()
+-    return mask
+-
+-
+-
+-
+-
+-
+-def invert_mask(mask_image: Image) -> np.ndarray:
+-    """Method to invert mask
+-    Args:
+-        mask_image (np.ndarray): input mask image
+-    Returns:
+-        np.ndarray: inverted mask image
+-    """
+-    inverted_mask_image = ImageOps.invert(mask_image)
+-    return inverted_mask_image
+-
+-
+-
+-
+-
+-
+-
+-
+-def fetch_video_pipeline(video_model_name):
+-    """
+-    Fetches the video pipeline for image processing.
+-
+-    Args:
+-        video_model_name (str): The name of the video model.
+-
+-    Returns:
+-        pipe (StableVideoDiffusionPipeline): The video pipeline.
+-
+-    """
+-    pipe = StableVideoDiffusionPipeline.from_pretrained(
+-        video_model_name, torch_dtype=torch.float16, 
+-    )
+-    pipe = pipe.to('cuda')
+-    pipe.unet= torch.compile(pipe.unet)
+-    
+-    
+-    return pipe
+-
+diff --git a/scripts/video_pipeline.py b/scripts/video_pipeline.py
+deleted file mode 100644
+index e69de29..0000000
