@@ -14,10 +14,20 @@ app.add_middleware(
     
 )
 
-app.include_router(sdxl_text_to_image.router, prefix='/api/v1/product-diffusion')
-app.include_router()
+#app.include_router(sdxl_text_to_image.router, prefix='/api/v1/product-diffusion')
+
 
 
 @app.get('/')
 async def root():
-    return {'message: Product Diffusion API'}
+    return {
+        'message': 'Welcome to the main API Page for the product Photography Application , we provide APIs for building Stunning Product Images with Diffusion Models',
+        'description': 'This API provides endpoints for accessing and managing product diffusion data.',
+        'version': '1.0.0',
+        'author': 'Vikramjeet Singh',
+        'contact': {
+            'email': 'singh.vikram.1782000@gmail.com',
+            'github': 'https://github.com/vikramxD'
+        },
+        'license': 'MIT',
+    }
