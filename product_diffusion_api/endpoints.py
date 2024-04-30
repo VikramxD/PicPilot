@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from routers import sdxl_text_to_image
 
 
 
@@ -14,7 +15,7 @@ app.add_middleware(
     
 )
 
-#app.include_router(sdxl_text_to_image.router, prefix='/api/v1/product-diffusion')
+app.include_router(sdxl_text_to_image.router, prefix='/api/v1/product-diffusion')
 
 
 
@@ -31,3 +32,7 @@ async def root():
         },
         'license': 'MIT',
     }
+    
+@app.get("/health")
+def check_health():
+    return {"status": "ok"}
