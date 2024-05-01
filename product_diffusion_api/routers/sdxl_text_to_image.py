@@ -52,9 +52,11 @@ class SDXLLoraInference:
         guidance_scale: float,
     ) -> None:
         self.pipe = DiffusionPipeline.from_pretrained(
-            "stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.bfloat16
+            "stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16
         )
-        self.pipe.to("cuda")
+        self.model_path = "VikramSingh178/sdxl-lora-finetune-product-caption"
+        self.pipe.load_lora_weights(self.model_path)
+        self.pipe.to('cuda')
         self.prompt = prompt
         self.negative_prompt = negative_prompt
         self.num_images = num_images
