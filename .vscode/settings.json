@@ -1,3 +1,6 @@
 {
-    "python.REPL.enableREPLSmartSend": false
+    "python.REPL.enableREPLSmartSend": false,
+    "circleci.persistedProjectSelection": [
+        "circleci/BQyaZDyai3ejufsymJgXtx/G7GFeA574Ga7r2VtdHXBbu"
+    ]
 }
