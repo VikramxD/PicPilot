@@ -1,3 +1,7 @@
+import sys
+
+sys.path.append("../scripts")  # Path of the scripts directory
+import config
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 import base64
@@ -6,8 +10,16 @@ from typing import List
 import uuid
 from diffusers import DiffusionPipeline
 import torch
+import torch_tensorrt
+from functools import lru_cache
+
+torch._inductor.config.conv_1x1_as_mm = True
+torch._inductor.config.coordinate_descent_tuning = True
+torch._inductor.config.epilogue_fusion = False
+torch._inductor.config.coordinate_descent_check_all_directions = True
 
 router = APIRouter()
+
 
 # Utility function to convert PIL image to base64 encoded JSON
 def pil_to_b64_json(image):
@@ -17,6 +29,27 @@ def pil_to_b64_json(image):
     image.save(buffered, format="PNG")
     b64_image = base64.b64encode(buffered.getvalue()).decode("utf-8")
     return {"image_id": image_id, "b64_image": b64_image}
+
+
+@lru_cache(maxsize=1)
+def load_pipeline(model_name, adapter_name):
+    pipe = DiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.bfloat16).to(
+        "cuda"
+    )
+    pipe.load_lora_weights(adapter_name)
+    pipe.unet.to(memory_format=torch.channels_last)
+    pipe.vae.to(memory_format=torch.channels_last)
+    # pipe.unet = torch.compile(
+    # pipe.unet,
+    # mode = 'max-autotime'
+    # )
+
+    pipe.fuse_qkv_projections()
+
+    return pipe
+
+
+loaded_pipeline = load_pipeline(config.MODEL_NAME, config.ADAPTER_NAME)
 
 
 # SDXLLoraInference class for running inference
@@ -51,12 +84,7 @@ class SDXLLoraInference:
         num_inference_steps: int,
         guidance_scale: float,
     ) -> None:
-        self.pipe = DiffusionPipeline.from_pretrained(
-            "stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16
-        )
-        self.model_path = "VikramSingh178/sdxl-lora-finetune-product-caption"
-        self.pipe.load_lora_weights(self.model_path)
-        self.pipe.to('cuda')
+        self.pipe = loaded_pipeline
         self.prompt = prompt
         self.negative_prompt = negative_prompt
         self.num_images = num_images
@@ -79,6 +107,7 @@ class SDXLLoraInference:
         ).images[0]
         return pil_to_b64_json(image)
 
+
 # Input format for single request
 class InputFormat(BaseModel):
     prompt: str
@@ -87,9 +116,11 @@ class InputFormat(BaseModel):
     negative_prompt: str
     num_images: int
 
+
 # Input format for batch requests
 class BatchInputFormat(BaseModel):
     batch_input: List[InputFormat]
+
 
 # Endpoint for single request
 @router.post("/sdxl_v0_lora_inference")
@@ -103,6 +134,7 @@ async def sdxl_v0_lora_inference(data: InputFormat):
     )
     output_json = inference.run_inference()
     return output_json
+
 
 # Endpoint for batch requests
 @router.post("/sdxl_v0_lora_inference/batch")
@@ -122,7 +154,10 @@ async def sdxl_v0_lora_inference_batch(data: BatchInputFormat):
     MAX_QUEUE_SIZE = 64
 
     if len(data.batch_input) > MAX_QUEUE_SIZE:
-        raise HTTPException(status_code=400, detail=f"Number of requests exceeds maximum queue size ({MAX_QUEUE_SIZE})")
+        raise HTTPException(
+            status_code=400,
+            detail=f"Number of requests exceeds maximum queue size ({MAX_QUEUE_SIZE})",
+        )
 
     processed_requests = []
     for item in data.batch_input:
