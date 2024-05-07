@@ -1,2 +1,5 @@
 .venv
 scripts/wandb
+variables.tf
+.terraform
+
