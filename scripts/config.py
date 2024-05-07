@@ -1,4 +1,5 @@
 MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
+ADAPTER_NAME = "VikramSingh178/sdxl-lora-finetune-product-caption"
 VAE_NAME= "madebyollin/sdxl-vae-fp16-fix"
 DATASET_NAME= "hahminlew/kream-product-blip-captions"
 PROJECT_NAME = "Product Photography"
