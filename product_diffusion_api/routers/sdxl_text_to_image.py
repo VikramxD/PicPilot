@@ -119,7 +119,7 @@ async def sdxl_v0_lora_inference_batch(data: BatchInputFormat):
     Raises:
         HTTPException: If the number of requests exceeds the maximum queue size.
     """
-    MAX_QUEUE_SIZE = 32
+    MAX_QUEUE_SIZE = 64
 
     if len(data.batch_input) > MAX_QUEUE_SIZE:
         raise HTTPException(status_code=400, detail=f"Number of requests exceeds maximum queue size ({MAX_QUEUE_SIZE})")
