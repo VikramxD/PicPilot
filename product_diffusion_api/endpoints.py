@@ -28,7 +28,8 @@ async def root():
         'author': 'Vikramjeet Singh',
         'contact': {
             'email': 'singh.vikram.1782000@gmail.com',
-            'github': 'https://github.com/vikramxD'
+            'github': 'https://github.com/vikramxD',
+            'website': 'https://vikramxd.github.io'
         },
         'license': 'MIT',
     }
