@@ -1,5 +1,5 @@
 import sys
-
+from torchao.quantization import apply_dynamic_quant
 sys.path.append("../scripts")  # Path of the scripts directory
 import config
 from fastapi import APIRouter, HTTPException
@@ -10,15 +10,46 @@ from typing import List
 import uuid
 from diffusers import DiffusionPipeline
 import torch
-import torch_tensorrt
 from functools import lru_cache
 
 torch._inductor.config.conv_1x1_as_mm = True
 torch._inductor.config.coordinate_descent_tuning = True
 torch._inductor.config.epilogue_fusion = False
 torch._inductor.config.coordinate_descent_check_all_directions = True
+torch._inductor.config.force_fuse_int_mm_with_mul = True
+torch._inductor.config.use_mixed_mm = True
 
 router = APIRouter()
+
+
+def dynamic_quant_filter_fn(mod, *args):
+    return (
+        isinstance(mod, torch.nn.Linear)
+        and mod.in_features > 16
+        and (mod.in_features, mod.out_features)
+        not in [
+            (1280, 640),
+            (1920, 1280),
+            (1920, 640),
+            (2048, 1280),
+            (2048, 2560),
+            (2560, 1280),
+            (256, 128),
+            (2816, 1280),
+            (320, 640),
+            (512, 1536),
+            (512, 256),
+            (512, 512),
+            (640, 1280),
+            (640, 1920),
+            (640, 320),
+            (640, 5120),
+            (640, 640),
+            (960, 320),
+            (960, 640),
+        ]
+    )
+
 
 
 # Utility function to convert PIL image to base64 encoded JSON
@@ -37,14 +68,14 @@ def load_pipeline(model_name, adapter_name):
         "cuda"
     )
     pipe.load_lora_weights(adapter_name)
+    pipe.unload_lora_weights()
     pipe.unet.to(memory_format=torch.channels_last)
-    pipe.vae.to(memory_format=torch.channels_last)
-    # pipe.unet = torch.compile(
-    # pipe.unet,
-    # mode = 'max-autotime'
-    # )
-
+    pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead", fullgraph=True)
     pipe.fuse_qkv_projections()
+    apply_dynamic_quant(pipe.unet, dynamic_quant_filter_fn)
+    apply_dynamic_quant(pipe.vae, dynamic_quant_filter_fn)
+    
+  
 
     return pipe
 
