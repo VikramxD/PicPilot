@@ -37,13 +37,13 @@ def load_pipeline(model_name, adapter_name):
         "cuda"
     )
     pipe.load_lora_weights(adapter_name)
+    pipe.unet = torch.compile(
+    pipe.unet,
+    mode = 'max-autotune'
+    )
     pipe.unet.to(memory_format=torch.channels_last)
     pipe.vae.to(memory_format=torch.channels_last)
-    # pipe.unet = torch.compile(
-    # pipe.unet,
-    # mode = 'max-autotime'
-    # )
-
+    
     pipe.fuse_qkv_projections()
 
     return pipe
