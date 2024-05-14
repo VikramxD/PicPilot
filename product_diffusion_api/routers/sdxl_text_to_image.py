@@ -1,5 +1,6 @@
 import sys
 from torchao.quantization import apply_dynamic_quant
+
 sys.path.append("../scripts")  # Path of the scripts directory
 import config
 from fastapi import APIRouter, HTTPException
@@ -11,6 +12,9 @@ import uuid
 from diffusers import DiffusionPipeline
 import torch
 from functools import lru_cache
+from s3_manager import S3ManagerService
+from PIL import Image
+import io
 
 torch._inductor.config.conv_1x1_as_mm = True
 torch._inductor.config.coordinate_descent_tuning = True
@@ -52,18 +56,30 @@ def dynamic_quant_filter_fn(mod, *args):
 
 
 
-# Utility function to convert PIL image to base64 encoded JSON
+
+
 def pil_to_b64_json(image):
-    # Generate a UUID for the image
     image_id = str(uuid.uuid4())
     buffered = BytesIO()
     image.save(buffered, format="PNG")
     b64_image = base64.b64encode(buffered.getvalue()).decode("utf-8")
     return {"image_id": image_id, "b64_image": b64_image}
 
-def upload_pil_to_s3(image):
-    image
-    
+
+def pil_to_s3_json(image: Image.Image, file_name: str) -> str:
+    image_id = str(uuid.uuid4())
+    s3_uploader = S3ManagerService()
+    image_bytes = io.BytesIO()
+    image.save(image_bytes, format="PNG")
+    image_bytes.seek(0)
+
+    unique_file_name = s3_uploader.generate_unique_file_name(file_name)
+    s3_uploader.upload_file(image_bytes, unique_file_name)
+    signed_url = s3_uploader.generate_signed_url(
+        unique_file_name, exp=43200
+    )  # 12 hours
+    return {"image_id": image_id, "url": signed_url}
+
 
 @lru_cache(maxsize=1)
 def load_pipeline(model_name, adapter_name):
@@ -77,9 +93,6 @@ def load_pipeline(model_name, adapter_name):
     pipe.fuse_qkv_projections()
     apply_dynamic_quant(pipe.unet, dynamic_quant_filter_fn)
     apply_dynamic_quant(pipe.vae, dynamic_quant_filter_fn)
-    
-  
-
     return pipe
 
 
@@ -125,12 +138,17 @@ class SDXLLoraInference:
         self.num_inference_steps = num_inference_steps
         self.guidance_scale = guidance_scale
 
-    def run_inference(self):
+    def run_inference(self, mode: str = "b64_json") -> str:
         """
         Runs the inference process and returns the generated image.
 
+        Parameters:
+            mode (str): The mode for returning the generated image.
+                        Possible values: "b64_json", "s3_json".
+                        Defaults to "b64_json".
+
         Returns:
-            str: The generated image in base64-encoded JSON format.
+            str: The generated image in the specified format.
         """
         image = self.pipe(
             prompt=self.prompt,
@@ -139,7 +157,14 @@ class SDXLLoraInference:
             negative_prompt=self.negative_prompt,
             num_images_per_prompt=self.num_images,
         ).images[0]
-        return pil_to_b64_json(image)
+        
+        if mode == "s3_json":
+            s3_url = pil_to_s3_json(image)
+            return pil_to_s3_json(image, s3_url)
+        elif mode == "b64_json":
+            return pil_to_b64_json(image)
+        else:
+            raise ValueError("Invalid mode. Supported modes are 'b64_json' and 's3_json'.")
 
 
 # Input format for single request
@@ -170,7 +195,7 @@ async def sdxl_v0_lora_inference(data: InputFormat):
     return output_json
 
 
-# Endpoint for batch requests
+
 @router.post("/sdxl_v0_lora_inference/batch")
 async def sdxl_v0_lora_inference_batch(data: BatchInputFormat):
     """
