@@ -2,4 +2,4 @@
 /scripts/wandb
 variables.tf
 .terraform
-
+config.env

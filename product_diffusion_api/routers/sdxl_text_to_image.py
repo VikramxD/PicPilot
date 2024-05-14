@@ -61,6 +61,9 @@ def pil_to_b64_json(image):
     b64_image = base64.b64encode(buffered.getvalue()).decode("utf-8")
     return {"image_id": image_id, "b64_image": b64_image}
 
+def upload_pil_to_s3(image):
+    image
+    
 
 @lru_cache(maxsize=1)
 def load_pipeline(model_name, adapter_name):
@@ -203,3 +206,4 @@ async def sdxl_v0_lora_inference_batch(data: BatchInputFormat):
         processed_requests.append(output_json)
 
     return {"message": "Requests processed successfully", "data": processed_requests}
+
