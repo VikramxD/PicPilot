@@ -1,33 +1,33 @@
 import base64
 import io
+import os
 import boto3
 from botocore.config import Config
 import random
 import string
 from dotenv import load_dotenv
 
-env = load_dotenv('../config.env')
+# Load environment variables from the .env file
+load_dotenv('../config.env')
 
-
-class ImageService:
-    def _init_(self):
+class S3ManagerService:
+    def __init__(self):
         self.s3 = boto3.client(
             "s3",
             config=Config(signature_version="s3v4"),
-            aws_access_key_id=env.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=env.AWS_SECRET_ACCESS_KEY,
-            region_name=env.AWS_REGION,
+            aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
+            region_name=os.getenv('AWS_REGION'),
         )
-
-    def generate_signed_url(self, file_name: str, exp: int = 1800) -> str:
+    
+    def generate_signed_url(self, file_name: str, exp: int = 43200) -> str:  # 43200 seconds = 12 hours
         return self.s3.generate_presigned_url(
             "get_object",
-            Params={"Bucket": env.AWS_BUCKET_NAME, "Key": file_name},
+            Params={"Bucket": os.getenv('AWS_BUCKET_NAME'), "Key": file_name},
             ExpiresIn=exp,
         )
 
-    def generate_unique_file_name(self, file) -> str:
-        file_name = file.filename
+    def generate_unique_file_name(self, file_name: str) -> str:
         random_string = "".join(
             random.choices(string.ascii_uppercase + string.digits, k=10)
         )
@@ -36,7 +36,7 @@ class ImageService:
         return f"{file_real_name}-{random_string}.{file_extension}"
 
     def upload_file(self, file, file_name) -> str:
-        self.s3.upload_fileobj(file, env.AWS_BUCKET_NAME, file_name)
+        self.s3.upload_fileobj(file, os.getenv('AWS_BUCKET_NAME'), file_name)
         return file_name
 
     def upload_base64_file(self, base64_file: str, file_name: str) -> str:
@@ -45,5 +45,9 @@ class ImageService:
     def get_object(self, file_name: str, bucket: str):
         try:
             return self.s3.get_object(Bucket=bucket, Key=file_name)
-        except:  # noqa: E722
+        except self.s3.exceptions.NoSuchKey:
+            print(f"The file {file_name} does not exist in the bucket {bucket}.")
+            return None
+        except Exception as e:
+            print(f"An error occurred: {e}")
             return None
