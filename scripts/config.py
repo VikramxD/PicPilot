@@ -3,6 +3,8 @@ ADAPTER_NAME = "VikramSingh178/sdxl-lora-finetune-product-caption"
 VAE_NAME= "madebyollin/sdxl-vae-fp16-fix"
 DATASET_NAME= "hahminlew/kream-product-blip-captions"
 PROJECT_NAME = "Product Photography"
+PRODUCTS_10k_DATASET = "amaye15/Products-10k"
+
 
 class Config:
     def __init__(self):

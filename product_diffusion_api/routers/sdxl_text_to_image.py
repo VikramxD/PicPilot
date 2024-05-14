@@ -231,6 +231,7 @@ async def sdxl_v0_lora_inference_batch(data: BatchInputFormat):
             item.num_images,
             item.num_inference_steps,
             item.guidance_scale,
+            item.mode,
         )
         output_json = inference.run_inference()
         processed_requests.append(output_json)
