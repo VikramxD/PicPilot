@@ -31,7 +31,7 @@ class S3ManagerService:
         random_string = "".join(
             random.choices(string.ascii_uppercase + string.digits, k=10)
         )
-        file_extension = file_name.split(".")[-1]
+        file_extension = "png"
         file_real_name = file_name.split(".")[0]
         return f"{file_real_name}-{random_string}.{file_extension}"
 
