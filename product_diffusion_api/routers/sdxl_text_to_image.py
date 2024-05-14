@@ -66,7 +66,7 @@ def pil_to_b64_json(image):
     return {"image_id": image_id, "b64_image": b64_image}
 
 
-def pil_to_s3_json(image: Image.Image, file_name: str) -> str:
+def pil_to_s3_json(image: Image.Image,file_name) -> str:
     image_id = str(uuid.uuid4())
     s3_uploader = S3ManagerService()
     image_bytes = io.BytesIO()
@@ -91,8 +91,8 @@ def load_pipeline(model_name, adapter_name):
     pipe.unet.to(memory_format=torch.channels_last)
     pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead", fullgraph=True)
     pipe.fuse_qkv_projections()
-    apply_dynamic_quant(pipe.unet, dynamic_quant_filter_fn)
-    apply_dynamic_quant(pipe.vae, dynamic_quant_filter_fn)
+    #apply_dynamic_quant(pipe.unet, dynamic_quant_filter_fn)
+    #apply_dynamic_quant(pipe.vae, dynamic_quant_filter_fn)
     return pipe
 
 
@@ -130,6 +130,7 @@ class SDXLLoraInference:
         num_images: int,
         num_inference_steps: int,
         guidance_scale: float,
+        mode :str
     ) -> None:
         self.pipe = loaded_pipeline
         self.prompt = prompt
@@ -137,8 +138,10 @@ class SDXLLoraInference:
         self.num_images = num_images
         self.num_inference_steps = num_inference_steps
         self.guidance_scale = guidance_scale
+        self.mode = mode 
+        
 
-    def run_inference(self, mode: str = "b64_json") -> str:
+    def run_inference(self) -> str:
         """
         Runs the inference process and returns the generated image.
 
@@ -158,10 +161,10 @@ class SDXLLoraInference:
             num_images_per_prompt=self.num_images,
         ).images[0]
         
-        if mode == "s3_json":
-            s3_url = pil_to_s3_json(image)
-            return pil_to_s3_json(image, s3_url)
-        elif mode == "b64_json":
+        if self.mode == "s3_json":
+            s3_url = pil_to_s3_json(image,'sdxl_image')
+            return s3_url
+        elif self.mode == "b64_json":
             return pil_to_b64_json(image)
         else:
             raise ValueError("Invalid mode. Supported modes are 'b64_json' and 's3_json'.")
@@ -174,6 +177,7 @@ class InputFormat(BaseModel):
     guidance_scale: float
     negative_prompt: str
     num_images: int
+    mode: str
 
 
 # Input format for batch requests
@@ -190,6 +194,7 @@ async def sdxl_v0_lora_inference(data: InputFormat):
         data.num_images,
         data.num_inference_steps,
         data.guidance_scale,
+        data.mode
     )
     output_json = inference.run_inference()
     return output_json
