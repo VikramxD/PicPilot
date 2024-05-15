@@ -4,6 +4,8 @@ VAE_NAME= "madebyollin/sdxl-vae-fp16-fix"
 DATASET_NAME= "hahminlew/kream-product-blip-captions"
 PROJECT_NAME = "Product Photography"
 PRODUCTS_10k_DATASET = "amaye15/Products-10k"
+CAPTIONING_MODEL_NAME = "Salesforce/blip-image-captioning-large"
+
 
 
 class Config:
