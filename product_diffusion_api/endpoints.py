@@ -5,6 +5,7 @@ from routers import painting
 
 
 
+
 app = FastAPI(openapi_url='/api/v1/product-diffusion/openapi.json',docs_url='/api/v1/product_diffusion/docs')
 app.add_middleware(
     CORSMiddleware,
@@ -39,3 +40,4 @@ async def root():
 @app.get("/health")
 def check_health():
     return {"status": "ok"}
+
