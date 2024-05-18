@@ -82,11 +82,13 @@ def pil_to_s3_json(image: Image.Image,file_name) -> str:
 
 
 @lru_cache(maxsize=1)
-def load_pipeline(model_name, adapter_name):
+def load_pipeline(model_name, adapter_name,adapter_name_2):
     pipe = DiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.bfloat16).to(
         "cuda"
     )
     pipe.load_lora_weights(adapter_name)
+    pipe.load_lora_weights(adapter_name_2)
+    pipe.set_adapters([adapter_name, adapter_name_2], adapter_weights=[0.7, 0.8])
     pipe.unload_lora_weights()
     pipe.unet.to(memory_format=torch.channels_last)
     pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead", fullgraph=True)
@@ -96,7 +98,7 @@ def load_pipeline(model_name, adapter_name):
     return pipe
 
 
-loaded_pipeline = load_pipeline(config.MODEL_NAME, config.ADAPTER_NAME)
+loaded_pipeline = load_pipeline(config.MODEL_NAME, config.ADAPTER_NAME,config.ADAPTER_NAME_2)
 
 
 # SDXLLoraInference class for running inference

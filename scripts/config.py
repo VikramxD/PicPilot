@@ -1,9 +1,10 @@
 MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
 ADAPTER_NAME = "VikramSingh178/sdxl-lora-finetune-product-caption"
+ADAPTER_NAME_2 = "VikramSingh178/Products10k-SDXL-Lora"
 VAE_NAME= "madebyollin/sdxl-vae-fp16-fix"
 DATASET_NAME= "hahminlew/kream-product-blip-captions"
 PROJECT_NAME = "Product Photography"
-PRODUCTS_10k_DATASET = "amaye15/Products-10k"
+PRODUCTS_10k_DATASET = "VikramSingh178/Products-10k-BLIP-captions"
 CAPTIONING_MODEL_NAME = "Salesforce/blip-image-captioning-base"
 
 
@@ -14,7 +15,7 @@ class Config:
         self.pretrained_vae_model_name_or_path = VAE_NAME
         self.revision = None
         self.variant = None
-        self.dataset_name = DATASET_NAME
+        self.dataset_name = PRODUCTS_10k_DATASET
         self.dataset_config_name = None
         self.train_data_dir = None
         self.image_column = 'image'
