@@ -51,16 +51,8 @@ from diffusers.utils.torch_utils import is_compiled_module
 logger = get_logger(__name__)
 
 
+
 def save_model_card(
-    repo_id: str,
-    images: list = None,
-    base_model: str = None,
-    dataset_name: str = None,
-    train_text_encoder: bool = False,
-    repo_folder: str = None,
-    vae_path: str = None,
-):
-    def save_model_card(
         repo_id: str,
         images: list = None,
         base_model: str = None,
@@ -533,7 +525,7 @@ def main():
     else:
         data_files = {}
         if config.train_data_dir is not None:
-            data_files["train"] = os.path.join(config.train_data_dir, "**")
+            data_files["test"] = os.path.join(config.train_data_dir, "**")
         dataset = load_dataset(
             "imagefolder",
             data_files=data_files,
@@ -544,7 +536,7 @@ def main():
 
     # Preprocessing the datasets.
     # We need to tokenize inputs and targets.
-    column_names = dataset["train"].column_names
+    column_names = dataset["test"].column_names
 
     # 6. Get the column names for input/target.
     DATASET_NAME_MAPPING = {
@@ -651,13 +643,13 @@ def main():
 
     with accelerator.main_process_first():
         if config.max_train_samples is not None:
-            dataset["train"] = (
-                dataset["train"]
+            dataset["test"] = (
+                dataset["test"]
                 .shuffle(seed=config.seed)
                 .select(range(config.max_train_samples))
             )
         # Set the training transforms
-        train_dataset = dataset["train"].with_transform(
+        train_dataset = dataset["test"].with_transform(
             preprocess_train, output_all_columns=True
         )
 
