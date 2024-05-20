@@ -1,6 +1,4 @@
 import sys
-from torchao.quantization import apply_dynamic_quant
-
 sys.path.append("../scripts")  # Path of the scripts directory
 import config
 from fastapi import APIRouter, HTTPException
@@ -16,6 +14,8 @@ from s3_manager import S3ManagerService
 from PIL import Image
 import io
 
+
+
 torch._inductor.config.conv_1x1_as_mm = True
 torch._inductor.config.coordinate_descent_tuning = True
 torch._inductor.config.epilogue_fusion = False
@@ -24,35 +24,6 @@ torch._inductor.config.force_fuse_int_mm_with_mul = True
 torch._inductor.config.use_mixed_mm = True
 
 router = APIRouter()
-
-
-def dynamic_quant_filter_fn(mod, *args):
-    return (
-        isinstance(mod, torch.nn.Linear)
-        and mod.in_features > 16
-        and (mod.in_features, mod.out_features)
-        not in [
-            (1280, 640),
-            (1920, 1280),
-            (1920, 640),
-            (2048, 1280),
-            (2048, 2560),
-            (2560, 1280),
-            (256, 128),
-            (2816, 1280),
-            (320, 640),
-            (512, 1536),
-            (512, 256),
-            (512, 512),
-            (640, 1280),
-            (640, 1920),
-            (640, 320),
-            (640, 5120),
-            (640, 640),
-            (960, 320),
-            (960, 640),
-        ]
-    )
 
 
 
@@ -83,18 +54,17 @@ def pil_to_s3_json(image: Image.Image,file_name) -> str:
 
 @lru_cache(maxsize=1)
 def load_pipeline(model_name, adapter_name,adapter_name_2):
-    pipe = DiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.bfloat16).to(
+    pipe = DiffusionPipeline.from_pretrained(model_name, torch_dtype= torch.bfloat16 ).to(
         "cuda"
     )
     pipe.load_lora_weights(adapter_name)
     pipe.load_lora_weights(adapter_name_2)
-    pipe.set_adapters([adapter_name, adapter_name_2], adapter_weights=[0.7, 0.8])
+    pipe.set_adapters([adapter_name, adapter_name_2], adapter_weights=[0.7, 0.5])
+    pipe.fuse_lora()
     pipe.unload_lora_weights()
     pipe.unet.to(memory_format=torch.channels_last)
-    pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead", fullgraph=True)
+    pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead")
     pipe.fuse_qkv_projections()
-    #apply_dynamic_quant(pipe.unet, dynamic_quant_filter_fn)
-    #apply_dynamic_quant(pipe.vae, dynamic_quant_filter_fn)
     return pipe
 
 
