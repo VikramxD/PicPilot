@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import sdxl_text_to_image
 from routers import painting
+from apitally.fastapi import ApitallyMiddleware
+
 
 
 
@@ -13,8 +15,9 @@ app.add_middleware(
     allow_methods = ["*"],
     allow_headers=["*"],
     allow_credentials = True
-    
+       
 )
+app.add_middleware(ApitallyMiddleware, client_id="client_id",env="dev")
 
 app.include_router(sdxl_text_to_image.router, prefix='/api/v1/product-diffusion')
 app.include_router(painting.router,prefix='/api/v1/product-diffusion')

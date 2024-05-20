@@ -13,9 +13,9 @@ from functools import lru_cache
 from s3_manager import S3ManagerService
 from PIL import Image
 import io
+from utils import accelerator
 
-
-
+device = accelerator()
 torch._inductor.config.conv_1x1_as_mm = True
 torch._inductor.config.coordinate_descent_tuning = True
 torch._inductor.config.epilogue_fusion = False
@@ -54,16 +54,14 @@ def pil_to_s3_json(image: Image.Image,file_name) -> str:
 
 @lru_cache(maxsize=1)
 def load_pipeline(model_name, adapter_name,adapter_name_2):
-    pipe = DiffusionPipeline.from_pretrained(model_name, torch_dtype= torch.bfloat16 ).to(
-        "cuda"
-    )
+    pipe = DiffusionPipeline.from_pretrained(model_name, torch_dtype= torch.bfloat16 ).to(device)
     pipe.load_lora_weights(adapter_name)
     pipe.load_lora_weights(adapter_name_2)
     pipe.set_adapters([adapter_name, adapter_name_2], adapter_weights=[0.7, 0.5])
     pipe.fuse_lora()
     pipe.unload_lora_weights()
     pipe.unet.to(memory_format=torch.channels_last)
-    pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead")
+    #pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead")
     pipe.fuse_qkv_projections()
     return pipe
 
