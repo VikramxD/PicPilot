@@ -1,13 +1,27 @@
+<<<<<<< HEAD:api/routers/sdxl_text_to_image.py
+=======
+import sys
+sys.path.append("../scripts")  # Path of the scripts directory
+>>>>>>> 846a4a3 (commit):product_diffusion_api/routers/sdxl_text_to_image.py
 import config
 from fastapi import APIRouter, HTTPException
 from typing import List
 from diffusers import DiffusionPipeline
 import torch
 from functools import lru_cache
+<<<<<<< HEAD:api/routers/sdxl_text_to_image.py
 from scripts.api_utils import accelerator
 from models.sdxl_input import InputFormat
 from async_batcher.batcher import AsyncBatcher
 from scripts.api_utils import pil_to_b64_json, pil_to_s3_json
+=======
+from s3_manager import S3ManagerService
+from PIL import Image
+import io
+
+
+
+>>>>>>> 846a4a3 (commit):product_diffusion_api/routers/sdxl_text_to_image.py
 torch._inductor.config.conv_1x1_as_mm = True
 torch._inductor.config.coordinate_descent_tuning = True
 torch._inductor.config.epilogue_fusion = False
@@ -20,10 +34,38 @@ device = accelerator()
 router = APIRouter()
 
 
+<<<<<<< HEAD:api/routers/sdxl_text_to_image.py
+=======
+
+
+
+def pil_to_b64_json(image):
+    image_id = str(uuid.uuid4())
+    buffered = BytesIO()
+    image.save(buffered, format="PNG")
+    b64_image = base64.b64encode(buffered.getvalue()).decode("utf-8")
+    return {"image_id": image_id, "b64_image": b64_image}
+
+
+def pil_to_s3_json(image: Image.Image,file_name) -> str:
+    image_id = str(uuid.uuid4())
+    s3_uploader = S3ManagerService()
+    image_bytes = io.BytesIO()
+    image.save(image_bytes, format="PNG")
+    image_bytes.seek(0)
+
+    unique_file_name = s3_uploader.generate_unique_file_name(file_name)
+    s3_uploader.upload_file(image_bytes, unique_file_name)
+    signed_url = s3_uploader.generate_signed_url(
+        unique_file_name, exp=43200
+    )  # 12 hours
+    return {"image_id": image_id, "url": signed_url}
+>>>>>>> 846a4a3 (commit):product_diffusion_api/routers/sdxl_text_to_image.py
 
 
 # Load the diffusion pipeline
 @lru_cache(maxsize=1)
+<<<<<<< HEAD:api/routers/sdxl_text_to_image.py
 def load_pipeline(model_name, adapter_name,enable_compile:bool):
     """
     Load the diffusion pipeline with the specified model and adapter names.
@@ -43,6 +85,19 @@ def load_pipeline(model_name, adapter_name,enable_compile:bool):
     if enable_compile is True:
         pipe.unet = torch.compile(pipe.unet, mode="max-autotune")
         pipe.vae.decode = torch.compile(pipe.vae.decode, mode="max-autotune")
+=======
+def load_pipeline(model_name, adapter_name,adapter_name_2):
+    pipe = DiffusionPipeline.from_pretrained(model_name, torch_dtype= torch.bfloat16 ).to(
+        "cuda"
+    )
+    pipe.load_lora_weights(adapter_name)
+    pipe.load_lora_weights(adapter_name_2)
+    pipe.set_adapters([adapter_name, adapter_name_2], adapter_weights=[0.7, 0.5])
+    pipe.fuse_lora()
+    pipe.unload_lora_weights()
+    pipe.unet.to(memory_format=torch.channels_last)
+    pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead")
+>>>>>>> 846a4a3 (commit):product_diffusion_api/routers/sdxl_text_to_image.py
     pipe.fuse_qkv_projections()
     return pipe
 
