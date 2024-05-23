@@ -2,9 +2,16 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import sdxl_text_to_image
 from routers import painting
+
 import logfire
 logfire.configure()
 logfire.configure(pydantic_plugin=logfire.PydanticPlugin(record='all'))
+
+
+
+
+
+
 
 app = FastAPI(openapi_url='/api/v1/product-diffusion/openapi.json',docs_url='/api/v1/product_diffusion/docs')
 app.add_middleware(
@@ -13,7 +20,7 @@ app.add_middleware(
     allow_methods = ["*"],
     allow_headers=["*"],
     allow_credentials = True
-    
+       
 )
 
 app.include_router(sdxl_text_to_image.router, prefix='/api/v1/product-diffusion')
