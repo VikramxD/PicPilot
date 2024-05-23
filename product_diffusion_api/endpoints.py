@@ -4,7 +4,7 @@ from routers import sdxl_text_to_image
 from routers import painting
 
 import logfire
-logfire.configure()
+
 logfire.configure(pydantic_plugin=logfire.PydanticPlugin(record='all'))
 
 
@@ -25,7 +25,7 @@ app.add_middleware(
 
 app.include_router(sdxl_text_to_image.router, prefix='/api/v1/product-diffusion')
 app.include_router(painting.router,prefix='/api/v1/product-diffusion')
-
+logfire.instrument_fastapi(app)
 
 
 
