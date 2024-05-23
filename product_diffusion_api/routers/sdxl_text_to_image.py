@@ -30,6 +30,16 @@ router = APIRouter()
 
 
 def pil_to_b64_json(image):
+    """
+    Converts a PIL image to a base64-encoded JSON object.
+
+    Args:
+        image (PIL.Image.Image): The PIL image object to be converted.
+
+    Returns:
+        dict: A dictionary containing the image ID and the base64-encoded image.
+
+    """
     image_id = str(uuid.uuid4())
     buffered = BytesIO()
     image.save(buffered, format="PNG")
@@ -37,7 +47,18 @@ def pil_to_b64_json(image):
     return {"image_id": image_id, "b64_image": b64_image}
 
 
-def pil_to_s3_json(image: Image.Image,file_name) -> str:
+def pil_to_s3_json(image: Image.Image, file_name) -> str:
+    """
+    Uploads a PIL image to Amazon S3 and returns a JSON object containing the image ID and the signed URL.
+
+    Args:
+        image (PIL.Image.Image): The PIL image to be uploaded.
+        file_name (str): The name of the file.
+
+    Returns:
+        dict: A JSON object containing the image ID and the signed URL.
+
+    """
     image_id = str(uuid.uuid4())
     s3_uploader = S3ManagerService()
     image_bytes = io.BytesIO()
@@ -53,20 +74,29 @@ def pil_to_s3_json(image: Image.Image,file_name) -> str:
 
 
 @lru_cache(maxsize=1)
-def load_pipeline(model_name, adapter_name,adapter_name_2):
-    pipe = DiffusionPipeline.from_pretrained(model_name, torch_dtype= torch.bfloat16 ).to(device)
+def load_pipeline(model_name, adapter_name):
+    """
+    Load the diffusion pipeline with the specified model and adapter names.
+
+    Args:
+        model_name (str): The name of the pretrained model.
+        adapter_name (str): The name of the adapter.
+
+    Returns:
+        DiffusionPipeline: The loaded diffusion pipeline.
+    """
+    pipe = DiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.bfloat16).to(device)
     pipe.load_lora_weights(adapter_name)
-    pipe.load_lora_weights(adapter_name_2)
-    pipe.set_adapters([adapter_name, adapter_name_2], adapter_weights=[0.7, 0.5])
     pipe.fuse_lora()
     pipe.unload_lora_weights()
     pipe.unet.to(memory_format=torch.channels_last)
-    #pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead")
+    pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead")
+    pipe.vae.decode = torch.compile(pipe.vae.decode, mode="reduce-overhead")
     pipe.fuse_qkv_projections()
     return pipe
 
 
-loaded_pipeline = load_pipeline(config.MODEL_NAME, config.ADAPTER_NAME,config.ADAPTER_NAME_2)
+loaded_pipeline = load_pipeline(config.MODEL_NAME, config.ADAPTER_NAME)
 
 
 # SDXLLoraInference class for running inference

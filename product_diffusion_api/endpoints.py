@@ -2,8 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import sdxl_text_to_image
 from routers import painting
-
 import logfire
+
+
+
 
 logfire.configure(pydantic_plugin=logfire.PydanticPlugin(record='all'))
 
