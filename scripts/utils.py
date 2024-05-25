@@ -1,8 +1,9 @@
 import torch
 from ultralytics import YOLO
-from transformers import pipeline 
-import cv2
+from transformers import SamModel,SamProcessor
 import numpy as np
+from PIL import Image 
+from config import SEGMENTATION_MODEL_NAME
 
 
 def accelerator():
@@ -22,84 +23,89 @@ def accelerator():
 
 
 
-
-def center_scaled_roi(image_path, bg_size, scale_factor):
+class ImageAugmentation:
     """
-    Center and scale the region of interest (ROI) within a background image.
+    Class for centering an image on a white background using ROI.
+
+    Attributes:
+        background_size (tuple): Size of the larger background where the image will be placed.
+    """
+
+    def __init__(self, background_size=(1920, 1080)):
+        """
+        Initialize ImageAugmentation class.
+
+        Args:
+            background_size (tuple, optional): Size of the larger background. Default is (1920, 1080).
+        """
+        self.background_size = background_size
+
+    def center_image_on_background(self, image, roi):
+        """
+        Center the input image on a larger background using ROI.
+
+        Args:
+            image (numpy.ndarray): Input image.
+            roi (tuple): Coordinates of the region of interest (x, y, width, height).
+
+        Returns:
+            numpy.ndarray: Image centered on a larger background.
+        """
+        w, h = self.background_size
+        bg = np.ones((h, w, 3), dtype=np.uint8) * 255  # White background
+        x, y, roi_w, roi_h = roi
+        bg[(h - roi_h) // 2:(h - roi_h) // 2 + roi_h, (w - roi_w) // 2:(w - roi_w) // 2 + roi_w] = image
+        return bg
+
+    def detect_region_of_interest(self, image):
+        """
+        Detect the region of interest in the input image.
+
+        Args:
+            image (numpy.ndarray): Input image.
+
+        Returns:
+            tuple: Coordinates of the region of interest (x, y, width, height).
+        """
+        # Convert image to grayscale
+        grayscale_image = np.array(Image.fromarray(image).convert("L"))
+        
+        # Calculate bounding box of non-zero region
+        bbox = Image.fromarray(grayscale_image).getbbox()
+        return bbox
+
+def generate_bbox(image):
+    """
+    Generate bounding box for the input image.
 
     Args:
-        image_path (str): The path to the original image.
-        bg_size (tuple): The size (width, height) of the background image.
-        scale_factor (float): The scaling factor to apply to the ROI.
+        image_path (str): Path to the input image.
 
     Returns:
-        numpy.ndarray: The background image with the scaled ROI centered.
-
+        tuple: Bounding box coordinates (x, y, width, height).
     """
+    # Load YOLOv5 model
+    model = YOLO("yolov8s.pt")
+    results = model(image)
+    # Get bounding box coordinates
+    bbox = results[0].boxes.xyxy.int().tolist()
+    return bbox
 
-    original_image = cv2.imread(image_path)
-    height, width = original_image.shape[:2]
+def generate_mask():
+    model = SamModel.from_pretrained("SEGMENTATION_MODEL_NAMEz")
+    processor = SamProcessor.from_pretrained("SEGMENTATION_MODEL_NAME")
+    
+    
 
-    # Convert the image to grayscale
-    gray = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
 
-    # Apply Gaussian blur to reduce noise
-    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+if __name__ == "__main__":
+    augmenter = ImageAugmentation()
+    image_path = "/Users/vikram/Python/product_diffusion_api/sample_data/example1.jpg"
+    image = np.array(Image.open(image_path).convert("RGB"))
+    roi = augmenter.detect_region_of_interest(image)
+    centered_image = augmenter.center_image_on_background(image, roi)
+    bbox = generate_bbox(centered_image)
+    print(bbox)
+    
 
-    # Perform edge detection using Canny
-    edges = cv2.Canny(blurred, 50, 150)
 
-    # Find contours in the edged image
-    contours, _ = cv2.findContours(edges.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-    # Initialize variables to store ROI coordinates
-    roi_x, roi_y, roi_w, roi_h = 0, 0, 0, 0
-
-    # Loop over the contours
-    for contour in contours:
-        # Approximate the contour
-        peri = cv2.arcLength(contour, True)
-        approx = cv2.approxPolyDP(contour, 0.02 * peri, True)
-
-        # If the contour has 4 vertices, it's likely a rectangle
-        if len(approx) == 4:
-            # Get the bounding box of the contour
-            x, y, w, h = cv2.boundingRect(approx)
-            roi_x, roi_y, roi_w, roi_h = x, y, w, h
-            break
-
-    # Calculate dimensions for the background
-    bg_width, bg_height = bg_size
-
-    # Resize the ROI based on the scale factor
-    scaled_roi_w = int(roi_w * scale_factor)
-    scaled_roi_h = int(roi_h * scale_factor)
-
-    # Calculate offsets to center the scaled ROI within the background
-    x_offset = (bg_width - scaled_roi_w) // 2
-    y_offset = (bg_height - scaled_roi_h) // 2
-
-    # Resize the original image
-    scaled_image = cv2.resize(original_image, (scaled_roi_w, scaled_roi_h))
-
-    # Create a blank background
-    background = np.zeros((bg_height, bg_width, 3), dtype=np.uint8)
-
-    # Place the scaled ROI onto the background
-    background[y_offset:y_offset+scaled_roi_h, x_offset:x_offset+scaled_roi_w] = scaled_image
-
-    return background
-
-# Define dimensions for the background (larger than the ROI)
-bg_width, bg_height = 800, 600
-
-# Define the scale factor
-scale_factor = 0.5  # Adjust this value as needed
-
-# Call the function to center the scaled ROI within the background
-centered_scaled_roi = center_scaled_roi('image.jpg', (bg_width, bg_height), scale_factor)
-
-# Display the centered scaled ROI
-cv2.imshow('Centered Scaled ROI', centered_scaled_roi)
-cv2.waitKey(0)
-cv2.destroyAllWindows()

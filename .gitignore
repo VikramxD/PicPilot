@@ -3,3 +3,5 @@
 variables.tf
 .terraform
 config.env
+/scripts/yolov8s*
+/scripts/*jpg
