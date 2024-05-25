@@ -21,3 +21,4 @@ datasets
 peft
 async-batcher
 ultralytics
+opencv-python-headless
