@@ -20,3 +20,4 @@ Jinja2
 datasets
 peft
 async-batcher
+ultralytics
