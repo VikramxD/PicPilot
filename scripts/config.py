@@ -6,6 +6,7 @@ DATASET_NAME= "hahminlew/kream-product-blip-captions"
 PROJECT_NAME = "Product Photography"
 PRODUCTS_10k_DATASET = "VikramSingh178/Products-10k-BLIP-captions"
 CAPTIONING_MODEL_NAME = "Salesforce/blip-image-captioning-base"
+SEGMENTATION_MODEL_NAME = "facebook/sam-vit-huge"
 
 
 
