@@ -1,8 +1,8 @@
 import torch
 from ultralytics import YOLO
-from transformers import SamModel,SamProcessor
+from transformers import SamModel, SamProcessor
 import numpy as np
-from PIL import Image 
+from PIL import Image
 from config import SEGMENTATION_MODEL_NAME
 
 
@@ -14,13 +14,12 @@ def accelerator():
         str: The name of the device accelerator ('cuda', 'mps', or 'cpu').
     """
     if torch.cuda.is_available():
-        device = 'cuda'
+        device = "cuda"
     elif torch.backends.mps.is_available():
-        device = 'mps'
+        device = "mps"
     else:
-        device = 'cpu'
+        device = "cpu"
     return device
-
 
 
 class ImageAugmentation:
@@ -54,7 +53,10 @@ class ImageAugmentation:
         w, h = self.background_size
         bg = np.ones((h, w, 3), dtype=np.uint8) * 255  # White background
         x, y, roi_w, roi_h = roi
-        bg[(h - roi_h) // 2:(h - roi_h) // 2 + roi_h, (w - roi_w) // 2:(w - roi_w) // 2 + roi_w] = image
+        bg[
+            (h - roi_h) // 2 : (h - roi_h) // 2 + roi_h,
+            (w - roi_w) // 2 : (w - roi_w) // 2 + roi_w,
+        ] = image
         return bg
 
     def detect_region_of_interest(self, image):
@@ -69,10 +71,11 @@ class ImageAugmentation:
         """
         # Convert image to grayscale
         grayscale_image = np.array(Image.fromarray(image).convert("L"))
-        
+
         # Calculate bounding box of non-zero region
         bbox = Image.fromarray(grayscale_image).getbbox()
         return bbox
+
 
 def generate_bbox(image):
     """
@@ -85,17 +88,39 @@ def generate_bbox(image):
         tuple: Bounding box coordinates (x, y, width, height).
     """
     # Load YOLOv5 model
-    model = YOLO("yolov8s.pt")
+    model = YOLO("../models/yolov8s.pt")
     results = model(image)
     # Get bounding box coordinates
     bbox = results[0].boxes.xyxy.int().tolist()
     return bbox
 
-def generate_mask():
-    model = SamModel.from_pretrained("SEGMENTATION_MODEL_NAMEz")
-    processor = SamProcessor.from_pretrained("SEGMENTATION_MODEL_NAME")
-    
-    
+
+def generate_mask(image):
+    """
+    Generates masks for the given image using a segmentation model.
+
+    Args:
+        image: The input image for which masks need to be generated.
+
+    Returns:
+        masks: A tensor containing the generated masks.
+
+    Raises:
+        None
+    """
+    model = SamModel.from_pretrained(SEGMENTATION_MODEL_NAME).to(device=accelerator())
+    processor = SamProcessor.from_pretrained(SEGMENTATION_MODEL_NAME)
+    inputs = processor(
+        image, input_boxes=[generate_bbox(image)], return_tensors="pt"
+    ).to(torch.float)
+    inputs.to(device=accelerator())
+    outputs = model(**inputs)
+    mask = processor.image_processor.post_process_masks(
+        outputs.pred_masks.cpu(),
+        inputs["original_sizes"].cpu(),
+        inputs["reshaped_input_sizes"].cpu(),
+    )
+    return mask
 
 
 if __name__ == "__main__":
@@ -104,8 +129,7 @@ if __name__ == "__main__":
     image = np.array(Image.open(image_path).convert("RGB"))
     roi = augmenter.detect_region_of_interest(image)
     centered_image = augmenter.center_image_on_background(image, roi)
-    bbox = generate_bbox(centered_image)
-    print(bbox)
-    
-
-
+    masks = generate_mask(Image.fromarray(centered_image))
+    masks = np.array(masks)
+    mask_image = Image.fromarray(masks[0])
+    mask_image.save("mask.jpg")
