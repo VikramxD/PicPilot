@@ -4,6 +4,9 @@ from transformers import SamModel, SamProcessor
 import numpy as np
 from PIL import Image, ImageOps
 from config import SEGMENTATION_MODEL_NAME, DETECTION_MODEL_NAME
+from diffusers.utils import load_image
+
+
 
 def accelerator():
     """
@@ -49,43 +52,51 @@ class ImageAugmentation:
         extended_image.paste(resized_image, (paste_x, paste_y))
         return extended_image
 
-    def generate_mask_from_bbox(self, image: Image) -> np.ndarray:
+    def generate_mask_from_bbox(self,image: Image, segmentation_model: str ,detection_model) -> Image:
         """
         Generates a mask from the bounding box of an image using YOLO and SAM-ViT models.
+
+        Args:
+            image_path (str): The path to the input image.
+
+        Returns:
+            numpy.ndarray: The generated mask as a NumPy array.
         """
-        yolo = YOLO(DETECTION_MODEL_NAME)
-        processor = SamProcessor.from_pretrained(SEGMENTATION_MODEL_NAME)
-        model = SamModel.from_pretrained(SEGMENTATION_MODEL_NAME).to(accelerator())
-        
-        # Run YOLO detection
-        results = yolo(np.array(image))
+    
+        yolo = YOLO(detection_model)
+        processor = SamProcessor.from_pretrained(segmentation_model)
+        model = SamModel.from_pretrained(segmentation_model).to(device=accelerator())
+        results = yolo(image)
         bboxes = results[0].boxes.xyxy.tolist()
-        print(bboxes)
-        
-        
-        # Prepare inputs for SAM
-        inputs = processor(image, input_boxes=[bboxes], return_tensors="pt").to(device=accelerator())
+        input_boxes = [[[bboxes[0]]]]
+        inputs = processor(load_image(image), input_boxes=input_boxes, return_tensors="pt").to("cuda")
         with torch.no_grad():
             outputs = model(**inputs)
-            masks = processor.image_processor.post_process_masks(outputs.pred_masks.cpu(), inputs["original_sizes"].cpu(), inputs["reshaped_input_sizes"].cpu())
-        
-        
-        return masks[0].numpy()
+        mask = processor.image_processor.post_process_masks(
+            outputs.pred_masks.cpu(),
+            inputs["original_sizes"].cpu(),
+            inputs["reshaped_input_sizes"].cpu()
+        )[0][0][0].numpy()
+        mask_image = Image.fromarray(mask)
+        return mask_image
+
+
 
     def invert_mask(self, mask_image: np.ndarray) -> np.ndarray:
         """
         Inverts the given mask image.
         """
-        mask_image = (mask_image * 255).astype(np.uint8)
-        mask_pil = Image.fromarray(mask_image)
         
-        inverted_mask_pil = ImageOps.invert(mask_pil.convert("L"))
+        
+        inverted_mask_pil = ImageOps.invert(mask_image.convert("L"))
         return inverted_mask_pil
 
 if __name__ == "__main__":
-    augmenter = ImageAugmentation(target_width=1920, target_height=1080, roi_scale=0.6)
-    image_path = "/home/product_diffusion_api/sample_data/example1.jpg"
+    augmenter = ImageAugmentation(target_width=2560, target_height=1440, roi_scale=0.7)
+    image_path = "/home/product_diffusion_api/sample_data/example3.jpg"
     image = Image.open(image_path)
     extended_image = augmenter.extend_image(image)
-    mask = augmenter.generate_mask_from_bbox(extended_image)
-    
+    mask = augmenter.generate_mask_from_bbox(extended_image, SEGMENTATION_MODEL_NAME, DETECTION_MODEL_NAME)
+    inverted_mask_image = augmenter.invert_mask(mask)
+    mask.save("mask.jpg")
+    inverted_mask_image.save("inverted_mask.jpg")
