@@ -2,8 +2,6 @@ import torch
 from datasets import load_dataset, Dataset
 from transformers import BlipProcessor, BlipForConditionalGeneration
 from tqdm import tqdm
-
-# Assuming PRODUCTS_10k_DATASET and CAPTIONING_MODEL_NAME are defined in config.py
 from config import PRODUCTS_10k_DATASET, CAPTIONING_MODEL_NAME
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
