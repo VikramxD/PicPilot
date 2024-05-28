@@ -5,8 +5,8 @@ from utils import (accelerator, ImageAugmentation, clear_memory)
 import hydra
 from omegaconf import DictConfig
 from PIL import Image
-import lightning.pytorch as pl
-pl.seed_everything(1234)
+
+
 
 
 class AutoPaintingPipeline:
@@ -39,7 +39,7 @@ class AutoPaintingPipeline:
         clear_memory()
         image = load_image(self.image)
         mask_image = load_image(self.mask_image)
-        output = self.pipeline(prompt=prompt,negative_prompt=negative_prompt,image=image,mask_image=mask_image,num_inference_steps=num_inference_steps,strength=strength,guidance_scale=guidance_scale,height = 1472, width = 2560).images[0]
+        output = self.pipeline(prompt=prompt,negative_prompt=negative_prompt,image=image,mask_image=mask_image,num_inference_steps=num_inference_steps,strength=strength,guidance_scale=guidance_scale,height = 1080, width = 1920).images[0]
         
         return output
     
@@ -54,7 +54,7 @@ def inference(cfg: DictConfig):
     """
     augmenter = ImageAugmentation(target_width=cfg.target_width, target_height=cfg.target_height, roi_scale=cfg.roi_scale)
     model_name = cfg.model
-    image_path = "../sample_data/example5.jpg"
+    image_path = "../sample_data/example1.jpg"
     image = Image.open(image_path)
     extended_image = augmenter.extend_image(image)
     mask_image = augmenter.generate_mask_from_bbox(extended_image, cfg.segmentation_model, cfg.detection_model)
