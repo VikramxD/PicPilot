@@ -3,11 +3,11 @@ detection_model : 'yolov8l'
 model : 'kandinsky-community/kandinsky-2-2-decoder-inpaint'
 target_width : 1920
 target_height : 1080
-prompt : 'Award Winning Photography of product on a mountain used for camping'
-negative_prompt : 'low resolution , bad resolution, bad quality,bad Artifacts,Weird Artifacts , Poor Lighting'
-roi_scale : 0.6
+prompt : 'product in the kitchen used in cooking 4k'
+negative_prompt : 'low resolution , bad resolution'
+roi_scale : 0.7
 strength : 0.2
-guidance_scale : 7.5
+guidance_scale : 7.0
 num_inference_steps : 800
 output_path : '../outputs'
  
