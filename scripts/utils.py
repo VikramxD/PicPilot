@@ -5,6 +5,25 @@ import numpy as np
 from PIL import Image, ImageOps
 from config import SEGMENTATION_MODEL_NAME, DETECTION_MODEL_NAME
 from diffusers.utils import load_image
+import gc
+
+
+
+
+
+
+
+def clear_memory():
+    """
+    Clears the memory by collecting garbage and emptying the CUDA cache.
+
+    This function is useful when dealing with memory-intensive operations in Python, especially when using libraries like PyTorch.
+
+   """
+    gc.collect()
+    torch.cuda.empty_cache()
+   
+
 
 
 
@@ -93,7 +112,7 @@ class ImageAugmentation:
 
 if __name__ == "__main__":
     augmenter = ImageAugmentation(target_width=2560, target_height=1440, roi_scale=0.7)
-    image_path = "/home/product_diffusion_api/sample_data/example3.jpg"
+    image_path = "../sample_data/example3.jpg"
     image = Image.open(image_path)
     extended_image = augmenter.extend_image(image)
     mask = augmenter.generate_mask_from_bbox(extended_image, SEGMENTATION_MODEL_NAME, DETECTION_MODEL_NAME)
