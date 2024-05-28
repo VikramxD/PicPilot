@@ -111,7 +111,7 @@ class ImageAugmentation:
         return inverted_mask_pil
 
 if __name__ == "__main__":
-    augmenter = ImageAugmentation(target_width=2560, target_height=1440, roi_scale=0.7)
+    augmenter = ImageAugmentation(target_width=1024, target_height=1024, roi_scale=0.5)
     image_path = "../sample_data/example3.jpg"
     image = Image.open(image_path)
     extended_image = augmenter.extend_image(image)
