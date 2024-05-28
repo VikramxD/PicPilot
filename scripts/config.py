@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 MODEL_NAME:str="stabilityai/stable-diffusion-xl-base-1.0"
 ADAPTER_NAME:str = "VikramSingh178/sdxl-lora-finetune-product-caption"
 ADAPTER_NAME_2:str = "VikramSingh178/Products10k-SDXL-Lora"
@@ -13,6 +14,18 @@ ENABLE_COMPILE:bool = True
 INPAINTING_MODEL_NAME:str = 'kandinsky-community/kandinsky-2-2-decoder-inpaint'
 
 
+=======
+MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
+ADAPTER_NAME = "VikramSingh178/sdxl-lora-finetune-product-caption"
+ADAPTER_NAME_2 = "VikramSingh178/Products10k-SDXL-Lora"
+VAE_NAME= "madebyollin/sdxl-vae-fp16-fix"
+DATASET_NAME= "hahminlew/kream-product-blip-captions"
+PROJECT_NAME = "Product Photography"
+PRODUCTS_10k_DATASET = "VikramSingh178/Products-10k-BLIP-captions"
+CAPTIONING_MODEL_NAME = "Salesforce/blip-image-captioning-base"
+SEGMENTATION_MODEL_NAME = "facebook/sam-vit-large"
+DETECTION_MODEL_NAME = "yolov8l"
+>>>>>>> a817fb6 (chore: Update .gitignore and add new files for inpainting pipeline)
 
 
 
