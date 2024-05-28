@@ -3,11 +3,11 @@ from diffusers import AutoPipelineForInpainting
 from diffusers.utils import load_image
 from utils import (accelerator, ImageAugmentation, clear_memory)
 import hydra
-from omegaconf import OmegaConf, DictConfig
+from omegaconf import DictConfig
 from PIL import Image
 import lightning.pytorch as pl
-pl.seed_everything(42)
-generator = torch.Generator("cuda").manual_seed(92)
+pl.seed_everything(1234)
+
 
 class AutoPaintingPipeline:
     """
@@ -26,7 +26,7 @@ class AutoPaintingPipeline:
         self.image = load_image(image)
         self.mask_image = load_image(mask_image)
         self.pipeline.to(self.device)
-        self.pipeline.unet = torch.compile(self.pipeline.unet, mode="reduce-overhead", fullgraph=True)
+       
         
         
     def run_inference(self, prompt: str, negative_prompt: str, num_inference_steps: int, strength: float, guidance_scale: float):
@@ -36,11 +36,11 @@ class AutoPaintingPipeline:
         Returns:
             Image: The output image after inpainting.
         """
-        
+        clear_memory()
         image = load_image(self.image)
         mask_image = load_image(self.mask_image)
-        output = self.pipeline(prompt=prompt,negative_prompt=negative_prompt,image=image,mask_image=mask_image,num_inference_steps=num_inference_steps,strength=strength,guidance_scale =guidance_scale,height = 1472, width = 2560).images[0]
-        clear_memory()
+        output = self.pipeline(prompt=prompt,negative_prompt=negative_prompt,image=image,mask_image=mask_image,num_inference_steps=num_inference_steps,strength=strength,guidance_scale=guidance_scale,height = 1472, width = 2560).images[0]
+        
         return output
     
     
@@ -54,7 +54,7 @@ def inference(cfg: DictConfig):
     """
     augmenter = ImageAugmentation(target_width=cfg.target_width, target_height=cfg.target_height, roi_scale=cfg.roi_scale)
     model_name = cfg.model
-    image_path = "../sample_data/example3.jpg"
+    image_path = "../sample_data/example5.jpg"
     image = Image.open(image_path)
     extended_image = augmenter.extend_image(image)
     mask_image = augmenter.generate_mask_from_bbox(extended_image, cfg.segmentation_model, cfg.detection_model)
