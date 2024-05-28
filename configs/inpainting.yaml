@@ -1,0 +1,13 @@
+segmentation_model : 'facebook/sam-vit-large'
+detection_model : 'yolov8l'
+model : 'kandinsky-community/kandinsky-2-2-decoder-inpaint'
+target_width : 1920
+target_height : 1080
+prompt : 'product is on the kitchen floor , ultrarealistic lighting , commercial, award , winning photography'
+negative_prompt : 'low resolution , bad resolution'
+roi_scale : 0.5
+strength : 0.7
+guidance_scale : 7.5
+num_inference_steps : 600
+output_path : '../outputs'
+ 
