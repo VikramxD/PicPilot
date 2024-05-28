@@ -1,13 +1,14 @@
-segmentation_model : 'facebook/sam-vit-huge'
+segmentation_model : 'facebook/sam-vit-base'
 detection_model : 'yolov8l'
 model : 'kandinsky-community/kandinsky-2-2-decoder-inpaint'
-target_width : 1920
-target_height : 1080
-prompt : 'product in the kitchen used in cooking 4k'
-negative_prompt : 'low resolution , bad resolution'
-roi_scale : 0.7
-strength : 0.2
-guidance_scale : 7.0
-num_inference_steps : 800
+target_width : 2560
+target_height : 1472
+prompt : 'Product on the table 4k ultrarealistic'
+negative_prompt : 'low resolution , bad resolution , Deformation , Weird Artifacts, bad quality,blown up image, high brightness , high saturation '
+roi_scale : 0.6
+strength : 0.5
+guidance_scale : 8
+num_inference_steps : 150
 output_path : '../outputs'
+
  
