@@ -22,3 +22,4 @@ peft
 async-batcher
 ultralytics
 opencv-python-headless
+boto3

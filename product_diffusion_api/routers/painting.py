@@ -1,37 +1,54 @@
-from fastapi import FastAPI, UploadFile, File,APIRouter,HTTPException
-from fastapi.responses import FileResponse
+import sys
+sys.path.append("../scripts")
+from fastapi import APIRouter,File,UploadFile
 from pydantic import BaseModel
-from typing import Optional
+import base64
+from io import BytesIO
+from typing import List
+import uuid
+from inpainting_pipeline import AutoPaintingPipeline
+from functools import lru_cache
+from s3_manager import S3ManagerService
 from PIL import Image
-import torch
-from diffusers import AutoPipelineForInpainting
-from diffusers.utils import load_image
-from utils import (accelerator, ImageAugmentation, clear_memory)
+import io
+from scripts.utils import ImageAugmentation
 import hydra
 from omegaconf import DictConfig
-import lightning.pytorch as pl
-import io
 
-# Define FastAPI app
+
+
 router = APIRouter()
 
-class InpaintingRequest(BaseModel):
-    
-    prompt: str
-    negative_prompt: Optional[str] = None
-    num_inference_steps: int
-    strength: float
-    guidance_scale: float
-    target_width: int
-    target_height: int
+def pil_to_b64_json(image):
+    """
+    Converts a PIL image to a base64-encoded JSON object.
 
-class InpaintingBatchRequest(BaseModel):
-    batch_input: List[InpaintingRequest]
+    Args:
+        image (PIL.Image.Image): The PIL image object to be converted.
+
+    Returns:
+        dict: A dictionary containing the image ID and the base64-encoded image.
+
+    """
+    image_id = str(uuid.uuid4())
+    buffered = BytesIO()
+    image.save(buffered, format="PNG")
+    b64_image = base64.b64encode(buffered.getvalue()).decode("utf-8")
+    return {"image_id": image_id, "b64_image": b64_image}
 
 
+def pil_to_s3_json(image: Image.Image, file_name) -> str:
+    """
+    Uploads a PIL image to Amazon S3 and returns a JSON object containing the image ID and the signed URL.
 
+    Args:
+        image (PIL.Image.Image): The PIL image to be uploaded.
+        file_name (str): The name of the file.
 
-def pil_to_s3_json(image: Image.Image, file_name: str):
+    Returns:
+        dict: A JSON object containing the image ID and the signed URL.
+
+    """
     image_id = str(uuid.uuid4())
     s3_uploader = S3ManagerService()
     image_bytes = io.BytesIO()
@@ -40,64 +57,56 @@ def pil_to_s3_json(image: Image.Image, file_name: str):
 
     unique_file_name = s3_uploader.generate_unique_file_name(file_name)
     s3_uploader.upload_file(image_bytes, unique_file_name)
-    signed_url = s3_uploader.generate_signed_url(unique_file_name, exp=43200)  # 12 hours
+    signed_url = s3_uploader.generate_signed_url(
+        unique_file_name, exp=43200
+    )  # 12 hours
     return {"image_id": image_id, "url": signed_url}
 
-class AutoPaintingPipeline:
-    def __init__(self, model_name: str, image: Image.Image, mask_image: Image.Image, target_width: int, target_height: int):
-        self.model_name = model_name
-        self.device = accelerator()
-        self.pipeline = AutoPipelineForInpainting.from_pretrained(self.model_name, torch_dtype=torch.float16)
-        self.image = load_image(image)
-        self.mask_image = load_image(mask_image)
-        self.target_width = target_width
-        self.target_height = target_height
-        self.pipeline.to(self.device)
-        
-    def run_inference(self, prompt: str, negative_prompt: Optional[str], num_inference_steps: int, strength: float, guidance_scale: float):
-        clear_memory()
-        image = load_image(self.image)
-        mask_image = load_image(self.mask_image)
-        output = self.pipeline(
-            prompt=prompt,
-            negative_prompt=negative_prompt,
-            image=image,
-            mask_image=mask_image,
-            num_inference_steps=num_inference_steps,
-            strength=strength,
-            guidance_scale=guidance_scale,
-            height=self.target_height,
-            width=self.target_width
-        ).images[0]
-        return output
 
-@app.post("/inpaint/")
-async def inpaint(
-    file: UploadFile = File(...),
-    request: InpaintingRequest
-):
-    image = Image.open(file.file)
-    augmenter = ImageAugmentation(target_width=request.target_width, target_height=request.target_height)  # Use fixed size or set dynamically
-    extended_image = augmenter.extend_image(image)
-    mask_image = augmenter.generate_mask_from_bbox(extended_image, 'segmentation_model', 'detection_model')
-    mask_image = augmenter.invert_mask(mask_image)
 
-    pipeline = AutoPaintingPipeline(
-        model_name="model_name",
-        image=extended_image,
-        mask_image=mask_image,
-        target_width=request.target_width,
-        target_height=request.target_height
-    )
-    output_image = pipeline.run_inference(
-        prompt=request.prompt,
-        negative_prompt=request.negative_prompt,
-        num_inference_steps=request.num_inference_steps,
-        strength=request.strength,
-        guidance_scale=request.guidance_scale,
-        
-    )
-
+class InpaintingRequest(BaseModel):
+    image: File(..., description="The image to be inpainted")
+    prompt: str
+    negative_prompt: str
+    num_inference_steps: int
+    strength: float
+    guidance_scale: float
     
-    result = pil_to_s3_json(output_image, "output_image.png")
-    return result
+    
+
+
+
+
+def augment_image(image, target_width, target_height, roi_scale,segmentation_model_name,detection_model_name):
+    """
+    Augments an image with a given prompt, model, and other parameters.
+
+    Parameters:
+    - image (str): The path to the image file.
+    - target_width (int): The desired width of the augmented image.
+    - target_height (int): The desired height of the augmented image.
+    - roi_scale (float): The scale factor for the region of interest.
+
+    Returns:
+    - augmented_image (PIL.Image.Image): The augmented image.
+    - inverted_mask (PIL.Image.Image): The inverted mask generated from the augmented image.
+    """
+    image = Image.open(image)
+    image_augmentation = ImageAugmentation(target_width, target_height, roi_scale)
+    image = image_augmentation.extend_image(image)
+    mask = image_augmentation.generate_mask_from_bbox(image,segmentation_model_name,detection_model_name)
+    inverted_mask = image_augmentation.invert_mask(mask)
+    return image, inverted_mask
+
+
+@hydra.main(version_base="1.3",config_path="conf",config_name="inpainting")
+def run_inference(cfg,image,prompt,negative_prompt,num_inference_steps,strength,guidance_scale):
+    image, mask_image = augment_image(image, cfg.width, cfg.height, cfg.roi_scale,cfg.segmentation_model_name,cfg.detection_model_name)
+    pipeline = AutoPaintingPipeline(model_name=cfg.model_name, image = image, mask_image=mask_image, target_height=cfg.height, target_width=cfg.width)
+    output = pipeline.run_inference(prompt=prompt, negative_prompt=negative_prompt, num_inference_steps=num_inference_steps, strength=strength, guidance_scale=guidance_scale)
+    pil_to_s3_json(output,file_name="output.jpg")
+    
+    
+@router.post("/inpainting")
+def inpainting_inference(request: InpaintingRequest):
+    return run_inference(request)
