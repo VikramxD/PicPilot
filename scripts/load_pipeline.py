@@ -6,6 +6,10 @@ from config import PROJECT_NAME
 autolog(init=dict(project=PROJECT_NAME))
 
 
+
+
+
+
 def load_pipeline(model_name, adapter_name):
         pipe = DiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.float16).to(
             "cuda"

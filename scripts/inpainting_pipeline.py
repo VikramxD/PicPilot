@@ -1,4 +1,4 @@
-import torch
+#  import torch
 from diffusers import AutoPipelineForInpainting
 from diffusers.utils import load_image
 from utils import (accelerator, ImageAugmentation, clear_memory)
