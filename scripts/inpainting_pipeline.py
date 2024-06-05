@@ -1,4 +1,4 @@
-#  import torch
+import torch
 from diffusers import AutoPipelineForInpainting
 from diffusers.utils import load_image
 from utils import (accelerator, ImageAugmentation, clear_memory)
@@ -29,6 +29,7 @@ class AutoPaintingPipeline:
         self.target_width = target_width
         self.target_height = target_height
         self.pipeline.to(self.device)
+        self.pipeline.unet = torch.compile(self.pipeline.unet,mode='max-autotune')
         
        
         

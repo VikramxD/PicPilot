@@ -13,7 +13,7 @@ from functools import lru_cache
 from s3_manager import S3ManagerService
 from PIL import Image
 import io
-from scripts.utils import accelerator
+from utils import accelerator
 
 device = accelerator()
 torch._inductor.config.conv_1x1_as_mm = True
