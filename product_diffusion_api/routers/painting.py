@@ -1,21 +1,16 @@
 import sys
 sys.path.append("../scripts")
-from fastapi import APIRouter,File,UploadFile
+from fastapi import APIRouter, File, UploadFile, HTTPException
 from pydantic import BaseModel
 import base64
 from io import BytesIO
-from typing import List
 import uuid
 from inpainting_pipeline import AutoPaintingPipeline
-from functools import lru_cache
 from s3_manager import S3ManagerService
 from PIL import Image
 import io
-from scripts.utils import ImageAugmentation
-import hydra
-from omegaconf import DictConfig
-
-
+from utils import ImageAugmentation
+from hydra import compose, initialize
 
 router = APIRouter()
 
@@ -37,7 +32,7 @@ def pil_to_b64_json(image):
     return {"image_id": image_id, "b64_image": b64_image}
 
 
-def pil_to_s3_json(image: Image.Image, file_name) -> str:
+def pil_to_s3_json(image: Image.Image, file_name) -> dict:
     """
     Uploads a PIL image to Amazon S3 and returns a JSON object containing the image ID and the signed URL.
 
@@ -63,21 +58,14 @@ def pil_to_s3_json(image: Image.Image, file_name) -> str:
     return {"image_id": image_id, "url": signed_url}
 
 
-
 class InpaintingRequest(BaseModel):
-    image: File(..., description="The image to be inpainted")
     prompt: str
     negative_prompt: str
     num_inference_steps: int
     strength: float
     guidance_scale: float
-    
-    
 
-
-
-
-def augment_image(image, target_width, target_height, roi_scale,segmentation_model_name,detection_model_name):
+def augment_image(image, target_width, target_height, roi_scale, segmentation_model_name, detection_model_name):
     """
     Augments an image with a given prompt, model, and other parameters.
 
@@ -94,19 +82,60 @@ def augment_image(image, target_width, target_height, roi_scale,segmentation_mod
     image = Image.open(image)
     image_augmentation = ImageAugmentation(target_width, target_height, roi_scale)
     image = image_augmentation.extend_image(image)
-    mask = image_augmentation.generate_mask_from_bbox(image,segmentation_model_name,detection_model_name)
+    mask = image_augmentation.generate_mask_from_bbox(image, segmentation_model_name, detection_model_name)
     inverted_mask = image_augmentation.invert_mask(mask)
     return image, inverted_mask
 
+def run_inference(cfg: dict, image_path: str, prompt: str, negative_prompt: str, num_inference_steps: int, strength: float, guidance_scale: float):
+    """
+    Run inference using the provided configuration and input image.
 
-@hydra.main(version_base="1.3",config_path="conf",config_name="inpainting")
-def run_inference(cfg,image,prompt,negative_prompt,num_inference_steps,strength,guidance_scale):
-    image, mask_image = augment_image(image, cfg.width, cfg.height, cfg.roi_scale,cfg.segmentation_model_name,cfg.detection_model_name)
-    pipeline = AutoPaintingPipeline(model_name=cfg.model_name, image = image, mask_image=mask_image, target_height=cfg.height, target_width=cfg.width)
+    Args:
+        cfg (dict): Configuration dictionary containing model parameters.
+        image_path (str): Path to the input image file.
+        prompt (str): Prompt for the inference process.
+        negative_prompt (str): Negative prompt for the inference process.
+        num_inference_steps (int): Number of inference steps to perform.
+        strength (float): Strength parameter for the inference.
+        guidance_scale (float): Guidance scale for the inference.
+
+    Returns:
+        dict: A JSON object containing the image ID and the signed URL.
+
+    Raises:
+        HTTPException: If an error occurs during the inference process.
+
+    """
+    image, mask_image = augment_image(image_path, cfg['target_width'], cfg['target_height'], cfg['roi_scale'], cfg['segmentation_model'], cfg['detection_model'])
+    
+    pipeline = AutoPaintingPipeline(model_name=cfg['model'], image=image, mask_image=mask_image, target_height=cfg['target_height'], target_width=cfg['target_width'])
     output = pipeline.run_inference(prompt=prompt, negative_prompt=negative_prompt, num_inference_steps=num_inference_steps, strength=strength, guidance_scale=guidance_scale)
-    pil_to_s3_json(output,file_name="output.jpg")
-    
-    
+    return pil_to_s3_json(output, file_name="output.png")
+
 @router.post("/inpainting")
-def inpainting_inference(request: InpaintingRequest):
-    return run_inference(request)
+async def inpainting_inference(image: UploadFile = File(...), 
+                               prompt: str = "", 
+                               negative_prompt: str = "", 
+                               num_inference_steps: int = 50, 
+                               strength: float = 0.5, 
+                               guidance_scale: float = 7.5):
+    """
+    Run the inpainting inference pipeline.
+    """
+    try:
+        image_bytes = await image.read()
+        image_path = f"/tmp/{uuid.uuid4()}.png"
+        with open(image_path, "wb") as f:
+            f.write(image_bytes)
+        
+        
+        with initialize(version_base=None,config_path="../../configs"):
+            cfg = compose(config_name="inpainting")
+
+        result = run_inference(cfg, image_path, prompt, negative_prompt, num_inference_steps, strength, guidance_scale)
+        
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
