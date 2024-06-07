@@ -34,14 +34,15 @@ logfire.instrument_fastapi(app)
 @app.get('/')
 async def root():
     return {
-        'message': 'Welcome to the main API Page for the product Photography Application , we provide APIs for building Stunning Product Images with Diffusion Models',
+        'message': 'Welcome to the PICPILOT API Page , Develop Visual Stories for your Brand',
         'description': 'This API provides endpoints for accessing and managing product diffusion data.',
         'version': '1.0.0',
         'author': 'Vikramjeet Singh',
         'contact': {
             'email': 'singh.vikram.1782000@gmail.com',
             'github': 'https://github.com/vikramxD',
-            'website': 'https://vikramxd.github.io'
+            'website': 'https://vikramxd.github.io',
+            'peerlist': 'https://peerlist.io/vikramxd'
         },
         'license': 'MIT',
     }
