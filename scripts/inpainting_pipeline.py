@@ -1,15 +1,14 @@
 import torch
-from diffusers import AutoPipelineForInpainting
+from diffusers import AutoPipelineForInpainting,DiffusionPipeline
 from diffusers.utils import load_image
 from utils import (accelerator, ImageAugmentation, clear_memory)
 import hydra
 from omegaconf import DictConfig
 from PIL import Image
-import lightning.pytorch as pl
-#pl.seed_everything(1234)
+from functools import lru_cache
 
 
-
+@lru_cache(maxsize=1)
 class AutoPaintingPipeline:
     """
     AutoPaintingPipeline class represents a pipeline for auto painting using an inpainting model from diffusers.
@@ -41,7 +40,7 @@ class AutoPaintingPipeline:
         Returns:
             Image: The output image after inpainting.
         """
-        clear_memory()
+       
         image = load_image(self.image)
         mask_image = load_image(self.mask_image)
         output = self.pipeline(prompt=prompt,negative_prompt=negative_prompt,image=image,mask_image=mask_image,num_inference_steps=num_inference_steps,strength=strength,guidance_scale=guidance_scale, height = self.target_height ,width = self.target_width).images[0]
@@ -63,7 +62,6 @@ def inference(cfg: DictConfig):
     extended_image = augmenter.extend_image(image)
     mask_image = augmenter.generate_mask_from_bbox(extended_image, cfg.segmentation_model, cfg.detection_model)
     mask_image = augmenter.invert_mask(mask_image)
-    #mask_image = cv2.GaussianBlur(np.array(mask_image), (7,7), 0)
     prompt = cfg.prompt
     negative_prompt = cfg.negative_prompt
     num_inference_steps = cfg.num_inference_steps
