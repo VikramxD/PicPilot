@@ -6,7 +6,11 @@ target_width : 2560
 target_height : 1472
 prompt : 'Product on the table 4k ultrarealistic'
 negative_prompt : 'low resolution , bad resolution , Deformation , Weird Artifacts, bad quality,blown up image, high brightness , high saturation '
+<<<<<<< HEAD
 roi_scale : 0.9
+=======
+roi_scale : 0.5
+>>>>>>> bb1cf42 (chore: Update inpainting pipeline configuration and parameters)
 strength : 0.6
 guidance_scale : 7
 num_inference_steps : 150
