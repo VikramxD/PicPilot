@@ -11,6 +11,8 @@ from PIL import Image
 import io
 from utils import ImageAugmentation
 from hydra import compose, initialize
+import lightning.pytorch as pl
+pl.seed_everything(42)
 
 router = APIRouter()
 
@@ -106,13 +108,26 @@ def run_inference(cfg: dict, image_path: str, prompt: str, negative_prompt: str,
         HTTPException: If an error occurs during the inference process.
 
     """
-    image, mask_image = augment_image(image_path, cfg['target_width'], cfg['target_height'], cfg['roi_scale'], cfg['segmentation_model'], cfg['detection_model'])
+    image, mask_image = augment_image(image_path, 
+                                      cfg['target_width'], 
+                                      cfg['target_height'], 
+                                      cfg['roi_scale'], 
+                                      cfg['segmentation_model'], 
+                                      cfg['detection_model'])
     
-    pipeline = AutoPaintingPipeline(model_name=cfg['model'], image=image, mask_image=mask_image, target_height=cfg['target_height'], target_width=cfg['target_width'])
-    output = pipeline.run_inference(prompt=prompt, negative_prompt=negative_prompt, num_inference_steps=num_inference_steps, strength=strength, guidance_scale=guidance_scale)
+    pipeline = AutoPaintingPipeline(model_name=cfg['model'], 
+                                    image=image, 
+                                    mask_image=mask_image, 
+                                    target_height=cfg['target_height'], 
+                                    target_width=cfg['target_width'])
+    output = pipeline.run_inference(prompt=prompt, 
+                                    negative_prompt=negative_prompt, 
+                                    num_inference_steps=num_inference_steps, 
+                                    strength=strength, 
+                                    guidance_scale=guidance_scale)
     return pil_to_s3_json(output, file_name="output.png")
 
-@router.post("/inpainting")
+@router.post("kandinskyv2.2_inpainting")
 async def inpainting_inference(image: UploadFile = File(...), 
                                prompt: str = "", 
                                negative_prompt: str = "", 
@@ -120,7 +135,7 @@ async def inpainting_inference(image: UploadFile = File(...),
                                strength: float = 0.5, 
                                guidance_scale: float = 7.5):
     """
-    Run the inpainting inference pipeline.
+    Run the inpainting/outpainting inference pipeline.
     """
     try:
         image_bytes = await image.read()
