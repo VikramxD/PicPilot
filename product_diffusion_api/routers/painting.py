@@ -127,7 +127,7 @@ def run_inference(cfg: dict, image_path: str, prompt: str, negative_prompt: str,
                                     guidance_scale=guidance_scale)
     return pil_to_s3_json(output, file_name="output.png")
 
-@router.post("kandinskyv2.2_inpainting")
+@router.post("/kandinskyv2.2_inpainting")
 async def inpainting_inference(image: UploadFile = File(...), 
                                prompt: str = "", 
                                negative_prompt: str = "", 
