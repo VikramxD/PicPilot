@@ -19,7 +19,7 @@ def load_pipeline(model_name: str, device, enable_compile: bool = True):
     pipeline.to(device)
     return pipeline
 
-@lru_cache(maxsize=1)
+
 class AutoPaintingPipeline:
     def __init__(self, pipeline, image: Image, mask_image: Image, target_width: int, target_height: int):
         self.pipeline = pipeline
