@@ -8,7 +8,7 @@ from PIL import Image
 from functools import lru_cache
 
 
-@lru_cache(maxsize=1)
+
 class AutoPaintingPipeline:
     """
     AutoPaintingPipeline class represents a pipeline for auto painting using an inpainting model from diffusers.
