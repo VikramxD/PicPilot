@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routers import sdxl_text_to_image
 from routers import painting
 import logfire
-
+import uvicorn 
 
 
 
@@ -50,4 +50,6 @@ async def root():
 @app.get("/health")
 def check_health():
     return {"status": "ok"}
+
+uvicorn.run(app, host="0.0.0.0", port=8000)
 
