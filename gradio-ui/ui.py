@@ -32,7 +32,7 @@ def generate_sdxl_lora_image(prompt, negative_prompt, num_inference_steps, guida
     image = load_image(url)
     return image
 
-with gr.Blocks(theme='WeixuanYuan/Soft_dark') as demo:
+with gr.Blocks(theme='ParityError/Interstellar') as demo:
     with gr.Tab("SDXL LORA TEXT-TO-IMAGE"):
         with gr.Row():
             with gr.Column(scale=1):
