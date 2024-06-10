@@ -74,7 +74,7 @@ def pil_to_s3_json(image: Image.Image, file_name) -> str:
 
 
 @lru_cache(maxsize=1)
-def load_pipeline(model_name, adapter_name):
+def load_pipeline(model_name, adapter_name,enable_compile:bool):
     """
     Load the diffusion pipeline with the specified model and adapter names.
 
@@ -90,13 +90,14 @@ def load_pipeline(model_name, adapter_name):
     pipe.fuse_lora()
     pipe.unload_lora_weights()
     pipe.unet.to(memory_format=torch.channels_last)
-    pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead")
-    pipe.vae.decode = torch.compile(pipe.vae.decode, mode="reduce-overhead")
+    if enable_compile is True:
+        pipe.unet = torch.compile(pipe.unet, mode="max-autotune")
+        pipe.vae.decode = torch.compile(pipe.vae.decode, mode="max-autotune")
     pipe.fuse_qkv_projections()
     return pipe
 
 
-loaded_pipeline = load_pipeline(config.MODEL_NAME, config.ADAPTER_NAME)
+loaded_pipeline = load_pipeline(config.MODEL_NAME, config.ADAPTER_NAME, config.ENABLE_COMPILE)
 
 
 # SDXLLoraInference class for running inference
