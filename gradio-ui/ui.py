@@ -35,6 +35,7 @@ with gr.Blocks() as demo:
     with gr.Tab("SDXL LORA Inpainting"):
         gr.Markdown("## SDXL LORA Inpainting")
         with gr.Row():
+<<<<<<< HEAD
             with gr.Column():
                 gr.Markdown("### Input Parameters")
                 prompt = gr.Textbox(label="Prompt", placeholder="Enter your prompt here")
@@ -48,5 +49,26 @@ with gr.Blocks() as demo:
                 gr.Markdown("### Output")
                 output_image = gr.Image(label="Generated Image")
         generate_button.click(fn=generate_sdxl_lora_image, inputs=[prompt, negative_prompt, num_inference_steps, guidance_scale, num_images, mode], outputs=output_image)
+=======
+            with gr.Column(scale=1):
+              
+                    prompt = gr.Textbox(label="Prompt", placeholder="Enter your prompt here")
+                    negative_prompt = gr.Textbox(label="Negative Prompt", placeholder="Enter negative prompt here")
+                   
+
+               
+                    with gr.Column(scale=1):
+                        num_inference_steps = gr.Slider(minimum=1, maximum=1000, step=1, value=20, label="Inference Steps")
+                        guidance_scale = gr.Slider(minimum=1.0, maximum=10.0, step=0.1, value=7.5, label="Guidance Scale")
+                        num_images = gr.Slider(minimum=1, maximum=10, step=1, value=1, label="Number of Images")
+                        mode = gr.Dropdown(choices=["s3_json", "b64_json"], value="s3_json", label="Mode")
+                        generate_button = gr.Button("Generate Image")
+            
+            
+            image_preview = gr.Image(label="Generated Image", height=512, width=512,scale=1,show_download_button=True,show_share_button=True,container=False)
+        
+        generate_button.click(generate_sdxl_lora_image, inputs=[prompt, negative_prompt, num_inference_steps, guidance_scale, num_images, mode], outputs=[image_preview])
+    
+>>>>>>> 85a7460 (added API folder)
 
 demo.launch()
