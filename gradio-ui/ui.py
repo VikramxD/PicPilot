@@ -53,5 +53,6 @@ with gr.Blocks(theme='ParityError/Interstellar') as demo:
             image_preview = gr.Image(label="Generated Image", height=512, width=512,scale=1,show_download_button=True,show_share_button=True,container=False)
         
         generate_button.click(generate_sdxl_lora_image, inputs=[prompt, negative_prompt, num_inference_steps, guidance_scale, num_images, mode], outputs=[image_preview])
+    
 
 demo.launch()
