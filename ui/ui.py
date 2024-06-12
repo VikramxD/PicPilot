@@ -38,7 +38,7 @@ async def generate_sdxl_lora_image(prompt, negative_prompt, num_inference_steps,
         mode=mode
     ).dict()
     
-    response = await requests.post(sdxl_inference_endpoint, json=payload)
+    response = requests.post(sdxl_inference_endpoint, json=payload)
     response = response.json()
     url = response['url']
     image = load_image(url)
