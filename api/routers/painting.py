@@ -2,70 +2,26 @@ import sys
 sys.path.append("../scripts")
 from fastapi import APIRouter, File, UploadFile, HTTPException
 from pydantic import BaseModel
-import base64
+from PIL import Image
 from io import BytesIO
+from models import InpaintingRequest
 import uuid
 from inpainting_pipeline import AutoPaintingPipeline
-from s3_manager import S3ManagerService
-from PIL import Image
-import io
-from utils import ImageAugmentation
+from utils import pil_to_s3_json, ImageAugmentation
 from hydra import compose, initialize
 import lightning.pytorch as pl
 pl.seed_everything(42)
 
 router = APIRouter()
 
-def pil_to_b64_json(image):
-    """
-    Converts a PIL image to a base64-encoded JSON object.
-
-    Args:
-        image (PIL.Image.Image): The PIL image object to be converted.
-
-    Returns:
-        dict: A dictionary containing the image ID and the base64-encoded image.
-
-    """
-    image_id = str(uuid.uuid4())
-    buffered = BytesIO()
-    image.save(buffered, format="PNG")
-    b64_image = base64.b64encode(buffered.getvalue()).decode("utf-8")
-    return {"image_id": image_id, "b64_image": b64_image}
 
 
-def pil_to_s3_json(image: Image.Image, file_name) -> dict:
-    """
-    Uploads a PIL image to Amazon S3 and returns a JSON object containing the image ID and the signed URL.
-
-    Args:
-        image (PIL.Image.Image): The PIL image to be uploaded.
-        file_name (str): The name of the file.
-
-    Returns:
-        dict: A JSON object containing the image ID and the signed URL.
-
-    """
-    image_id = str(uuid.uuid4())
-    s3_uploader = S3ManagerService()
-    image_bytes = io.BytesIO()
-    image.save(image_bytes, format="PNG")
-    image_bytes.seek(0)
-
-    unique_file_name = s3_uploader.generate_unique_file_name(file_name)
-    s3_uploader.upload_file(image_bytes, unique_file_name)
-    signed_url = s3_uploader.generate_signed_url(
-        unique_file_name, exp=43200
-    )  # 12 hours
-    return {"image_id": image_id, "url": signed_url}
-
-
-class InpaintingRequest(BaseModel):
-    prompt: str
-    negative_prompt: str
-    num_inference_steps: int
-    strength: float
-    guidance_scale: float
+#class InpaintingRequest(BaseModel):
+   # prompt: str
+   # negative_prompt: str
+   # num_inference_steps: int
+   # strength: float
+   # guidance_scale: float
 
 def augment_image(image, target_width, target_height, roi_scale, segmentation_model_name, detection_model_name):
     """
@@ -136,6 +92,20 @@ async def inpainting_inference(image: UploadFile = File(...),
                                guidance_scale: float = 7.5):
     """
     Run the inpainting/outpainting inference pipeline.
+
+    Parameters:
+    - image: UploadFile - The image file to be used for inpainting/outpainting.
+    - prompt: str - The prompt text for guiding the inpainting/outpainting process.
+    - negative_prompt: str - The negative prompt text for guiding the inpainting/outpainting process.
+    - num_inference_steps: int - The number of inference steps to perform during the inpainting/outpainting process.
+    - strength: float - The strength parameter for controlling the inpainting/outpainting process.
+    - guidance_scale: float - The guidance scale parameter for controlling the inpainting/outpainting process.
+
+    Returns:
+    - result: The result of the inpainting/outpainting process.
+
+    Raises:
+    - HTTPException: If an error occurs during the inpainting/outpainting process.
     """
     try:
         image_bytes = await image.read()

@@ -14,8 +14,9 @@ from s3_manager import S3ManagerService
 from PIL import Image
 import io
 from utils import accelerator
-
-device = accelerator()
+from models.sdxl_input import InputFormat
+from async_batcher.batcher import AsyncBatcher
+from utils import pil_to_b64_json, pil_to_s3_json
 torch._inductor.config.conv_1x1_as_mm = True
 torch._inductor.config.coordinate_descent_tuning = True
 torch._inductor.config.epilogue_fusion = False
@@ -23,56 +24,14 @@ torch._inductor.config.coordinate_descent_check_all_directions = True
 torch._inductor.config.force_fuse_int_mm_with_mul = True
 torch._inductor.config.use_mixed_mm = True
 
+
+device = accelerator()
 router = APIRouter()
 
 
 
 
-
-def pil_to_b64_json(image):
-    """
-    Converts a PIL image to a base64-encoded JSON object.
-
-    Args:
-        image (PIL.Image.Image): The PIL image object to be converted.
-
-    Returns:
-        dict: A dictionary containing the image ID and the base64-encoded image.
-
-    """
-    image_id = str(uuid.uuid4())
-    buffered = BytesIO()
-    image.save(buffered, format="PNG")
-    b64_image = base64.b64encode(buffered.getvalue()).decode("utf-8")
-    return {"image_id": image_id, "b64_image": b64_image}
-
-
-def pil_to_s3_json(image: Image.Image, file_name) -> str:
-    """
-    Uploads a PIL image to Amazon S3 and returns a JSON object containing the image ID and the signed URL.
-
-    Args:
-        image (PIL.Image.Image): The PIL image to be uploaded.
-        file_name (str): The name of the file.
-
-    Returns:
-        dict: A JSON object containing the image ID and the signed URL.
-
-    """
-    image_id = str(uuid.uuid4())
-    s3_uploader = S3ManagerService()
-    image_bytes = io.BytesIO()
-    image.save(image_bytes, format="PNG")
-    image_bytes.seek(0)
-
-    unique_file_name = s3_uploader.generate_unique_file_name(file_name)
-    s3_uploader.upload_file(image_bytes, unique_file_name)
-    signed_url = s3_uploader.generate_signed_url(
-        unique_file_name, exp=43200
-    )  # 12 hours
-    return {"image_id": image_id, "url": signed_url}
-
-
+# Load the diffusion pipeline
 @lru_cache(maxsize=1)
 def load_pipeline(model_name, adapter_name,enable_compile:bool):
     """
@@ -101,7 +60,7 @@ loaded_pipeline = load_pipeline(config.MODEL_NAME, config.ADAPTER_NAME, config.E
 
 
 # SDXLLoraInference class for running inference
-class SDXLLoraInference:
+class SDXLLoraInference(AsyncBatcher):
     """
     Class for performing SDXL Lora inference.
 
@@ -169,21 +128,37 @@ class SDXLLoraInference:
             return pil_to_b64_json(image)
         else:
             raise ValueError("Invalid mode. Supported modes are 'b64_json' and 's3_json'.")
+        
+    
+class SDXLLoraBatcher(AsyncBatcher[InputFormat, dict]):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.pipe = loaded_pipeline
 
-
-# Input format for single request
-class InputFormat(BaseModel):
-    prompt: str
-    num_inference_steps: int
-    guidance_scale: float
-    negative_prompt: str
-    num_images: int
-    mode: str
-
-
-# Input format for batch requests
-class BatchInputFormat(BaseModel):
-    batch_input: List[InputFormat]
+    def process_batch(self, batch: List[InputFormat]) -> List[dict]:
+        results = []
+        for data in batch:
+            try:
+                images = self.pipe(
+                    prompt=data.prompt,
+                    num_inference_steps=data.num_inference_steps,
+                    guidance_scale=data.guidance_scale,
+                    negative_prompt=data.negative_prompt,
+                    num_images_per_prompt=data.num_images,
+                ).images
+                
+                for image in images:
+                    if data.mode == "s3_json":
+                        result = pil_to_s3_json(image, 'sdxl_image')
+                    elif data.mode == "b64_json":
+                        result = pil_to_b64_json(image)
+                    else:
+                        raise ValueError("Invalid mode. Supported modes are 'b64_json' and 's3_json'.")
+                    results.append(result)
+            except Exception as e:
+                print(f"Error in process_batch: {e}")
+                raise HTTPException(status_code=500, detail="Batch inference failed")
+        return results
 
 
 # Endpoint for single request
@@ -195,47 +170,24 @@ async def sdxl_v0_lora_inference(data: InputFormat):
         data.num_images,
         data.num_inference_steps,
         data.guidance_scale,
-        data.mode
+        data.mode,
+        
+        
     )
     output_json = inference.run_inference()
     return output_json
 
 
+# Endpoint for batch requests
 
 @router.post("/sdxl_v0_lora_inference/batch")
-async def sdxl_v0_lora_inference_batch(data: BatchInputFormat):
-    """
-    Perform batch inference for SDXL V0 LoRa model.
-
-    Args:
-        data (BatchInputFormat): The input data containing a batch of requests.
-
-    Returns:
-        dict: A dictionary containing the message and processed requests data.
-
-    Raises:
-        HTTPException: If the number of requests exceeds the maximum queue size.
-    """
-    MAX_QUEUE_SIZE = 64
-
-    if len(data.batch_input) > MAX_QUEUE_SIZE:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Number of requests exceeds maximum queue size ({MAX_QUEUE_SIZE})",
-        )
-
-    processed_requests = []
-    for item in data.batch_input:
-        inference = SDXLLoraInference(
-            item.prompt,
-            item.negative_prompt,
-            item.num_images,
-            item.num_inference_steps,
-            item.guidance_scale,
-            item.mode,
-        )
-        output_json = inference.run_inference()
-        processed_requests.append(output_json)
-
-    return {"message": "Requests processed successfully", "data": processed_requests}
+async def sdxl_v0_lora_inference_batch(data: List[InputFormat]):
+    batcher = SDXLLoraBatcher(max_batch_size=64, max_queue_time=0.001)
+    try:
+        predictions = await batcher.process(batch=data)
+        return predictions
+    except Exception as e:
+        print(f"Error in /sdxl_v0_lora_inference/batch: {e}")
+        raise HTTPException(status_code=500, detail="Batch inference endpoint failed")
+    
 
