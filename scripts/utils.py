@@ -6,7 +6,11 @@ from PIL import Image, ImageOps
 from config import SEGMENTATION_MODEL_NAME, DETECTION_MODEL_NAME
 from diffusers.utils import load_image
 import gc
-
+from s3_manager import S3ManagerService
+import io
+from io import BytesIO
+import base64
+import uuid
 
 
 
@@ -109,6 +113,52 @@ class ImageAugmentation:
         
         inverted_mask_pil = ImageOps.invert(mask_image.convert("L"))
         return inverted_mask_pil
+    
+def pil_to_b64_json(image):
+    """
+    Converts a PIL image to a base64-encoded JSON object.
+
+    Args:
+        image (PIL.Image.Image): The PIL image object to be converted.
+
+    Returns:
+        dict: A dictionary containing the image ID and the base64-encoded image.
+
+    """
+    image_id = str(uuid.uuid4())
+    buffered = BytesIO()
+    image.save(buffered, format="PNG")
+    b64_image = base64.b64encode(buffered.getvalue()).decode("utf-8")
+    return {"image_id": image_id, "b64_image": b64_image}
+
+
+def pil_to_s3_json(image: Image.Image, file_name) -> dict:
+    """
+    Uploads a PIL image to Amazon S3 and returns a JSON object containing the image ID and the signed URL.
+
+    Args:
+        image (PIL.Image.Image): The PIL image to be uploaded.
+        file_name (str): The name of the file.
+
+    Returns:
+        dict: A JSON object containing the image ID and the signed URL.
+
+    """
+    image_id = str(uuid.uuid4())
+    s3_uploader = S3ManagerService()
+    image_bytes = io.BytesIO()
+    image.save(image_bytes, format="PNG")
+    image_bytes.seek(0)
+
+    unique_file_name = s3_uploader.generate_unique_file_name(file_name)
+    s3_uploader.upload_file(image_bytes, unique_file_name)
+    signed_url = s3_uploader.generate_signed_url(
+        unique_file_name, exp=43200
+    )  # 12 hours
+    return {"image_id": image_id, "url": signed_url}
+
+
+
 
 if __name__ == "__main__":
     augmenter = ImageAugmentation(target_width=1024, target_height=1024, roi_scale=0.5)

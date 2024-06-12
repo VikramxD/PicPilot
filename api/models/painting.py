@@ -1,11 +1,9 @@
 from pydantic import BaseModel
 
 
-class Painting(BaseModel):
+class InpaintingRequest(BaseModel):
     prompt: str
-    num_inference_steps: int
-    guidance_scale: float
     negative_prompt: str
-    num_images: int
-    mode: str
-    
+    num_inference_steps: int
+    strength: float
+    guidance_scale: float
