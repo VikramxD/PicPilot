@@ -16,8 +16,7 @@ import io
 from utils import accelerator
 from models.sdxl_input import InputFormat
 from async_batcher.batcher import AsyncBatcher
-
-device = accelerator()
+from utils import pil_to_b64_json, pil_to_s3_json
 torch._inductor.config.conv_1x1_as_mm = True
 torch._inductor.config.coordinate_descent_tuning = True
 torch._inductor.config.epilogue_fusion = False
@@ -25,56 +24,14 @@ torch._inductor.config.coordinate_descent_check_all_directions = True
 torch._inductor.config.force_fuse_int_mm_with_mul = True
 torch._inductor.config.use_mixed_mm = True
 
+
+device = accelerator()
 router = APIRouter()
 
 
 
 
-
-def pil_to_b64_json(image):
-    """
-    Converts a PIL image to a base64-encoded JSON object.
-
-    Args:
-        image (PIL.Image.Image): The PIL image object to be converted.
-
-    Returns:
-        dict: A dictionary containing the image ID and the base64-encoded image.
-
-    """
-    image_id = str(uuid.uuid4())
-    buffered = BytesIO()
-    image.save(buffered, format="PNG")
-    b64_image = base64.b64encode(buffered.getvalue()).decode("utf-8")
-    return {"image_id": image_id, "b64_image": b64_image}
-
-
-def pil_to_s3_json(image: Image.Image, file_name) -> str:
-    """
-    Uploads a PIL image to Amazon S3 and returns a JSON object containing the image ID and the signed URL.
-
-    Args:
-        image (PIL.Image.Image): The PIL image to be uploaded.
-        file_name (str): The name of the file.
-
-    Returns:
-        dict: A JSON object containing the image ID and the signed URL.
-
-    """
-    image_id = str(uuid.uuid4())
-    s3_uploader = S3ManagerService()
-    image_bytes = io.BytesIO()
-    image.save(image_bytes, format="PNG")
-    image_bytes.seek(0)
-
-    unique_file_name = s3_uploader.generate_unique_file_name(file_name)
-    s3_uploader.upload_file(image_bytes, unique_file_name)
-    signed_url = s3_uploader.generate_signed_url(
-        unique_file_name, exp=43200
-    )  # 12 hours
-    return {"image_id": image_id, "url": signed_url}
-
-
+# Load the diffusion pipeline
 @lru_cache(maxsize=1)
 def load_pipeline(model_name, adapter_name,enable_compile:bool):
     """
