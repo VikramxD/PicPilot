@@ -60,7 +60,7 @@ loaded_pipeline = load_pipeline(config.MODEL_NAME, config.ADAPTER_NAME, config.E
 
 
 # SDXLLoraInference class for running inference
-class SDXLLoraInference(AsyncBatcher):
+class SDXLLoraInference:
     """
     Class for performing SDXL Lora inference.
 
@@ -182,9 +182,9 @@ async def sdxl_v0_lora_inference(data: InputFormat):
 
 @router.post("/sdxl_v0_lora_inference/batch")
 async def sdxl_v0_lora_inference_batch(data: List[InputFormat]):
-    batcher = SDXLLoraBatcher(max_batch_size=64, max_queue_time=0.001)
+    batcher = SDXLLoraBatcher(max_batch_size=64)
     try:
-        predictions = await batcher.process(batch=data)
+        predictions = batcher.process_batch(data)
         return predictions
     except Exception as e:
         print(f"Error in /sdxl_v0_lora_inference/batch: {e}")
