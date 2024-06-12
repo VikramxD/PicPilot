@@ -4,7 +4,7 @@ from fastapi import APIRouter, File, UploadFile, HTTPException
 from pydantic import BaseModel
 from PIL import Image
 from io import BytesIO
-from models import InpaintingRequest
+from models.painting import InpaintingRequest
 import uuid
 from inpainting_pipeline import AutoPaintingPipeline
 from utils import pil_to_s3_json, ImageAugmentation
