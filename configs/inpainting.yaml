@@ -1,5 +1,5 @@
-segmentation_model : 'facebook/sam-vit-huge'
-detection_model : 'yolov8l'
+segmentation_model : 'facebook/sam-vit-base'
+detection_model : 'yolov8s'
 model : 'kandinsky-community/kandinsky-2-2-decoder-inpaint'
 target_width : 2560
 target_height : 1472

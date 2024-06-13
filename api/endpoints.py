@@ -51,5 +51,5 @@ async def root():
 def check_health():
     return {"status": "ok"}
 
-uvicorn.run(app, host="0.0.0.0", port=8000)
+
 
