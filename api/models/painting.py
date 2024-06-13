@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from fastapi import Form
 
 
 class InpaintingRequest(BaseModel):
@@ -7,3 +8,4 @@ class InpaintingRequest(BaseModel):
     num_inference_steps: int
     strength: float
     guidance_scale: float
+    
