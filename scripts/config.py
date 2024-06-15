@@ -9,7 +9,7 @@ CAPTIONING_MODEL_NAME = "Salesforce/blip-image-captioning-base"
 SEGMENTATION_MODEL_NAME = "facebook/sam-vit-large"
 DETECTION_MODEL_NAME = "yolov8l"
 ENABLE_COMPILE = False
-INPAINTING_MODEL_NAME = ''
+INPAINTING_MODEL_NAME = 'kandinsky-community/kandinsky-2-2-decoder-inpaint'
 
 
 
