@@ -184,7 +184,7 @@ async def sdxl_v0_lora_inference(data: InputFormat):
 async def sdxl_v0_lora_inference_batch(data: List[InputFormat]):
     batcher = SDXLLoraBatcher(max_batch_size=64)
     try:
-        predictions = batcher.process_batch(data)
+        predictions = await batcher.process_batch(data)
         return predictions
     except Exception as e:
         print(f"Error in /sdxl_v0_lora_inference/batch: {e}")
