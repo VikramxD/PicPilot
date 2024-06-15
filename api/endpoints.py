@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import sdxl_text_to_image
-from routers import painting
+from routers import (sdxl_text_to_image,painting,batch_painting)
 import logfire
 import uvicorn 
 
@@ -27,6 +26,7 @@ app.add_middleware(
 
 app.include_router(sdxl_text_to_image.router, prefix='/api/v1/product-diffusion')
 app.include_router(painting.router,prefix='/api/v1/product-diffusion')
+app.include_router(batch_painting.router,prefix='/api/v1/product-diffusion')
 logfire.instrument_fastapi(app)
 
 
