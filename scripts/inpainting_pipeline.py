@@ -8,7 +8,7 @@ from PIL import Image
 from functools import lru_cache
 
 @lru_cache(maxsize=1)
-def load_pipeline(model_name: str, device, enable_compile: bool = True):
+def load_pipeline(model_name: str, device, enable_compile: bool = False):
     pipeline = AutoPipelineForInpainting.from_pretrained(model_name, torch_dtype=torch.float16)
     if enable_compile:
         pipeline.unet.to(memory_format=torch.channels_last)
