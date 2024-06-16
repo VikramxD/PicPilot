@@ -1,4 +1,4 @@
-name: Push to Docker Image
+name: Push Image to Huggingface Spaces
 
 on:
   push:
