@@ -32,7 +32,7 @@ router = APIRouter()
 
 
 # Load the diffusion pipeline
-@lru_cache(maxsize=1)
+
 def load_pipeline(model_name, adapter_name,enable_compile:bool):
     """
     Load the diffusion pipeline with the specified model and adapter names.
@@ -182,7 +182,7 @@ async def sdxl_v0_lora_inference(data: InputFormat):
 
 @router.post("/sdxl_v0_lora_inference/batch")
 async def sdxl_v0_lora_inference_batch(data: List[InputFormat]):
-    batcher = SDXLLoraBatcher(max_batch_size=64)
+    batcher = SDXLLoraBatcher(max_batch_size=-1)
     try:
         predictions = await batcher.process_batch(data)
         return predictions
