@@ -24,7 +24,7 @@ class AutoPaintingPipeline:
         self.target_width = target_width
         self.target_height = target_height
 
-    def run_inference(self, prompt: str, negative_prompt: str, num_inference_steps: int, strength: float, guidance_scale: float):
+    def run_inference(self, prompt: str, negative_prompt: str, num_inference_steps: int, strength: float, guidance_scale: float,num_images):
         output = self.pipeline(
             prompt=prompt,
             negative_prompt=negative_prompt,
@@ -33,6 +33,7 @@ class AutoPaintingPipeline:
             num_inference_steps=num_inference_steps,
             strength=strength,
             guidance_scale=guidance_scale,
+            num_images_per_prompt = num_images,
             height=self.target_height,
             width=self.target_width
             
