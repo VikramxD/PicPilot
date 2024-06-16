@@ -19,7 +19,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build the Docker image
-        run: docker build -t vikram1202/picpilot:latest -f ./Dockerfile .
+        run: docker build -t vikram1202/picpilot:latest -f .Dockerfile .
 
 
       - name: Push Docker image to Docker Hub
