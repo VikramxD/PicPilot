@@ -26,9 +26,10 @@ jobs:
         uses: docker/build-push-action@v5.3.0
         with:
           context: .
-          file: ./Dockerfile  # Path to your Dockerfile
+          file: ./Dockerfile  # Path to your Dockerfile relative to the root of the repository
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/my-image:pr-${{ github.run_id }}
 
       - name: Logout from Docker Hub
         run: docker logout
+
