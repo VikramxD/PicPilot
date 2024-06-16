@@ -2,7 +2,7 @@ import sys
 sys.path.append('../scripts')
 import os
 import uuid
-from typing import List, Tuple, Any,Dict
+from typing import List, Tuple, Any, Dict
 from fastapi import APIRouter, File, UploadFile, HTTPException, Form, Depends, Body
 from pydantic import BaseModel, Field
 from PIL import Image
@@ -11,9 +11,7 @@ from utils import pil_to_s3_json, pil_to_b64_json, ImageAugmentation, accelerato
 from inpainting_pipeline import AutoPaintingPipeline, load_pipeline
 from hydra import compose, initialize
 from async_batcher.batcher import AsyncBatcher
-from concurrent.futures import Executor
 import json
-import asyncio
 from functools import lru_cache
 
 pl.seed_everything(42)
@@ -26,11 +24,20 @@ with initialize(version_base=None, config_path="../../configs"):
 # Load the inpainting pipeline
 @lru_cache(maxsize=1)
 def load_pipeline_wrapper():
+    """
+    Load the inpainting pipeline with the specified configuration.
+
+    Returns:
+        pipeline: The loaded inpainting pipeline.
+    """
     pipeline = load_pipeline(cfg.model, accelerator(), enable_compile=True)
     return pipeline
 inpainting_pipeline = load_pipeline_wrapper()
 
 class InpaintingRequest(BaseModel):
+    """
+    Model representing a request for inpainting inference.
+    """
     prompt: str = Field(..., description="Prompt text for inference")
     negative_prompt: str = Field(..., description="Negative prompt text for inference")
     num_inference_steps: int = Field(..., description="Number of inference steps")
@@ -41,6 +48,9 @@ class InpaintingRequest(BaseModel):
     use_augmentation: bool = Field(True, description="Whether to use image augmentation")
     
 class InpaintingBatchRequestModel(BaseModel):
+    """
+    Model representing a batch request for inpainting inference.
+    """
     requests: List[InpaintingRequest]
 
 async def save_image(image: UploadFile) -> str:
@@ -105,7 +115,7 @@ def run_inference(cfg, image_path: str, request: InpaintingRequest):
                                           cfg['detection_model'])
     else:
         image = Image.open(image_path)
-        mask_image = None  # Assume mask_image is provided or generated separately
+        mask_image = None  
     
     painting_pipeline = AutoPaintingPipeline(
         pipeline=inpainting_pipeline,
@@ -118,16 +128,26 @@ def run_inference(cfg, image_path: str, request: InpaintingRequest):
                                     negative_prompt=request.negative_prompt, 
                                     num_inference_steps=request.num_inference_steps, 
                                     strength=request.strength, 
-                                    guidance_scale=request.guidance_scale)
+                                    guidance_scale=request.guidance_scale,
+                                    num_images=request.num_images)
     if request.mode == "s3_json":
         return pil_to_s3_json(output, file_name="output.png")
     elif request.mode == "b64_json":
         return pil_to_b64_json(output)
     else:
         raise ValueError("Invalid mode. Supported modes are 'b64_json' and 's3_json'.")
-    
+
 class InpaintingBatcher(AsyncBatcher):
     async def process_batch(self, batch: Tuple[List[str], List[InpaintingRequest]]) -> List[Dict[str, Any]]:
+        """
+        Process a batch of images and requests for inpainting inference.
+
+        Args:
+            batch (Tuple[List[str], List[InpaintingRequest]]): Tuple of image paths and corresponding requests.
+
+        Returns:
+            List[Dict[str, Any]]: List of resulting images in the specified mode ('b64_json' or 's3_json').
+        """
         image_paths, requests = batch
         results = []
         for image_path, request in zip(image_paths, requests):
@@ -190,7 +210,7 @@ async def inpainting_batch_inference(
 
         batcher = InpaintingBatcher(max_batch_size=64)
         image_paths = [await save_image(image) for image in images]
-        results = await batcher.process_batch((image_paths, requests))
+        results = batcher.process_batch((image_paths, requests))
 
         return results
     except Exception as e:
