@@ -19,4 +19,4 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: picpilot:latest
+          tags: vikram1202/picpilot:latest
