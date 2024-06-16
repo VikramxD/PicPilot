@@ -1,5 +1,5 @@
 import sys
-sys.path.append("../scripts")  # Path of the scripts directory
+sys.path.append("../../scripts")  # Path of the scripts directory
 import config
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
@@ -32,7 +32,7 @@ router = APIRouter()
 
 
 # Load the diffusion pipeline
-
+@lru_cache(maxsize=1)
 def load_pipeline(model_name, adapter_name,enable_compile:bool):
     """
     Load the diffusion pipeline with the specified model and adapter names.
