@@ -27,5 +27,4 @@ jobs:
       with:
        context: .
        push: true
-       tags: ${{ secrets.DOCKER_HUB_USERNAME }}/your-image-name:latest
-
+       tags: vikram1202/picpilot:latest
