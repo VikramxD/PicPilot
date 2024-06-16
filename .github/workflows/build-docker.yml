@@ -15,8 +15,10 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           push: true
           tags: vikram1202/picpilot:latest
+          # Specify the path to the Dockerfile relative to the root of the repository
+          dockerfile: Dockerfile
