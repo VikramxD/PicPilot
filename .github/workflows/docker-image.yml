@@ -31,6 +31,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-
 
+    - name: List files in the repository root
+      run: ls -alh
+
     - name: Build and push Docker image
       run: |
         docker buildx build --file ./Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/picpilot:$(date +%s) --push --cache-to=type=local,dest=/tmp/.buildx-cache,new=true --cache-from=type=local,src=/tmp/.buildx-cache .
+      working-directory: ${{ github.workspace }}
