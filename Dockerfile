@@ -8,7 +8,7 @@ WORKDIR /app
 COPY ../api/requirements.txt ./
 
 # Install dependencies specified in requirements.txt
-RUN pip install  -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Create a non-root user and set up the environment
 RUN useradd -m -u 1000 user
