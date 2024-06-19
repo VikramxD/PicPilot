@@ -1,5 +1,5 @@
 import sys
-sys.path.append("../../scripts")  # Path of the scripts directory
+sys.path.append("../scripts")  # Path of the scripts directory
 import config
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
@@ -12,7 +12,7 @@ import torch
 from functools import lru_cache
 from PIL import Image
 import io
-from utils import accelerator
+from scripts.utils import accelerator
 from models.sdxl_input import InputFormat
 from async_batcher.batcher import AsyncBatcher
 from utils import pil_to_b64_json, pil_to_s3_json

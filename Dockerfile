@@ -21,6 +21,8 @@ ENV HOME=/home/user \
 # Set the final working directory
 WORKDIR $HOME/app
 
+
+
 # Copy the entire project into the container, setting the appropriate ownership
 COPY --chown=user . $HOME/app
 
