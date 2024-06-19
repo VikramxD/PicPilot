@@ -10,7 +10,6 @@ import uuid
 from diffusers import DiffusionPipeline
 import torch
 from functools import lru_cache
-from s3_manager import S3ManagerService
 from PIL import Image
 import io
 from utils import accelerator

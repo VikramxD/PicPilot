@@ -7,7 +7,7 @@ lightning==2.2.3
 logfire==0.42.0
 Pillow==10.3.0
 pydantic==2.7.4
-torch==2.2.0
+torch
 utils==1.0.2
 uvicorn==0.30.1
 boto3

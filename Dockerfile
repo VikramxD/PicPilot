@@ -1,14 +1,14 @@
 # Use the official Python base image
-FROM python:3.11-slim
+FROM python:3.10-slim
 
 # Set the initial working directory
-WORKDIR /api
+WORKDIR /app
 
 # Copy the requirements.txt file from the api directory
-COPY api/requirements.txt ./
+COPY ../api/requirements.txt ./
 
 # Install dependencies specified in requirements.txt
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
+RUN pip install  -r requirements.txt
 
 # Create a non-root user and set up the environment
 RUN useradd -m -u 1000 user

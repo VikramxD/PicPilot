@@ -5,7 +5,6 @@ from utils import accelerator, ImageAugmentation
 import hydra
 from omegaconf import DictConfig
 from PIL import Image
-from functools import lru_cache
 
 
 def load_pipeline(model_name: str, device, enable_compile: bool = True):
