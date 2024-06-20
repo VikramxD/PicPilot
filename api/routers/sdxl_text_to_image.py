@@ -1,21 +1,13 @@
-import sys
-sys.path.append("../scripts")  # Path of the scripts directory
 import config
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-import base64
-from io import BytesIO
 from typing import List
-import uuid
 from diffusers import DiffusionPipeline
 import torch
 from functools import lru_cache
-from PIL import Image
-import io
-from scripts.utils import accelerator
+from scripts.api_utils import accelerator
 from models.sdxl_input import InputFormat
 from async_batcher.batcher import AsyncBatcher
-from utils import pil_to_b64_json, pil_to_s3_json
+from scripts.api_utils import pil_to_b64_json, pil_to_s3_json
 torch._inductor.config.conv_1x1_as_mm = True
 torch._inductor.config.coordinate_descent_tuning = True
 torch._inductor.config.epilogue_fusion = False

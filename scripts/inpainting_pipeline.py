@@ -1,7 +1,7 @@
 import torch
 from diffusers import AutoPipelineForInpainting
 from diffusers.utils import load_image
-from utils import accelerator, ImageAugmentation
+from api_utils import accelerator, ImageAugmentation
 import hydra
 from omegaconf import DictConfig
 from PIL import Image

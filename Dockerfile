@@ -1,33 +1,45 @@
-# Use the official Python base image
-FROM python:3.10-slim
+# Dockerfile for Python application with dependencies and runtime optimizations
 
-# Set the initial working directory
+# Use Python 3.10 slim-buster as base image
+FROM python:3.10-slim-buster
+
+# Set working directory in the container
 WORKDIR /app
 
-# Copy the requirements.txt file from the api directory
-COPY ../api/requirements.txt ./
+# Install system dependencies
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        ffmpeg \
+        libsm6 \
+        libxext6 \
+        libgl1-mesa-glx \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install dependencies specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy everything from the current directory to /app in the container
+COPY . .
 
-# Create a non-root user and set up the environment
+# Install Python dependencies
+RUN pip install --no-cache-dir -r api/requirements.txt
+
+# Create a non-root user to run the application
 RUN useradd -m -u 1000 user
 
+# Set environment variables
+ENV HOME=/home/user \
+    PATH=/home/user/.local/bin:$PATH \
+    PYTHONPATH=$HOME/app/scripts
+
+# Set ownership to non-root user
+RUN chown -R user:user /app
+
+# Switch to the non-root user
 USER user
 
-ENV HOME=/home/user \
-    PATH=/home/user/.local/bin:$PATH
+# Install the application in editable mode
+RUN pip install --no-cache-dir -e /app
 
-# Set the final working directory
-WORKDIR $HOME/app
+# Set working directory for the application
+WORKDIR /app/api
 
-
-
-# Copy the entire project into the container, setting the appropriate ownership
-COPY --chown=user . $HOME/app
-
-# Set the working directory to /home/user/app/api
-WORKDIR $HOME/app/api
-
-# Command to run the API
+# Command to run the application
 CMD ["python", "endpoints.py"]

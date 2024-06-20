@@ -2,7 +2,7 @@ import sys
 import torch
 sys.path.append('../')
 from Kandinsky.kandinsky3 import get_inpainting_pipeline
-from utils import ImageAugmentation
+from api_utils import ImageAugmentation
 from diffusers.utils import load_image
 from PIL import Image
 

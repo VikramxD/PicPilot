@@ -6,9 +6,9 @@ from io import BytesIO
 
 
 
-sdxl_inference_endpoint = 'http://127.0.0.1:8000/api/v1/product-diffusion/sdxl_v0_lora_inference'
-sdxl_batch_inference_endpoint = 'http://127.0.0.1:8000/api/v1/product-diffusion/sdxl_v0_lora_inference/batch'
-kandinsky_inpainting_inference = 'http://127.0.0.1:8000/api/v1/product-diffusion/kandinskyv2.2_inpainting'
+sdxl_inference_endpoint = 'http://127.0.0.1:7860/api/v1/product-diffusion/sdxl_v0_lora_inference'
+sdxl_batch_inference_endpoint = 'http://127.0.0.1:7860/api/v1/product-diffusion/sdxl_v0_lora_inference/batch'
+kandinsky_inpainting_inference = 'http://127.0.0.1:7860/api/v1/product-diffusion/kandinskyv2.2_inpainting'
 
 # Define the InpaintingRequest model
 class InputRequest(BaseModel):

@@ -1,5 +1,4 @@
-import sys
-sys.path.append('../scripts')
+from pathlib import Path
 import os
 import uuid
 from typing import List, Tuple, Any, Dict
@@ -7,7 +6,7 @@ from fastapi import APIRouter, File, UploadFile, HTTPException, Form, Depends, B
 from pydantic import BaseModel, Field
 from PIL import Image
 import lightning.pytorch as pl
-from utils import pil_to_s3_json, pil_to_b64_json, ImageAugmentation, accelerator
+from scripts.api_utils import pil_to_s3_json, pil_to_b64_json, ImageAugmentation, accelerator
 from inpainting_pipeline import AutoPaintingPipeline, load_pipeline
 from hydra import compose, initialize
 from async_batcher.batcher import AsyncBatcher
@@ -18,7 +17,7 @@ pl.seed_everything(42)
 router = APIRouter()
 
 # Initialize Hydra configuration
-with initialize(version_base=None, config_path="../../configs"):
+with initialize(version_base=None, config_path=Path(__file__).resolve().parent.parent / "configs"):
     cfg = compose(config_name="inpainting")
 
 # Load the inpainting pipeline
