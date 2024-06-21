@@ -1,7 +1,4 @@
-# Dockerfile for Python application with dependencies and runtime optimizations
-
-# Use Python 3.10 slim-buster as base image
-FROM python:3.10-slim-buster
+FROM python:3.10
 
 # Set working directory in the container
 WORKDIR /app

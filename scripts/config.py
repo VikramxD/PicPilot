@@ -1,15 +1,17 @@
-MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
-ADAPTER_NAME = "VikramSingh178/sdxl-lora-finetune-product-caption"
-ADAPTER_NAME_2 = "VikramSingh178/Products10k-SDXL-Lora"
-VAE_NAME= "madebyollin/sdxl-vae-fp16-fix"
-DATASET_NAME= "hahminlew/kream-product-blip-captions"
-PROJECT_NAME = "Product Photography"
-PRODUCTS_10k_DATASET = "VikramSingh178/Products-10k-BLIP-captions"
-CAPTIONING_MODEL_NAME = "Salesforce/blip-image-captioning-base"
-SEGMENTATION_MODEL_NAME = "facebook/sam-vit-large"
-DETECTION_MODEL_NAME = "yolov8l"
-ENABLE_COMPILE = True
-INPAINTING_MODEL_NAME = 'kandinsky-community/kandinsky-2-2-decoder-inpaint'
+MODEL_NAME:str="stabilityai/stable-diffusion-xl-base-1.0"
+ADAPTER_NAME:str = "VikramSingh178/sdxl-lora-finetune-product-caption"
+ADAPTER_NAME_2:str = "VikramSingh178/Products10k-SDXL-Lora"
+VAE_NAME:str= "madebyollin/sdxl-vae-fp16-fix"
+DATASET_NAME:str = "hahminlew/kream-product-blip-captions"
+PROJECT_NAME:str = "Product Photography"
+PRODUCTS_10k_DATASET:str = "VikramSingh178/Products-10k-BLIP-captions"
+CAPTIONING_MODEL_NAME:str = "Salesforce/blip-image-captioning-base"
+SEGMENTATION_MODEL_NAME:str = "facebook/sam-vit-large"
+DETECTION_MODEL_NAME:str = "yolov8l"
+ENABLE_COMPILE:bool = True
+INPAINTING_MODEL_NAME:str = 'kandinsky-community/kandinsky-2-2-decoder-inpaint'
+
+
 
 
 
@@ -68,3 +70,5 @@ class Config:
         self.noise_offset = 0
         self.rank = 4
         self.debug_loss = False
+
+
