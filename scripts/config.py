@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 MODEL_NAME:str="stabilityai/stable-diffusion-xl-base-1.0"
 ADAPTER_NAME:str = "VikramSingh178/sdxl-lora-finetune-product-caption"
 ADAPTER_NAME_2:str = "VikramSingh178/Products10k-SDXL-Lora"
@@ -13,19 +12,6 @@ DETECTION_MODEL_NAME:str = "yolov8l"
 ENABLE_COMPILE:bool = True
 INPAINTING_MODEL_NAME:str = 'kandinsky-community/kandinsky-2-2-decoder-inpaint'
 
-
-=======
-MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
-ADAPTER_NAME = "VikramSingh178/sdxl-lora-finetune-product-caption"
-ADAPTER_NAME_2 = "VikramSingh178/Products10k-SDXL-Lora"
-VAE_NAME= "madebyollin/sdxl-vae-fp16-fix"
-DATASET_NAME= "hahminlew/kream-product-blip-captions"
-PROJECT_NAME = "Product Photography"
-PRODUCTS_10k_DATASET = "VikramSingh178/Products-10k-BLIP-captions"
-CAPTIONING_MODEL_NAME = "Salesforce/blip-image-captioning-base"
-SEGMENTATION_MODEL_NAME = "facebook/sam-vit-large"
-DETECTION_MODEL_NAME = "yolov8l"
->>>>>>> a817fb6 (chore: Update .gitignore and add new files for inpainting pipeline)
 
 
 
@@ -86,18 +72,3 @@ class Config:
         self.debug_loss = False
 
 
-=======
-LOGS_DIR = '../logs'
-DATA_DIR = '../data'
-Project_Name = 'product_placement_api'
-entity = 'vikramxd'
-image_dir = '../sample_data'
-mask_dir = '../masks'
-segmentation_model = 'facebook/sam-vit-large'
-detection_model = 'yolov8l'
-kandinsky_model_name = 'kandinsky-community/kandinsky-2-2-decoder-inpaint'
-video_model_name = 'stabilityai/stable-video-diffusion-img2vid-xt'
-target_width = 2560
-target_height = 1440
-roi_scale = 0.6
->>>>>>> aaed2f5 (Refactor config.py and models.py, and add new functions in segment_everything.py and video_pipeline.py)
