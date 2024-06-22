@@ -1,21 +1,13 @@
 .venv
-<<<<<<< HEAD
 /scripts/wandb
 variables.tf
 .terraform
 config.env
 /scripts/yolov8s*
 /scripts/*jpg
-<<<<<<< HEAD
-<<<<<<< HEAD
 /scripts/outputs
-=======
 scripts/wandb
->>>>>>> bc53421 (Refactor .gitignore, config.py, and wandb scripts, and update requirements.txt)
-=======
 /scripts/outputs
->>>>>>> a817fb6 (chore: Update .gitignore and add new files for inpainting pipeline)
-=======
 /scripts/outputs
 bfg.jar
->>>>>>> bd37c37 (commit)
+
