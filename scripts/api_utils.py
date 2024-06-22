@@ -6,15 +6,11 @@ from PIL import Image, ImageOps
 from config import SEGMENTATION_MODEL_NAME, DETECTION_MODEL_NAME
 from diffusers.utils import load_image
 import gc
-<<<<<<< HEAD:scripts/api_utils.py
 from s3_manager import S3ManagerService
 import io
 from io import BytesIO
 import base64
 import uuid
-=======
-
->>>>>>> a817fb6 (chore: Update .gitignore and add new files for inpainting pipeline):scripts/utils.py
 
 
 
@@ -165,11 +161,7 @@ def pil_to_s3_json(image: Image.Image, file_name) -> dict:
 
 
 if __name__ == "__main__":
-<<<<<<< HEAD:scripts/api_utils.py
     augmenter = ImageAugmentation(target_width=1024, target_height=1024, roi_scale=0.5)
-=======
-    augmenter = ImageAugmentation(target_width=2560, target_height=1440, roi_scale=0.7)
->>>>>>> a817fb6 (chore: Update .gitignore and add new files for inpainting pipeline):scripts/utils.py
     image_path = "../sample_data/example3.jpg"
     image = Image.open(image_path)
     extended_image = augmenter.extend_image(image)
