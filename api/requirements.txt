@@ -14,5 +14,5 @@ boto3
 ultralytics
 transformers
 accelerate
-
+peft
 
