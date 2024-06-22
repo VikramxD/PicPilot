@@ -12,6 +12,7 @@ utils==1.0.2
 uvicorn==0.30.1
 boto3
 ultralytics
-transformers 
+transformers
+accelerate
 
 
