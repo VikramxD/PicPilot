@@ -7,6 +7,7 @@ config.env
 /scripts/yolov8s*
 /scripts/*jpg
 <<<<<<< HEAD
+<<<<<<< HEAD
 /scripts/outputs
 =======
 scripts/wandb
@@ -14,3 +15,7 @@ scripts/wandb
 =======
 /scripts/outputs
 >>>>>>> a817fb6 (chore: Update .gitignore and add new files for inpainting pipeline)
+=======
+/scripts/outputs
+bfg.jar
+>>>>>>> bd37c37 (commit)
