@@ -1,3 +1,13 @@
+---
+license: mit
+sdk: docker
+emoji: 🚀
+colorFrom: blue
+colorTo: green
+pinned: false
+short_description: PicPilot Production Server
+---
+
 # Outpainting Pipeline
 
 - Intial Version of the project used a combination of Yolov8s Segmentation model to provide a rough mask , which was then inverted for Outpainting to use with Models like stable diffusion inpainting model from Runway along with ControlNet to control the outpainted generated output , 
