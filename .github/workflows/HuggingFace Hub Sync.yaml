@@ -9,8 +9,6 @@ on:
 jobs:
   sync-to-hub:
     runs-on: ubuntu-latest
-    env:
-      HF_TOKEN: ${{ secrets.HF_TOKEN }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -20,7 +18,13 @@ jobs:
         run: |
           git config user.name "Your Name"
           git config user.email "your-email@example.com"
+      - name: Set pull strategy to rebase
+        run: git config pull.rebase true
       - name: Pull from remote
         run: git pull https://VikramSingh178:$HF_TOKEN@huggingface.co/spaces/VikramSingh178/picpilot-server main
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
       - name: Push to hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: git push https://VikramSingh178:$HF_TOKEN@huggingface.co/spaces/VikramSingh178/picpilot-server main
