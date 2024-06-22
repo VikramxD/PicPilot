@@ -50,11 +50,6 @@ async def root():
 def check_health():
     return {"status": "ok"}
 
-<<<<<<< HEAD:api/endpoints.py
 
 
 uvicorn.run(app, host='127.0.0.1', port=7860)
-=======
-uvicorn.run(app, host="0.0.0.0", port=8000)
-
->>>>>>> cceaa9e (chore: Update roi_scale in inpainting.yaml and add gradio UI for SDXL LORA Inpainting):product_diffusion_api/endpoints.py
