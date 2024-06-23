@@ -15,4 +15,4 @@ ultralytics
 transformers
 accelerate
 peft
-
+pydantic-settings
