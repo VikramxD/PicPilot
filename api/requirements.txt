@@ -16,4 +16,4 @@ transformers
 accelerate
 peft
 pydantic-settings
-logfire['fastapi']
+logfire[fastapi]
