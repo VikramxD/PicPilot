@@ -17,7 +17,7 @@ pl.seed_everything(42)
 router = APIRouter()
 
 # Initialize Hydra configuration
-with initialize(version_base=None, config_path=Path(__file__).resolve().parent.parent / "configs"):
+with initialize(version_base=None, config_path="../../configs"):
     cfg = compose(config_name="inpainting")
 
 # Load the inpainting pipeline

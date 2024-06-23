@@ -8,5 +8,5 @@ class Settings(BaseSettings):
 
    
    
-Settings()
+settings = Settings()
 
