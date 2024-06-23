@@ -9,7 +9,7 @@ PRODUCTS_10k_DATASET:str = "VikramSingh178/Products-10k-BLIP-captions"
 CAPTIONING_MODEL_NAME:str = "Salesforce/blip-image-captioning-base"
 SEGMENTATION_MODEL_NAME:str = "facebook/sam-vit-large"
 DETECTION_MODEL_NAME:str = "yolov8l"
-ENABLE_COMPILE:bool = True
+ENABLE_COMPILE:bool = False
 INPAINTING_MODEL_NAME:str = 'kandinsky-community/kandinsky-2-2-decoder-inpaint'
 
 
