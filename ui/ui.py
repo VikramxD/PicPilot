@@ -8,7 +8,7 @@ from io import BytesIO
 
 sdxl_inference_endpoint = 'https://vikramsingh178-picpilot-server.hf.space/api/v1/product-diffusion/sdxl_v0_lora_inference'
 sdxl_batch_inference_endpoint = 'https://vikramsingh178-picpilot-server.hf.space/api/v1/product-diffusion/sdxl_v0_lora_inference/batch'
-kandinsky_inpainting_inference = 'https://vikramsingh178-picpilot-server.hf.space/api/v1/product-diffusion/kandinskyv2.2_inpainting'
+kandinsky_inpainting_inference = 'https://vikramsingh178-picpilot-server.hf.space/api/v1/product-diffusion/inpainting'
 
 # Define the InpaintingRequest model
 class InputRequest(BaseModel):
@@ -39,7 +39,7 @@ async def generate_sdxl_lora_image(prompt, negative_prompt, num_inference_steps,
     ).dict()
     
     response = requests.post(sdxl_inference_endpoint, json=payload)
-    response = response
+    response = response.json()
     url = response['url']
     image = load_image(url)
     return image
