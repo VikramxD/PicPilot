@@ -12,7 +12,7 @@ from hydra import compose, initialize
 from async_batcher.batcher import AsyncBatcher
 import json
 from functools import lru_cache
-
+import asyncio
 pl.seed_everything(42)
 router = APIRouter()
 
@@ -31,6 +31,7 @@ def load_pipeline_wrapper():
     """
     pipeline = load_pipeline(cfg.model, accelerator(), enable_compile=True)
     return pipeline
+
 inpainting_pipeline = load_pipeline_wrapper()
 
 class InpaintingRequest(BaseModel):
@@ -44,8 +45,7 @@ class InpaintingRequest(BaseModel):
     guidance_scale: float = Field(..., description="Guidance scale for inference")
     mode: str = Field(..., description="Mode for output ('b64_json' or 's3_json')")
     num_images: int = Field(..., description="Number of images to generate")
-    use_augmentation: bool = Field(True, description="Whether to use image augmentation")
-    
+
 class InpaintingBatchRequestModel(BaseModel):
     """
     Model representing a batch request for inpainting inference.
@@ -68,35 +68,14 @@ async def save_image(image: UploadFile) -> str:
         f.write(await image.read())
     return file_path
 
-def augment_image(image_path, target_width, target_height, roi_scale, segmentation_model_name, detection_model_name):
-    """
-    Augment an image by extending its dimensions and generating masks.
-
-    Args:
-        image_path (str): Path to the image file.
-        target_width (int): Target width for augmentation.
-        target_height (int): Target height for augmentation.
-        roi_scale (float): Scale factor for region of interest.
-        segmentation_model_name (str): Name of the segmentation model.
-        detection_model_name (str): Name of the detection model.
-
-    Returns:
-        Tuple[Image.Image, Image.Image]: Augmented image and inverted mask.
-    """
-    image = Image.open(image_path)
-    image_augmentation = ImageAugmentation(target_width, target_height, roi_scale)
-    image = image_augmentation.extend_image(image)
-    mask = image_augmentation.generate_mask_from_bbox(image, segmentation_model_name, detection_model_name)
-    inverted_mask = image_augmentation.invert_mask(mask)
-    return image, inverted_mask
-
-def run_inference(cfg, image_path: str, request: InpaintingRequest):
+def run_inference(cfg, image_path: str, mask_image_path: str, request: InpaintingRequest):
     """
     Run inference using an inpainting pipeline on an image.
 
     Args:
         cfg (dict): Configuration dictionary.
         image_path (str): Path to the image file.
+        mask_image_path (str): Path to the mask image file.
         request (InpaintingRequest): Pydantic model containing inference parameters.
 
     Returns:
@@ -105,17 +84,8 @@ def run_inference(cfg, image_path: str, request: InpaintingRequest):
     Raises:
         ValueError: If an invalid mode is provided.
     """
-    if request.use_augmentation:
-        image, mask_image = augment_image(image_path, 
-                                          cfg['target_width'], 
-                                          cfg['target_height'], 
-                                          cfg['roi_scale'], 
-                                          cfg['segmentation_model'], 
-                                          cfg['detection_model'])
-    else:
-        image = Image.open(image_path)
-        mask_image = None  
-    
+    image = Image.open(image_path)
+    mask_image = Image.open(mask_image_path)
     painting_pipeline = AutoPaintingPipeline(
         pipeline=inpainting_pipeline,
         image=image, 
@@ -137,26 +107,33 @@ def run_inference(cfg, image_path: str, request: InpaintingRequest):
         raise ValueError("Invalid mode. Supported modes are 'b64_json' and 's3_json'.")
 
 class InpaintingBatcher(AsyncBatcher):
-    async def process_batch(self, batch: Tuple[List[str], List[InpaintingRequest]]) -> List[Dict[str, Any]]:
+    def __init__(self, max_batch_size: int):
+        super().__init__(max_batch_size)
+
+    async def process_batch(self, batch: Tuple[List[str], List[str], List[InpaintingRequest]]) -> List[Dict[str, Any]]:
         """
         Process a batch of images and requests for inpainting inference.
 
         Args:
-            batch (Tuple[List[str], List[InpaintingRequest]]): Tuple of image paths and corresponding requests.
+            batch (Tuple[List[str], List[str], List[InpaintingRequest]]): Tuple of image paths, mask image paths, and corresponding requests.
 
         Returns:
             List[Dict[str, Any]]: List of resulting images in the specified mode ('b64_json' or 's3_json').
         """
-        image_paths, requests = batch
+        image_paths, mask_image_paths, requests = batch
         results = []
-        for image_path, request in zip(image_paths, requests):
-            result = run_inference(cfg, image_path, request)
-            results.append(result)
+        for image_path, mask_image_path, request in zip(image_paths, mask_image_paths, requests):
+            try:
+                result = run_inference(cfg, image_path, mask_image_path, request)
+                results.append(result)
+            except Exception as e:
+                results.append({"error": str(e)})
         return results
 
 @router.post("/inpainting")
 async def inpainting_inference(
     image: UploadFile = File(...),
+    mask_image: UploadFile = File(...),
     request_data: str = Form(...),
 ):
     """
@@ -164,6 +141,7 @@ async def inpainting_inference(
 
     Args:
         image (UploadFile): Uploaded image file.
+        mask_image (UploadFile): Uploaded mask image file.
         request_data (str): JSON string of the request parameters.
 
     Returns:
@@ -174,9 +152,10 @@ async def inpainting_inference(
     """
     try:
         image_path = await save_image(image)
+        mask_image_path = await save_image(mask_image)
         request_dict = json.loads(request_data)
         request = InpaintingRequest(**request_dict)
-        result = run_inference(cfg, image_path, request)
+        result = run_inference(cfg, image_path, mask_image_path, request)
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -184,6 +163,7 @@ async def inpainting_inference(
 @router.post("/inpainting/batch")
 async def inpainting_batch_inference(
     images: List[UploadFile] = File(...),
+    mask_images: List[UploadFile] = File(...),
     request_data: str = Form(...),
 ):
     """
@@ -191,6 +171,7 @@ async def inpainting_batch_inference(
 
     Args:
         images (List[UploadFile]): List of uploaded image files.
+        mask_images (List[UploadFile]): List of uploaded mask image files.
         request_data (str): JSON string of the request parameters.
 
     Returns:
@@ -204,12 +185,13 @@ async def inpainting_batch_inference(
         batch_request = InpaintingBatchRequestModel(**request_dict)
         requests = batch_request.requests
 
-        if len(images) != len(requests):
-            raise HTTPException(status_code=400, detail="The number of images and requests must match.")
+        if len(images) != len(requests) or len(images) != len(mask_images):
+            raise HTTPException(status_code=400, detail="The number of images, mask images, and requests must match.")
 
         batcher = InpaintingBatcher(max_batch_size=64)
-        image_paths = [await save_image(image) for image in images]
-        results = batcher.process_batch((image_paths, requests))
+        image_paths = await asyncio.gather(*[save_image(image) for image in images])
+        mask_image_paths = await asyncio.gather(*[save_image(mask_image) for mask_image in mask_images])
+        results = await batcher.process_batch((image_paths, mask_image_paths, requests))
 
         return results
     except Exception as e:
