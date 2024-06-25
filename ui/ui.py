@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from diffusers.utils import load_image
 from io import BytesIO
 import json
-import numpy as np
+from PIL import Image
 
 sdxl_inference_endpoint = 'https://vikramsingh178-picpilot-server.hf.space/api/v1/product-diffusion/sdxl_v0_lora_inference'
 sdxl_batch_inference_endpoint = 'https://vikramsingh178-picpilot-server.hf.space/api/v1/product-diffusion/sdxl_v0_lora_inference/batch'
@@ -44,12 +44,8 @@ async def generate_sdxl_lora_image(prompt, negative_prompt, num_inference_steps,
     return image
 
 def process_masked_image(img):
-    base_image = img["image"]
-    mask = img["mask"]
-    
-    # Convert mask to binary (0 or 255)
-    mask = np.where(mask > 0, 255, 0).astype(np.uint8)
-    
+    base_image = Image.fromarray(img['image'])
+    mask = Image.fromarray(img['mask'])
     return base_image, mask
 
 def generate_outpainting(prompt, negative_prompt, num_inference_steps, strength, guidance_scale, mode, num_images, masked_image):
@@ -61,8 +57,8 @@ def generate_outpainting(prompt, negative_prompt, num_inference_steps, strength,
     img_byte_arr = img_byte_arr.getvalue()
 
     mask_byte_arr = BytesIO()
-    mask_image = gr.processing_utils.encode_pil_to_base64(mask)
-    mask_byte_arr = mask_image.getvalue()
+    mask.save(mask_byte_arr, format='PNG')
+    mask_byte_arr = mask_byte_arr.getvalue()
     
     # Prepare the payload for multipart/form-data
     files = {
