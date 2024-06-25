@@ -189,8 +189,8 @@ async def inpainting_batch_inference(
             raise HTTPException(status_code=400, detail="The number of images, mask images, and requests must match.")
 
         batcher = InpaintingBatcher(max_batch_size=64)
-        image_paths = await asyncio.gather(*[save_image(image) for image in images])
-        mask_image_paths = await asyncio.gather(*[save_image(mask_image) for mask_image in mask_images])
+        image_paths = [save_image(image) for image in images]
+        mask_image_paths = [save_image(mask_image) for mask_image in mask_images]
         results = await batcher.process_batch((image_paths, mask_image_paths, requests))
 
         return results
