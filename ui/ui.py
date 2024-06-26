@@ -1,16 +1,17 @@
 import gradio as gr
+import numpy as np
 import requests
-from pydantic import BaseModel, Field
-from diffusers.utils import load_image
 from io import BytesIO
 import json
 from PIL import Image
+from pydantic import BaseModel, Field
+from diffusers.utils import load_image
 
+# API endpoints
 sdxl_inference_endpoint = 'https://vikramsingh178-picpilot-server.hf.space/api/v1/product-diffusion/sdxl_v0_lora_inference'
-sdxl_batch_inference_endpoint = 'https://vikramsingh178-picpilot-server.hf.space/api/v1/product-diffusion/sdxl_v0_lora_inference/batch'
 kandinsky_inpainting_inference = 'https://vikramsingh178-picpilot-server.hf.space/api/v1/product-diffusion/inpainting'
 
-class InputRequest(BaseModel):
+class InputRequestSDXL(BaseModel):
     prompt: str
     num_inference_steps: int
     guidance_scale: float
@@ -18,7 +19,7 @@ class InputRequest(BaseModel):
     num_images: int
     mode: str
 
-class InpaintingRequest(BaseModel):
+class InpaintingRequestKandinsky(BaseModel):
     prompt: str = Field(..., description="Prompt text for inference")
     negative_prompt: str = Field(..., description="Negative prompt text for inference")
     num_inference_steps: int = Field(..., description="Number of inference steps")
@@ -27,8 +28,8 @@ class InpaintingRequest(BaseModel):
     mode: str = Field(..., description="Mode for output ('b64_json' or 's3_json')")
     num_images: int = Field(..., description="Number of images to generate")
 
-async def generate_sdxl_lora_image(prompt, negative_prompt, num_inference_steps, guidance_scale, num_images, mode):
-    payload = InputRequest(
+def generate_sdxl_lora_image(prompt, negative_prompt, num_inference_steps, guidance_scale, num_images, mode):
+    payload = InputRequestSDXL(
         prompt=prompt,
         negative_prompt=negative_prompt,
         num_inference_steps=num_inference_steps,
@@ -37,19 +38,37 @@ async def generate_sdxl_lora_image(prompt, negative_prompt, num_inference_steps,
         mode=mode
     ).dict()
     
-    response = requests.post(sdxl_inference_endpoint, json=payload)
-    response = response.json()
-    url = response['url']
-    image = load_image(url)
-    return image
+    try:
+        response = requests.post(sdxl_inference_endpoint, json=payload)
+        response.raise_for_status()
+        response_data = response.json()
+        url = response_data['url']
+        image = load_image(url)
+        return image
+    except requests.exceptions.RequestException as e:
+        print(f"Error in SDXL-Lora API request: {e}")
+        return None
 
 def process_masked_image(img):
-    base_image = Image.fromarray(img['image'])
-    mask = Image.fromarray(img['mask'])
+    if img is None or "composite" not in img:
+        return None, None
+    
+    base_image = Image.fromarray(img["composite"]).convert("RGB")
+    
+    if "layers" in img and len(img["layers"]) > 0:
+        alpha_channel = img["layers"][0][:, :, 3]
+        mask = np.where(alpha_channel == 0, 0, 255).astype(np.uint8)
+        mask = Image.fromarray(mask).convert("L")
+    else:
+        mask = Image.new("L", base_image.size, 0)
+    
     return base_image, mask
 
 def generate_outpainting(prompt, negative_prompt, num_inference_steps, strength, guidance_scale, mode, num_images, masked_image):
     base_image, mask = process_masked_image(masked_image)
+    
+    if base_image is None or mask is None:
+        return None, None
     
     # Convert the images to bytes
     img_byte_arr = BytesIO()
@@ -60,66 +79,87 @@ def generate_outpainting(prompt, negative_prompt, num_inference_steps, strength,
     mask.save(mask_byte_arr, format='PNG')
     mask_byte_arr = mask_byte_arr.getvalue()
     
-    # Prepare the payload for multipart/form-data
+    # Prepare the files for multipart/form-data
     files = {
         'image': ('image.png', img_byte_arr, 'image/png'),
         'mask_image': ('mask.png', mask_byte_arr, 'image/png'),
     }
 
     # Prepare the request data
-    request_data = InpaintingRequest(
-        prompt=prompt,
-        negative_prompt=negative_prompt,
-        num_inference_steps=num_inference_steps,
-        strength=strength,
-        guidance_scale=guidance_scale,
-        mode=mode,
-        num_images=num_images
-    ).dict()
+    request_data = {
+        "prompt": prompt,
+        "negative_prompt": negative_prompt,
+        "num_inference_steps": num_inference_steps,
+        "strength": strength,
+        "guidance_scale": guidance_scale,
+        "mode": mode,
+        "num_images": num_images
+    }
 
-    # Add the JSON-encoded request data to the files dictionary
-    files['request_data'] = ('request_data.json', json.dumps(request_data), 'application/json')
+    # Convert request_data to a JSON string
+    request_data_json = json.dumps(request_data)
+
+    # Prepare the form data
+    form_data = {
+        'request_data': request_data_json
+    }
     
-    response = requests.post(kandinsky_inpainting_inference, files=files)
-    response.raise_for_status()
-    response = response.json()
-    url = response['url']
-    image = load_image(url)
-    return image
+    try:
+        response = requests.post(kandinsky_inpainting_inference, files=files, data=form_data)
+        response.raise_for_status()
+        response_data = response.json()
+        url = response_data['url']
+        outpainted_image = load_image(url)
+        return mask, outpainted_image
+    except requests.exceptions.RequestException as e:
+        print(f"Error in Kandinsky Inpainting API request: {e}")
+        return None, None
+
+def generate_mask_preview(img):
+    base_image, mask = process_masked_image(img)
+    if mask is None:
+        return None
+    return mask
 
 with gr.Blocks(theme='VikramSingh178/Webui-Theme') as demo:
     with gr.Tab("SdxL-Lora"):
         with gr.Row():
             with gr.Column():
                 with gr.Group():
-                    prompt = gr.Textbox(label="Prompt", placeholder="Enter your prompt here")
-                    negative_prompt = gr.Textbox(label="Negative Prompt", placeholder="Enter negative prompt here")
-                    num_inference_steps = gr.Slider(minimum=1, maximum=1000, step=1, value=20, label="Inference Steps")
-                    guidance_scale = gr.Slider(minimum=1.0, maximum=10.0, step=0.1, value=7.5, label="Guidance Scale")
-                    num_images = gr.Slider(minimum=1, maximum=10, step=1, value=1, label="Number of Images")
-                    mode = gr.Dropdown(choices=["s3_json", "b64_json"], value="s3_json", label="Mode")
-                    generate_button = gr.Button("Generate Image", variant='primary')
-            
+                    prompt_sdxl = gr.Textbox(label="Prompt", placeholder="Enter your prompt here")
+                    negative_prompt_sdxl = gr.Textbox(label="Negative Prompt", placeholder="Enter negative prompt here")
+                    num_inference_steps_sdxl = gr.Slider(minimum=1, maximum=1000, step=1, value=20, label="Inference Steps")
+                    guidance_scale_sdxl = gr.Slider(minimum=1.0, maximum=10.0, step=0.1, value=7.5, label="Guidance Scale")
+                    num_images_sdxl = gr.Slider(minimum=1, maximum=10, step=1, value=1, label="Number of Images")
+                    mode_sdxl = gr.Dropdown(choices=["s3_json", "b64_json"], value="s3_json", label="Mode")
+                    generate_button_sdxl = gr.Button("Generate Image", variant='primary')
+                   
             with gr.Column(scale=1):
-                image_preview = gr.Image(label="Generated Image", show_download_button=True, show_share_button=True, container=True)
-                generate_button.click(generate_sdxl_lora_image, inputs=[prompt, negative_prompt, num_inference_steps, guidance_scale, num_images, mode], outputs=[image_preview])
+                image_preview_sdxl = gr.Image(label="Generated Image (SDXL-Lora)", show_download_button=True, show_share_button=True, container=True)
+                generate_button_sdxl.click(generate_sdxl_lora_image, inputs=[prompt_sdxl, negative_prompt_sdxl, num_inference_steps_sdxl, guidance_scale_sdxl, num_images_sdxl, mode_sdxl], outputs=[image_preview_sdxl])
+                
 
     with gr.Tab("Inpainting"):
         with gr.Row():
             with gr.Column():
                 with gr.Group():
-                    masked_image = gr.ImageMask(label="Upload Image and Draw Mask")
-                    prompt = gr.Textbox(label="Prompt", placeholder="Enter your prompt here")
-                    negative_prompt = gr.Textbox(label="Negative Prompt", placeholder="Enter negative prompt here")
-                    num_inference_steps = gr.Slider(minimum=1, maximum=100, step=1, value=20, label="Inference Steps")
-                    strength = gr.Slider(minimum=0.1, maximum=1, step=0.1, value=0.8, label="Strength")
-                    guidance_scale = gr.Slider(minimum=1.0, maximum=10.0, step=0.1, value=7.5, label="Guidance Scale")
-                    num_images = gr.Slider(minimum=1, maximum=10, step=1, value=1, label="Number of Images")
-                    mode = gr.Dropdown(choices=["s3_json", "b64_json"], value="s3_json", label="Mode")
-                    generate_button = gr.Button("Generate Inpainting", variant='primary')
+                    masked_image_kandinsky = gr.ImageMask(label="Upload Image and Draw Mask", format='png')
+                    prompt_kandinsky = gr.Textbox(label="Prompt", placeholder="Enter your prompt here")
+                    negative_prompt_kandinsky = gr.Textbox(label="Negative Prompt", placeholder="Enter negative prompt here")
+                    num_inference_steps_kandinsky = gr.Slider(minimum=1, maximum=100, step=1, value=20, label="Inference Steps")
+                    strength_kandinsky = gr.Slider(minimum=0.1, maximum=1, step=0.1, value=0.8, label="Strength")
+                    guidance_scale_kandinsky = gr.Slider(minimum=1.0, maximum=10.0, step=0.1, value=7.5, label="Guidance Scale")
+                    num_images_kandinsky = gr.Slider(minimum=1, maximum=10, step=1, value=1, label="Number of Images")
+                    mode_kandinsky = gr.Dropdown(choices=["s3_json", "b64_json"], value="s3_json", label="Mode")
+                    generate_button_kandinsky = gr.Button("Generate Inpainting", variant='primary')
+                    generate_mask_button_kandinsky = gr.Button("Generate Mask", variant='secondary')
 
             with gr.Column(scale=1):
-                image_preview = gr.Image(label="Inpainted Image", show_download_button=True, show_share_button=True, container=True)
-                generate_button.click(generate_outpainting, inputs=[prompt, negative_prompt, num_inference_steps, strength, guidance_scale, mode, num_images, masked_image], outputs=[image_preview])
+                mask_preview_kandinsky = gr.Image(label="Mask Preview", show_download_button=True, container=True)
+                outpainted_image_preview_kandinsky = gr.Image(label="Outpainted Image (Kandinsky)", show_download_button=True, show_share_button=True, container=True)
+                generate_mask_button_kandinsky.click(generate_mask_preview, inputs=masked_image_kandinsky, outputs=[mask_preview_kandinsky])
+                generate_button_kandinsky.click(generate_outpainting, 
+                                                inputs=[prompt_kandinsky, negative_prompt_kandinsky, num_inference_steps_kandinsky, strength_kandinsky, guidance_scale_kandinsky, mode_kandinsky, num_images_kandinsky, masked_image_kandinsky], 
+                                                outputs=[mask_preview_kandinsky, outpainted_image_preview_kandinsky])
 
 demo.launch()
