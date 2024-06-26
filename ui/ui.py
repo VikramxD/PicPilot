@@ -126,40 +126,40 @@ with gr.Blocks(theme='VikramSingh178/Webui-Theme') as demo:
         with gr.Row():
             with gr.Column():
                 with gr.Group():
-                    prompt_sdxl = gr.Textbox(label="Prompt", placeholder="Enter your prompt here")
-                    negative_prompt_sdxl = gr.Textbox(label="Negative Prompt", placeholder="Enter negative prompt here")
-                    num_inference_steps_sdxl = gr.Slider(minimum=1, maximum=1000, step=1, value=20, label="Inference Steps")
-                    guidance_scale_sdxl = gr.Slider(minimum=1.0, maximum=10.0, step=0.1, value=7.5, label="Guidance Scale")
-                    num_images_sdxl = gr.Slider(minimum=1, maximum=10, step=1, value=1, label="Number of Images")
-                    mode_sdxl = gr.Dropdown(choices=["s3_json", "b64_json"], value="s3_json", label="Mode")
-                    generate_button_sdxl = gr.Button("Generate Image", variant='primary')
+                    prompt = gr.Textbox(label="Prompt", placeholder="Enter your prompt here")
+                    negative_prompt = gr.Textbox(label="Negative Prompt", placeholder="Enter negative prompt here")
+                    num_inference_steps = gr.Slider(minimum=1, maximum=1000, step=1, value=20, label="Inference Steps")
+                    guidance_scale = gr.Slider(minimum=1.0, maximum=10.0, step=0.1, value=7.5, label="Guidance Scale")
+                    num_images = gr.Slider(minimum=1, maximum=10, step=1, value=1, label="Number of Images")
+                    mode = gr.Dropdown(choices=["s3_json", "b64_json"], value="s3_json", label="Mode")
+                    generate_button = gr.Button("Generate Image", variant='primary')
                    
             with gr.Column(scale=1):
-                image_preview_sdxl = gr.Image(label="Generated Image (SDXL-Lora)", show_download_button=True, show_share_button=True, container=True)
-                generate_button_sdxl.click(generate_sdxl_lora_image, inputs=[prompt_sdxl, negative_prompt_sdxl, num_inference_steps_sdxl, guidance_scale_sdxl, num_images_sdxl, mode_sdxl], outputs=[image_preview_sdxl])
+                image_preview = gr.Image(label="Generated Image (SDXL-Lora)", show_download_button=True, show_share_button=True, container=True)
+                generate_button.click(generate_sdxl_lora_image, inputs=[prompt, negative_prompt, num_inference_steps, guidance_scale, num_images, mode], outputs=[image_preview])
                 
 
     with gr.Tab("Inpainting"):
         with gr.Row():
             with gr.Column():
                 with gr.Group():
-                    masked_image_kandinsky = gr.ImageMask(label="Upload Image and Draw Mask", format='png')
-                    prompt_kandinsky = gr.Textbox(label="Prompt", placeholder="Enter your prompt here")
-                    negative_prompt_kandinsky = gr.Textbox(label="Negative Prompt", placeholder="Enter negative prompt here")
-                    num_inference_steps_kandinsky = gr.Slider(minimum=1, maximum=100, step=1, value=20, label="Inference Steps")
-                    strength_kandinsky = gr.Slider(minimum=0.1, maximum=1, step=0.1, value=0.8, label="Strength")
-                    guidance_scale_kandinsky = gr.Slider(minimum=1.0, maximum=10.0, step=0.1, value=7.5, label="Guidance Scale")
-                    num_images_kandinsky = gr.Slider(minimum=1, maximum=10, step=1, value=1, label="Number of Images")
+                    masked_image = gr.ImageMask(label="Upload Image and Draw Mask", format='png')
+                    prompt = gr.Textbox(label="Prompt", placeholder="Enter your prompt here")
+                    negative_prompt= gr.Textbox(label="Negative Prompt", placeholder="Enter negative prompt here")
+                    num_inference_steps = gr.Slider(minimum=1, maximum=100, step=1, value=20, label="Inference Steps")
+                    strength = gr.Slider(minimum=0.1, maximum=1, step=0.1, value=0.8, label="Strength")
+                    guidance_scale = gr.Slider(minimum=1.0, maximum=10.0, step=0.1, value=7.5, label="Guidance Scale")
+                    num_images= gr.Slider(minimum=1, maximum=10, step=1, value=1, label="Number of Images")
                     mode_kandinsky = gr.Dropdown(choices=["s3_json", "b64_json"], value="s3_json", label="Mode")
-                    generate_button_kandinsky = gr.Button("Generate Inpainting", variant='primary')
-                    generate_mask_button_kandinsky = gr.Button("Generate Mask", variant='secondary')
+                    generate_button = gr.Button("Generate Inpainting", variant='primary')
+                    generate_mask_button_painting = gr.Button("Generate Mask", variant='secondary')
 
             with gr.Column(scale=1):
-                mask_preview_kandinsky = gr.Image(label="Mask Preview", show_download_button=True, container=True)
-                outpainted_image_preview_kandinsky = gr.Image(label="Outpainted Image (Kandinsky)", show_download_button=True, show_share_button=True, container=True)
-                generate_mask_button_kandinsky.click(generate_mask_preview, inputs=masked_image_kandinsky, outputs=[mask_preview_kandinsky])
-                generate_button_kandinsky.click(generate_outpainting, 
-                                                inputs=[prompt_kandinsky, negative_prompt_kandinsky, num_inference_steps_kandinsky, strength_kandinsky, guidance_scale_kandinsky, mode_kandinsky, num_images_kandinsky, masked_image_kandinsky], 
-                                                outputs=[mask_preview_kandinsky, outpainted_image_preview_kandinsky])
+                mask_preview= gr.Image(label="Mask Preview", show_download_button=True, container=True)
+                outpainted_image_preview = gr.Image(label="Outpainted Image (Kandinsky)", show_download_button=True, show_share_button=True, container=True)
+                generate_mask_button_painting.click(generate_mask_preview, inputs=masked_image, outputs=[mask_preview])
+                generate_button.click(generate_outpainting, 
+                                                inputs=[prompt, negative_prompt, num_inference_steps, strength, guidance_scale, mode_kandinsky, num_images, masked_image], 
+                                                outputs=[mask_preview, outpainted_image_preview])
 
 demo.launch()
