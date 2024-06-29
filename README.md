@@ -56,8 +56,8 @@ EXPERIMENTATION WITH THE FOLLOWING models
 ![cycle](https://github.com/VikramxD/product_diffusion_api/assets/72499426/b1b8c745-deb4-41ff-a93a-77fa06f55cc3)
 
 ## Some Improvements 
-- Working on API to deploy this model in batch mode adding loggers from prompt and generated output 
-- Implementation of UI in Gradio / Streamlit for checking the model out in visual way
+- <s>Working on API to deploy this model in batch mode adding loggers from prompt and generated output</s>
+- <s>Implementation of UI in Gradio / Streamlit for checking the model out in visual way</s>
 - <s>Experimenting with image to video model pipeline to generate a video output thinking of using (https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt) model for this</s>
 
 
