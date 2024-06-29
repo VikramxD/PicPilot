@@ -64,19 +64,23 @@ def process_masked_image(img):
     
     return base_image, mask
 
-def generate_outpainting(prompt, negative_prompt, num_inference_steps, strength, guidance_scale, mode, num_images, masked_image):
+def generate_outpainting(prompt, negative_prompt, num_inference_steps, strength, guidance_scale, mode, num_images, masked_image, width, height):
     base_image, mask = process_masked_image(masked_image)
     
     if base_image is None or mask is None:
         return None, None
     
-    # Convert the images to bytes
+    # Resize base image and mask
+    base_image_resized = base_image.resize((width, height))
+    mask_resized = mask.resize((width, height))
+    
+    # Convert the resized images to bytes
     img_byte_arr = BytesIO()
-    base_image.save(img_byte_arr, format='PNG')
+    base_image_resized.save(img_byte_arr, format='PNG')
     img_byte_arr = img_byte_arr.getvalue()
 
     mask_byte_arr = BytesIO()
-    mask.save(mask_byte_arr, format='PNG')
+    mask_resized.save(mask_byte_arr, format='PNG')
     mask_byte_arr = mask_byte_arr.getvalue()
     
     # Prepare the files for multipart/form-data
@@ -110,7 +114,7 @@ def generate_outpainting(prompt, negative_prompt, num_inference_steps, strength,
         response_data = response.json()
         url = response_data['url']
         outpainted_image = load_image(url)
-        return mask, outpainted_image
+        return mask_resized, outpainted_image
     except requests.exceptions.RequestException as e:
         print(f"Error in Kandinsky Inpainting API request: {e}")
         return None, None
@@ -121,6 +125,13 @@ def generate_mask_preview(img):
         return None
     return mask
 
+def resize_image(img, width, height):
+    if img is None:
+        return None
+    resized_img = img.resize((width, height))
+    return resized_img
+
+# Gradio interface setup
 with gr.Blocks(theme='VikramSingh178/Webui-Theme') as demo:
     with gr.Tab("SdxL-Lora"):
         with gr.Row():
@@ -151,15 +162,19 @@ with gr.Blocks(theme='VikramSingh178/Webui-Theme') as demo:
                     guidance_scale = gr.Slider(minimum=1.0, maximum=10.0, step=0.1, value=7.5, label="Guidance Scale")
                     num_images= gr.Slider(minimum=1, maximum=10, step=1, value=1, label="Number of Images")
                     mode_kandinsky = gr.Dropdown(choices=["s3_json", "b64_json"], value="s3_json", label="Mode")
+                    width_slider = gr.Slider(minimum=512, maximum=1024, step=1, value=800, label="Image Width")
+                    height_slider = gr.Slider(minimum=512, maximum=1024, step=1, value=800, label="Image Height")
+                    resize_button = gr.Button("Resize Image", variant='secondary')
                     generate_button = gr.Button("Generate Inpainting", variant='primary')
-                    generate_mask_button_painting = gr.Button("Generate Mask", variant='secondary')
+                    generate_mask_button_painting = gr.Button("Generate Mask", variant='primary')
 
             with gr.Column(scale=1):
                 mask_preview= gr.Image(label="Mask Preview", show_download_button=True, container=True)
                 outpainted_image_preview = gr.Image(label="Outpainted Image (Kandinsky)", show_download_button=True, show_share_button=True, container=True)
+                resize_button.click(resize_image, inputs=[masked_image, width_slider, height_slider], outputs=[masked_image])
                 generate_mask_button_painting.click(generate_mask_preview, inputs=masked_image, outputs=[mask_preview])
                 generate_button.click(generate_outpainting, 
-                                                inputs=[prompt, negative_prompt, num_inference_steps, strength, guidance_scale, mode_kandinsky, num_images, masked_image], 
-                                                outputs=[mask_preview, outpainted_image_preview])
+                                      inputs=[prompt, negative_prompt, num_inference_steps, strength, guidance_scale, mode_kandinsky, num_images, masked_image, width_slider, height_slider], 
+                                      outputs=[mask_preview, outpainted_image_preview])
 
 demo.launch()
