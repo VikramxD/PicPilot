@@ -2,7 +2,7 @@ from config import MODEL_NAME,ADAPTER_NAME
 import torch
 from diffusers import DiffusionPipeline
 from wandb.integration.diffusers import autolog
-from config import PROJECT_NAME
+from scripts.config import PROJECT_NAME
 autolog(init=dict(project=PROJECT_NAME))
 
 

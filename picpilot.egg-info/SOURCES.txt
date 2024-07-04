@@ -16,8 +16,9 @@ scripts/config.py
 scripts/inpainting_pipeline.py
 scripts/kandinsky3_inpainting.py
 scripts/load_pipeline.py
-scripts/logger.py
 scripts/products10k_captions.py
 scripts/s3_manager.py
 scripts/sdxl_lora_inference.py
 scripts/sdxl_lora_tuner.py
+ui/__init__.py
+ui/ui.py

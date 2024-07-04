@@ -3,10 +3,10 @@ from ultralytics import YOLO
 from transformers import SamModel, SamProcessor
 import numpy as np
 from PIL import Image, ImageOps
-from config import SEGMENTATION_MODEL_NAME, DETECTION_MODEL_NAME
+from scripts.config import SEGMENTATION_MODEL_NAME, DETECTION_MODEL_NAME
 from diffusers.utils import load_image
 import gc
-from s3_manager import S3ManagerService
+from scripts.s3_manager import S3ManagerService
 import io
 from io import BytesIO
 import base64

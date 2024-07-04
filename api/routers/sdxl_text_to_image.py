@@ -1,4 +1,4 @@
-import config
+import scripts.config as config
 from fastapi import APIRouter, HTTPException
 from typing import List
 from diffusers import DiffusionPipeline

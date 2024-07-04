@@ -1,12 +1,11 @@
-import sys
 import torch
-sys.path.append('../')
 from Kandinsky.kandinsky3 import get_inpainting_pipeline
-from api_utils import ImageAugmentation
+from scripts.api_utils import ImageAugmentation,accelerator
 from diffusers.utils import load_image
+import numpy as np
 from PIL import Image
 
-device_map = torch.device('cuda:0')
+device_map = torch.device(accelerator())
 dtype_map = {
     'unet': torch.float16,
     'text_encoder': torch.float16,
@@ -18,12 +17,13 @@ pipe = get_inpainting_pipeline(
     device_map, dtype_map,
 )
 
-augmenter = ImageAugmentation(target_width=2560, target_height=1440)
-image = Image.open(image_path='/home/product_diffusion_api/sample_data/example1.jpg')
-extended_image = augmenter.extend_image(image)
-mask_image = augmenter.generate_mask_from_bbox(extended_image, segmentation_model='facebook/sam-vit-base', detection_model='yolov8s')
-mask_image = augmenter.invert_mask(mask_image)
+image = Image.open('/home/PicPilot/sample_data/image.png')
+mask_image = Image.open('/home/PicPilot/sample_data/mask_image.png')
+image = load_image(image=image)
+mask_image = np.array(mask_image)
 
 
-image = pipe( "Product on the Kitchen used for cooking", extended_image, mask_image)
+
+
+image = pipe( "Product on the Kitchen used for cooking", image, mask_image)
 image.save('output.jpg')
