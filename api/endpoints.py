@@ -7,13 +7,6 @@ import uvicorn
 
 
 logfire.configure(pydantic_plugin=logfire.PydanticPlugin(record='all'))
-
-
-
-
-
-
-
 app = FastAPI(openapi_url='/api/v1/product-diffusion/openapi.json',docs_url='/api/v1/product-diffusion/docs')
 app.add_middleware(
     CORSMiddleware,
