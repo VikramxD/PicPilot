@@ -4,7 +4,6 @@ from PIL import Image
 import lightning.pytorch as pl
 from scripts.api_utils import accelerator
 from typing import Optional
-import matplotlib.pyplot as plt
 pl.seed_everything(42)
 
 class ImageGenerator:
