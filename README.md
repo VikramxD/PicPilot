@@ -99,4 +99,3 @@ https://github.com/VikramxD/product_diffusion_api/assets/72499426/c935ec2d-cb76-
 
 📄 License: MIT
 
-🌈 Made with ❤️ by the PicPilot team
