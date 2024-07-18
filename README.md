@@ -13,7 +13,7 @@ short_description: PicPilot Production Server
 ![SDK](https://img.shields.io/badge/sdk-docker-blue.svg)
 ![Color](https://img.shields.io/badge/color-blue--green-brightgreen.svg)
 
-> PicPilot: A UI for Generating Stunning Product Photography and Visual Narratives in seconds
+> PicPilot: Generate Stunning Photography and Craft Visual Narratives in seconds for your Brand
 
 ## 📖 Overview
 
@@ -69,11 +69,15 @@ We've experimented with several cutting-edge models:
 
 Here are some impressive results from our pipeline:
 
-![Cooker Output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/1228718b-5ef7-44a1-81f6-2953ffdc767c)
-![Toaster Output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/06e12aea-cdc2-4ab8-97e0-be77bc49a238)
-![Chair Output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/65bcd04f-a715-43c3-8928-a9669f8eda85)
-![Tent Output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/dd6af644-1c07-424a-8ba6-0715a5611094)
-![Cycle Output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/b1b8c745-deb4-41ff-a93a-77fa06f55cc3)
+<div align="center">
+  <img src="https://github.com/VikramxD/product_diffusion_api/assets/72499426/1228718b-5ef7-44a1-81f6-2953ffdc767c" width="30%" alt="Cooker Output">
+  <img src="https://github.com/VikramxD/product_diffusion_api/assets/72499426/06e12aea-cdc2-4ab8-97e0-be77bc49a238" width="30%" alt="Toaster Output">
+  <img src="https://github.com/VikramxD/product_diffusion_api/assets/72499426/65bcd04f-a715-43c3-8928-a9669f8eda85" width="30%" alt="Chair Output">
+</div>
+<div align="center">
+  <img src="https://github.com/VikramxD/product_diffusion_api/assets/72499426/dd6af644-1c07-424a-8ba6-0715a5611094" width="30%" alt="Tent Output">
+  <img src="https://github.com/VikramxD/product_diffusion_api/assets/72499426/b1b8c745-deb4-41ff-a93a-77fa06f55cc3" width="30%" alt="Cycle Output">
+</div>
 
 ## 📊 Experimentation & Improvements
 
@@ -94,4 +98,4 @@ https://github.com/VikramxD/product_diffusion_api/assets/72499426/c935ec2d-cb76-
 
 📄 License: MIT
 
-
+🌈 Made with ❤️ by the PicPilot team
