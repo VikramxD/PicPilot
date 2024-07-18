@@ -17,14 +17,15 @@ short_description: PicPilot Production Server
 
 ## 📖 Overview
 
-PicPilot is an innovative outpainting pipeline that leverages state-of-the-art Text to Image Models to extend and enhance images. This project has evolved through multiple iterations, addressing challenges and improving output quality at each stage.
+PicPilot is a scalable solution that leverages state-of-the-art Text to Image Models to extend and enhance images. This project has evolved through multiple iterations, addressing challenges and improving output quality at each stage.
 
 ### Key Features:
-- Advanced segmentation using Segment Anything VIT Huge and YOLOv8l
-- High-quality outpainting with Kandinsky-v2.2-decoder-inpaint
-- Optimized for NVIDIA A100 40GB GPU
-- Customizable prompts and settings
-- Batch API support 
+- segmentation using Segment Anything VIT Huge and YOLOv8s
+- High-quality outpainting with Controlnet + ZoeDepth
+- stable video diffusion support 
+- Batch API support and EventDriven Queue Support
+- Logging and Telemetry using LogFire
+   
 
 ## 🏗 Architecture
 
@@ -35,33 +36,10 @@ Our pipeline combines multiple AI models to achieve superior outpainting results
 2. **Segmentation**: Segment Anything VIT Huge creates precise masks
 3. **Outpainting**: Kandinsky-v2.2-decoder-inpaint generates high-quality extended images
 
-## 🛠 Installation
 
-```bash
-git clone https://github.com/your-username/picpilot-production-server.git
-cd picpilot-production-server
-pip install -r requirements.txt
-wandb login
-huggingface-cli login
-cd scripts
-```
+## 🧠 Models used 
 
-## 🚀 Usage
 
-Run the main script with your desired parameters:
-
-```bash
-python run.py --image_path /path/to/image.jpg \
-              --prompt 'Your prompt here' \
-              --negative_prompt 'Negative prompt here' \
-              --output_dir /path/to/output \
-              --mask_dir /path/to/mask \
-              --uid unique_id
-```
-
-## 🧠 Models
-
-We've experimented with several cutting-edge models:
 - [Stable Diffusion Inpainting](https://huggingface.co/runwayml/stable-diffusion-inpainting)
 - [ControlNet Segmentation](https://huggingface.co/lllyasviel/sd-controlnet-seg)
 - [Kandinsky 2.2 Decoder Inpaint](https://huggingface.co/kandinsky-community/kandinsky-2-2-decoder-inpaint)
@@ -86,10 +64,10 @@ For detailed insights into our experimentation process, check out our [Weights &
 
 Recent improvements:
 - ✅ Deployed model as an API for batch processing
-- ✅ Implemented UI using Gradio / Streamlit for visual interaction
-- ✅ Integrated image-to-video model pipeline using [Stable Video Diffusion](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt)
+- ✅ Implemented UI using Gradio 
+- ✅ Integrated image-to-video model pipeline using [Stable Video Diffusion](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt) and 
 
-## 🎥 Demo Video
+## 🎥 Sample Video
 
 Check out our short demo video to see PicPilot in action:
 
