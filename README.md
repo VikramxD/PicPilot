@@ -17,13 +17,14 @@ short_description: PicPilot Production Server
 
 ## 📖 Overview
 
-PicPilot is an innovative outpainting pipeline that leverages state-of-the-art AI models to extend and enhance images. This project has evolved through multiple iterations, addressing challenges and improving output quality at each stage.
+PicPilot is an innovative outpainting pipeline that leverages state-of-the-art Text to Image Models to extend and enhance images. This project has evolved through multiple iterations, addressing challenges and improving output quality at each stage.
 
 ### Key Features:
 - Advanced segmentation using Segment Anything VIT Huge and YOLOv8l
 - High-quality outpainting with Kandinsky-v2.2-decoder-inpaint
 - Optimized for NVIDIA A100 40GB GPU
 - Customizable prompts and settings
+- Batch API support 
 
 ## 🏗 Architecture
 
