@@ -7,61 +7,91 @@ colorTo: green
 pinned: false
 short_description: PicPilot Production Server
 ---
+# 🚀 PicPilot 
 
-# Outpainting Pipeline
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![SDK](https://img.shields.io/badge/sdk-docker-blue.svg)
+![Color](https://img.shields.io/badge/color-blue--green-brightgreen.svg)
 
-- Intial Version of the project used a combination of Yolov8s Segmentation model to provide a rough mask , which was then inverted for Outpainting to use with Models like stable diffusion inpainting model from Runway along with ControlNet to control the outpainted generated output , 
-- There were blockers in that approach as first the mask , was of a poor quality with rough edges which were messing with the outpainting output , even with techniques like blurring the mask the output quality was poor initailly with stable diffusion models
-- To address this , changes like detecting the ROI of the object in focus in addition to extending and resizing the image was done , the model for segmentation was upgraded to Segment Anything VIT Huge with yolov8l model , providing the bounding boxes for the Box prompt which was then inverted for outpainting 
-- The model was changed kandinsky-v2.2-decoder-inpaint with 800 inference steps , a guidence scale of 5.0 to 7.5 and then the following results were achieved
-- GPU used Nvidia A100 40GB 
+> PicPilot: A UI for Generating Stunning Product Photography and Visual Narratives in seconds
 
+## 📖 Overview
 
-## ARCHITECTURE
+PicPilot is an innovative outpainting pipeline that leverages state-of-the-art AI models to extend and enhance images. This project has evolved through multiple iterations, addressing challenges and improving output quality at each stage.
 
-![Architecture drawio](https://github.com/VikramxD/product_diffusion_api/assets/72499426/5a2e8b47-5a77-485b-b20c-0bca0928cb8a)
+### Key Features:
+- Advanced segmentation using Segment Anything VIT Huge and YOLOv8l
+- High-quality outpainting with Kandinsky-v2.2-decoder-inpaint
+- Optimized for NVIDIA A100 40GB GPU
+- Customizable prompts and settings
 
+## 🏗 Architecture
 
-## Installation
+![Architecture Diagram](https://github.com/VikramxD/product_diffusion_api/assets/72499426/5a2e8b47-5a77-485b-b20c-0bca0928cb8a)
 
-To install the necessary requirements, you can use pip:
+Our pipeline combines multiple AI models to achieve superior outpainting results:
+1. **Object Detection**: YOLOv8l provides accurate bounding boxes
+2. **Segmentation**: Segment Anything VIT Huge creates precise masks
+3. **Outpainting**: Kandinsky-v2.2-decoder-inpaint generates high-quality extended images
+
+## 🛠 Installation
 
 ```bash
+git clone https://github.com/your-username/picpilot-production-server.git
+cd picpilot-production-server
 pip install -r requirements.txt
 wandb login
 huggingface-cli login
 cd scripts
 ```
 
-This will install all necessary libraries for this project, including PIL , Diffusers , Segment Anything, wandb ,
+## 🚀 Usage
+
+Run the main script with your desired parameters:
 
 ```bash
-python run.py --image_path /path/to/image.jpg --prompt 'prompt' --negative_prompt 'negative prompt' --output_dir /path/to/output --mask_dir /path/to/mask --uid unique_id
-
+python run.py --image_path /path/to/image.jpg \
+              --prompt 'Your prompt here' \
+              --negative_prompt 'Negative prompt here' \
+              --output_dir /path/to/output \
+              --mask_dir /path/to/mask \
+              --uid unique_id
 ```
-### MODELS USED 
-EXPERIMENTATION WITH THE FOLLOWING models
- - https://huggingface.co/runwayml/stable-diffusion-inpainting
- - https://huggingface.co/lllyasviel/sd-controlnet-seg
- - https://huggingface.co/kandinsky-community/kandinsky-2-2-decoder-inpaint
 
-### WEIGHTS AND BIASES EXPERIMENTATION REPORT 
+## 🧠 Models
 
-[WANDB REPORT](https://wandb.ai/vikramxd/product_placement_api/reports/Experimentation-Report---Vmlldzo3Mjg1MjQw)
+We've experimented with several cutting-edge models:
+- [Stable Diffusion Inpainting](https://huggingface.co/runwayml/stable-diffusion-inpainting)
+- [ControlNet Segmentation](https://huggingface.co/lllyasviel/sd-controlnet-seg)
+- [Kandinsky 2.2 Decoder Inpaint](https://huggingface.co/kandinsky-community/kandinsky-2-2-decoder-inpaint)
 
-![cooker_output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/1228718b-5ef7-44a1-81f6-2953ffdc767c)
-![toaster_output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/06e12aea-cdc2-4ab8-97e0-be77bc49a238)
-![chair](https://github.com/VikramxD/product_diffusion_api/assets/72499426/65bcd04f-a715-43c3-8928-a9669f8eda85)
-![tent output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/dd6af644-1c07-424a-8ba6-0715a5611094)
-![cycle](https://github.com/VikramxD/product_diffusion_api/assets/72499426/b1b8c745-deb4-41ff-a93a-77fa06f55cc3)
+## 📸 Results
 
-## Some Improvements 
-- <s>Working on API to deploy this model in batch mode adding loggers from prompt and generated output</s>
-- <s>Implementation of UI in Gradio / Streamlit for checking the model out in visual way</s>
-- <s>Experimenting with image to video model pipeline to generate a video output thinking of using (https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt) model for this</s>
+Here are some impressive results from our pipeline:
 
+![Cooker Output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/1228718b-5ef7-44a1-81f6-2953ffdc767c)
+![Toaster Output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/06e12aea-cdc2-4ab8-97e0-be77bc49a238)
+![Chair Output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/65bcd04f-a715-43c3-8928-a9669f8eda85)
+![Tent Output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/dd6af644-1c07-424a-8ba6-0715a5611094)
+![Cycle Output](https://github.com/VikramxD/product_diffusion_api/assets/72499426/b1b8c745-deb4-41ff-a93a-77fa06f55cc3)
 
-## Short Video 
+## 📊 Experimentation & Improvements
+
+For detailed insights into our experimentation process, check out our [Weights & Biases Report](https://wandb.ai/vikramxd/product_placement_api/reports/Experimentation-Report---Vmlldzo3Mjg1MjQw).
+
+Recent improvements:
+- ✅ Deployed model as an API for batch processing
+- ✅ Implemented UI using Gradio / Streamlit for visual interaction
+- ✅ Integrated image-to-video model pipeline using [Stable Video Diffusion](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt)
+
+## 🎥 Demo Video
+
+Check out our short demo video to see PicPilot in action:
 
 https://github.com/VikramxD/product_diffusion_api/assets/72499426/c935ec2d-cb76-49dd-adae-8aa4feac211e
+
+---
+
+📄 License: MIT
+
 
