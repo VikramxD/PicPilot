@@ -28,7 +28,7 @@ PicPilot is an innovative outpainting pipeline that leverages state-of-the-art T
 
 ## 🏗 Architecture
 
-![Architecture Diagram](https://github.com/user-attachments/assets/df8f583d-ce01-491d-b3e5-d70fb82b4ea0)
+![image](https://github.com/user-attachments/assets/2961f39b-f554-4c5e-8b62-3cdc30fff46d)
 
 Our pipeline combines multiple AI models to achieve superior outpainting results:
 1. **Object Detection**: YOLOv8l provides accurate bounding boxes
