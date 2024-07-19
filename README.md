@@ -31,18 +31,23 @@ PicPilot is a scalable solution that leverages state-of-the-art Text to Image Mo
 
 ![image](https://github.com/user-attachments/assets/2961f39b-f554-4c5e-8b62-3cdc30fff46d)
 
-Our pipeline combines multiple AI models to achieve superior outpainting results:
+Current Pipeline 
 1. **Object Detection**: YOLOv8l provides accurate bounding boxes
-2. **Segmentation**: Segment Anything VIT Huge creates precise masks
-3. **Outpainting**: Kandinsky-v2.2-decoder-inpaint generates high-quality extended images
+2. **Segmentation**: Segment Anything VIT Huge creates precise masks with ROI extension
+3. **Outpainting**: Controlnet Zoe Depth + Realistic Vision XL
+4. **I2V GenXL**: Image to Video Generation
 
 
 ## 🧠 Models used 
 
 
 - [Stable Diffusion Inpainting](https://huggingface.co/runwayml/stable-diffusion-inpainting)
-- [ControlNet Segmentation](https://huggingface.co/lllyasviel/sd-controlnet-seg)
 - [Kandinsky 2.2 Decoder Inpaint](https://huggingface.co/kandinsky-community/kandinsky-2-2-decoder-inpaint)
+- [Stable Diffusion XL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0)
+- [Controlnet-Inpaint Dreamer](https://huggingface.co/destitech/controlnet-inpaint-dreamer-sdxl)
+- [Controlnet Zoe Depth](https://huggingface.co/diffusers/controlnet-zoe-depth-sdxl-1.0)
+- [Realistic Vision XL](https://huggingface.co/OzzyGT/RealVisXL_V4.0_inpainting)
+- [I2V GenXL](https://huggingface.co/ali-vilab/i2vgen-xl)
 
 ## 📸 Results
 
