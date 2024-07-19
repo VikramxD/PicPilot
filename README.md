@@ -34,8 +34,8 @@ PicPilot is a scalable solution that leverages state-of-the-art Text to Image Mo
 Current Pipeline 
 1. **Object Detection**: YOLOv8l provides accurate bounding boxes
 2. **Segmentation**: Segment Anything VIT Huge creates precise masks with ROI extension
-3. **Outpainting**: Controlnet Zoe Depth + Realistic Vision XL
-4. **I2V GenXL**: Image to Video Generation
+3. **painting**: Controlnet Zoe Depth + Realistic Vision XL
+4. **I2V GenXL**: Image to Video Generation Pipeline 
 
 
 ## 🧠 Models used 
@@ -70,7 +70,7 @@ For detailed insights into our experimentation process, check out our [Weights &
 Recent improvements:
 - ✅ Deployed model as an API for batch processing
 - ✅ Implemented UI using Gradio 
-- ✅ Integrated image-to-video model pipeline using [Stable Video Diffusion](https://huggingface.co/ali-vilab/i2vgen-xl)
+- ✅ Integrated image-to-video model pipeline using [I2V GenxL](https://huggingface.co/ali-vilab/i2vgen-xl)
 
 ## 🎥 Sample Video
 
