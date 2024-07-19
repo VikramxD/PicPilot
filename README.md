@@ -70,7 +70,7 @@ For detailed insights into our experimentation process, check out our [Weights &
 Recent improvements:
 - ✅ Deployed model as an API for batch processing
 - ✅ Implemented UI using Gradio 
-- ✅ Integrated image-to-video model pipeline using [Stable Video Diffusion](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt) and 
+- ✅ Integrated image-to-video model pipeline using [Stable Video Diffusion](https://huggingface.co/ali-vilab/i2vgen-xl)
 
 ## 🎥 Sample Video
 
