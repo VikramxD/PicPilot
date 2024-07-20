@@ -16,3 +16,4 @@ accelerate
 peft
 pydantic-settings
 logfire[fastapi]
+controlnet-aux
