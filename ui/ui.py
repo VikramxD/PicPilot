@@ -5,18 +5,11 @@ import json
 from PIL import Image
 from diffusers.utils import load_image
 from io import BytesIO
-<<<<<<< HEAD
 from vars import base_url
 
 # API endpoints
 sdxl_inference_endpoint = f'{base_url}/api/v1/product-diffusion/sdxl_v0_lora_inference'
 kandinsky_inpainting_inference = f'{base_url}/api/v1/product-diffusion/inpainting'
-=======
-
-# API endpoints
-sdxl_inference_endpoint = 'http://localhost:7860/api/v1/product-diffusion/sdxl_v0_lora_inference'
-kandinsky_inpainting_inference = 'http://localhost:7860/api/v1/product-diffusion/inpainting'
->>>>>>> 41b06fc (commit)
 
 def generate_sdxl_lora_image(prompt, negative_prompt, num_inference_steps, guidance_scale, num_images, mode):
     payload = {
@@ -93,7 +86,7 @@ with gr.Blocks(theme='VikramSingh178/Webui-Theme') as demo:
                 image_preview = gr.Image(label="Generated Image (SDXL-Lora)", show_download_button=True, show_share_button=True, container=True)
                 generate_button.click(generate_sdxl_lora_image, inputs=[prompt, negative_prompt, num_inference_steps, guidance_scale, num_images, mode], outputs=[image_preview])
                 
-    with gr.Tab("Inpainting"):
+    with gr.Tab("Outpainting"):
         with gr.Row():
             with gr.Column():
                 with gr.Group():
