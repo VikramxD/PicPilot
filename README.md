@@ -17,7 +17,7 @@ short_description: PicPilot Production Server
 
 ## 📖 Overview
 
-PicPilot is a scalable solution that leverages state-of-the-art Text to Image Models to extend and enhance images. This project has evolved through multiple iterations, addressing challenges and improving output quality at each stage.
+PicPilot is a scalable solution that leverages state-of-the-art Text to Image Models to extend and enhance images and create product photography This project has evolved through multiple iterations, addressing challenges and improving output quality at each stage.
 
 ### Key Features:
 - segmentation using Segment Anything VIT Huge and YOLOv8s
