@@ -1,5 +1,4 @@
 from pydantic_settings import BaseSettings
-
 class Settings(BaseSettings):
     LOGFIRE_TOKEN:str = ''
     AWS_ACCESS_KEY_ID: str = ''
