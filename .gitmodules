@@ -1,0 +1,3 @@
+[submodule "/Users/vikram/Projects/PicPilot/Diffree"]
+	path = /Users/vikram/Projects/PicPilot/Diffree
+	url = https://github.com/OpenGVLab/Diffree.git
