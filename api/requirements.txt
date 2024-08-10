@@ -18,3 +18,4 @@ pydantic-settings
 logfire[fastapi]
 controlnet-aux
 rembg
+nvidia-pytriton
