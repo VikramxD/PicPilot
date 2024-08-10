@@ -45,7 +45,7 @@ LOGGER = logging.getLogger("sdxl_lora_inference.server")
 for key, value in settings.TORCH_INDUCTOR_CONFIG.items():
     setattr(torch._inductor.config, key, value)
 
-# Set device
+
 DEVICE = accelerator()
 
 
