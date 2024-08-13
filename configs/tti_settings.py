@@ -6,7 +6,7 @@ class TTI_SETTINGS(BaseSettings):
     ADAPTER_NAME:str = "VikramSingh178/sdxl-lora-finetune-product-caption"
     ENABLE_COMPILE: bool = False
     DEVICE: str = "cuda"
-    TRITON_MODEL_NAME: str = "TTI_SDXL_KREAM"
+    TRITON_MODEL_NAME: str = "PICPILOT_PRODUCTION_SERVER"
     MAX_BATCH_SIZE: int = 8
     MAX_QUEUE_DELAY_MICROSECONDS: int = 100
     TORCH_INDUCTOR_CONFIG: dict = {

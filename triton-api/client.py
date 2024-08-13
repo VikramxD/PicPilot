@@ -9,11 +9,11 @@ import logging
 
 # Constants
 TRITON_SERVER_URL = "0.0.0.0:8000"
-TRITON_MODEL_NAME = "TTI_SDXL_KREAM"
+TRITON_MODEL_NAME = "PICPILOT_PRODUCTION_SERVER"
 API_VERSION = "1.1.0"
 DEFAULT_PORT = 8080
 
-# Global variables
+
 triton_client: Optional[AsyncioModelClient] = None
 
 # Set up logging
@@ -99,7 +99,7 @@ def _prepare_inference_inputs(request: ImageGenerationRequest) -> Dict[str, np.n
 
 app = FastAPI(
     title="PICPILOT API Suite",
-    description="API for generating images using SDXL Lora model",
+    description="PICPILOT API CLIENT",
     version=API_VERSION,
     lifespan=lifespan,
     docs_url='/api/v2/picpilot/docs',
