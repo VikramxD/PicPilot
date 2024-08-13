@@ -24,7 +24,7 @@ pip install uv
 
 # Change directory to api and install the required packages
 cd api || { echo "API directory not found"; exit 1; }
-pip install -r requirements.txt
+
 
 # Ensure the uv command is available
 if ! command -v uv &> /dev/null; then
@@ -32,5 +32,4 @@ if ! command -v uv &> /dev/null; then
     exit 1
 fi
 
-# Run your uv-related command here, if needed
-# uv <your_command_here>
+uv pip install -r requirements.txt
