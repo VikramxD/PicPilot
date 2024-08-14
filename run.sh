@@ -33,3 +33,7 @@ if ! command -v uv &> /dev/null; then
 fi
 
 uv pip install -r requirements.txt
+
+git config --global user.name = vikramxd
+git config --global user.email = singh.vikram.1782000@gmail.com
+
