@@ -2,12 +2,16 @@ import numpy as np
 from typing import List, Dict, Any
 import tempfile
 import os
+import io
+import logging
 from pytriton.decorators import batch
 from pytriton.model_config import ModelConfig, Tensor
 from pytriton.triton import Triton
 from scripts.outpainting import ControlNetZoeDepthOutpainting
 from scripts.api_utils import pil_to_b64_json
 from PIL import Image
+
+logger = logging.getLogger(__name__)
 
 class OutpaintingModel:
     def __init__(self):
@@ -27,6 +31,13 @@ class OutpaintingModel:
     def _get_int(value: np.ndarray) -> int:
         return int(value[0][0])
 
+    def _infer_fn(self, image: np.ndarray) -> List[Image.Image]:
+        logger.debug(f"Image data: {image.shape} ({image.size})")
+        images = []
+        for img in images:
+            images.append(img)
+        return images
+
     @batch
     def outpaint(self, 
                  image: np.ndarray, 
@@ -42,14 +53,11 @@ class OutpaintingModel:
                  outpainting_strength: np.ndarray,
                  outpainting_num_inference_steps: np.ndarray) -> Dict[str, np.ndarray]:
         results = []
-        for i in range(len(image)):
-            # Reshape the flattened image back to 1024x1024x3
-            pil_image = Image.fromarray(image[i].reshape(1024, 1024, 3).astype('uint8'))
-            
-            # Save the image to a temporary file
+        images = self._infer_fn(image)
+        for i, img in enumerate(images):
             with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
                 temp_filename = temp_file.name
-                pil_image.save(temp_filename)
+                img.save(temp_filename)
             
             try:
                 result = self.pipeline.run_pipeline(
@@ -69,8 +77,10 @@ class OutpaintingModel:
                 
                 result_json = pil_to_b64_json(result)
                 results.append(result_json.encode('utf-8'))
+            except Exception as e:
+                logger.error(f"Error processing image {i}: {str(e)}")
+                results.append(str(e).encode('utf-8'))
             finally:
-                # Clean up the temporary file
                 os.unlink(temp_filename)
         
         return {"result": np.array(results)}
@@ -83,7 +93,7 @@ triton.bind(
     model_name="outpainting",
     infer_func=model.outpaint,
     inputs=[
-        Tensor(name="image", dtype=np.uint8, shape=(-1,)),
+        Tensor(name="image", dtype=np.bytes_, shape=(-1,)),
         Tensor(name="base_image_description", dtype=np.bytes_, shape=(-1, 1)),
         Tensor(name="base_image_negative_prompt", dtype=np.bytes_, shape=(-1, 1)),
         Tensor(name="controlnet_conditioning_scale", dtype=np.float32, shape=(-1, 1)),
