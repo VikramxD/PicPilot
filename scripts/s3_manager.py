@@ -20,12 +20,21 @@ class S3ManagerService:
             region_name=settings.AWS_REGION,
         )
     
-    def generate_signed_url(self, file_name: str, exp: int = 43200) -> str:  # 43200 seconds = 12 hours
-        return self.s3.generate_presigned_url(
-            "get_object",
-            Params={"Bucket": settings.AWS_BUCKET_NAME, "Key": file_name},
-            ExpiresIn=exp,
-        )
+    def generate_signed_url(self, file_name: str, exp: int = 43200) -> str:
+        try:
+            url = self.s3.generate_presigned_url(
+                ClientMethod='get_object',
+                Params={
+                    'Bucket': settings.AWS_BUCKET_NAME,
+                    'Key': file_name
+                },
+                ExpiresIn=exp,
+                HttpMethod='GET'
+            )
+            return url
+        except Exception as e:
+            print(f"Error generating presigned URL: {e}")
+            return None
 
     def generate_unique_file_name(self, file_name: str) -> str:
         random_string = "".join(

@@ -7,7 +7,7 @@ class TTI_SETTINGS(BaseSettings):
     ENABLE_COMPILE: bool = False
     DEVICE: str = "cuda"
     TRITON_MODEL_NAME: str = "PICPILOT_PRODUCTION_SERVER"
-    MAX_BATCH_SIZE: int = 8
+    MAX_BATCH_SIZE: int = 32
     MAX_QUEUE_DELAY_MICROSECONDS: int = 100
     TORCH_INDUCTOR_CONFIG: dict = {
         "conv_1x1_as_mm": True,

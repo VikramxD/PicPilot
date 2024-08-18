@@ -130,18 +130,20 @@ class SDXLLoraInference:
         Raises:
             ValueError: If an invalid output mode is specified.
         """
-        image = self.pipe(
+        images = self.pipe(
             prompt=self.prompt,
             num_inference_steps=self.num_inference_steps,
             guidance_scale=self.guidance_scale,
             negative_prompt=self.negative_prompt,
             num_images_per_prompt=self.num_images,
-        ).images[0]
+        ).images
 
         if self.mode == "s3_json":
-            return pil_to_s3_json(image, "sdxl_image")
+            for image in images:
+                return pil_to_s3_json(image, "sdxl_image")
         elif self.mode == "b64_json":
-            return pil_to_b64_json(image)
+            for image in images:
+                return pil_to_b64_json(image)
         else:
             raise ValueError(
                 "Invalid mode. Supported modes are 'b64_json' and 's3_json'."

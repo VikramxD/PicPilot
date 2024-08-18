@@ -128,7 +128,7 @@ async def generate_image(request: ImageGenerationRequest) -> Dict[str, Any]:
         inputs = _prepare_inference_inputs(request)
         result_dict = await triton_client.infer_sample(**inputs)
 
-        output = result_dict["output"][0]
+        output = result_dict["output"]
         return json.loads(output.decode("utf-8"))
     except Exception as e:
         logger.error(f"Error generating image: {e}")
