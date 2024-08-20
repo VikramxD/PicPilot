@@ -225,7 +225,9 @@ def main():
     This function sets up the Triton server, binds the inference function,
     and starts serving inference requests.
     """
-    triton_config = TritonConfig(exit_on_error=True)
+    triton_config = TritonConfig(http_port=8000,
+                                 metrics_port=8002,
+                                 exit_on_error=True)
 
     with Triton(config=triton_config) as triton:
         LOGGER.info("Loading the SDXL Lora pipeline")
