@@ -162,8 +162,16 @@ async def upload_and_inpaint(
             error_message = result_dict["error"][0].decode()
             raise HTTPException(status_code=400, detail=error_message)
 
-        output = result_dict["output"]
-        return json.loads(output.decode("utf-8"))
+        output = result_dict["output"][0]
+        # Decode the JSON string and parse it
+        output_data = json.loads(output.decode("utf-8"))
+        
+        # Convert the list back to a numpy array if needed
+        output_array = np.array(output_data)
+
+        # Process the output_array as needed (e.g., convert to image, upload to S3, etc.)
+        # For now, we'll just return the data as-is
+        return {"result": output_data}
     except Exception as e:
         logger.error(f"Error during inpainting: {e}")
         raise HTTPException(status_code=500, detail=f"Error during inpainting: {str(e)}")

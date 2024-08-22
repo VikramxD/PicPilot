@@ -10,6 +10,7 @@ import logging
 import requests
 from scripts.s3_manager import S3ManagerService
 from config_settings import settings
+import json
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -100,10 +101,12 @@ def _infer_fn(
         output_image = image_tensor  # Replace with actual model inference logic
 
         output_image_np = output_image.squeeze().cpu().numpy()
-        output_image_bytes = output_image_np.tobytes()
-        outputs.append([output_image_bytes])
+        
+        # Convert the numpy array to a list and then to a JSON string
+        output_json = json.dumps(output_image_np.tolist())
+        outputs.append([output_json.encode()])
 
-    return {"output": np.array(outputs)}
+    return {"output": np.array(outputs, dtype=object)}
 
 def main():
     triton_config = TritonConfig(http_port=8000, metrics_port=8002, exit_on_error=True)
