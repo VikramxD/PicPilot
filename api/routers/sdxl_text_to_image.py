@@ -5,7 +5,6 @@ from diffusers import DiffusionPipeline
 import torch
 from functools import lru_cache
 from scripts.api_utils import accelerator
-from models.sdxl_input import InputFormat
 from async_batcher.batcher import AsyncBatcher
 from scripts.api_utils import pil_to_b64_json, pil_to_s3_json
 torch._inductor.config.conv_1x1_as_mm = True
