@@ -12,15 +12,13 @@ from PIL import Image
 from scripts.s3_manager import S3ManagerService
 from config_settings import settings
 
-# Constants
 TRITON_SERVER_URL = "0.0.0.0:8000"
 TRITON_MODEL_NAME = "FLUX_INPAINTING_SERVER"
-API_VERSION = "1.1.0"
+API_VERSION = "1.2.0"
 DEFAULT_PORT = 8080
 
 triton_client: Optional[AsyncioModelClient] = None
 
-# Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -32,10 +30,12 @@ class InpaintingRequest(BaseModel):
         prompt (str): The main prompt for inpainting.
         seed (int): Random seed for inpainting.
         strength (float): Strength of inpainting effect.
+        num_inference_steps (int): Number of inference steps.
     """
     prompt: str = Field(..., description="The main prompt for inpainting")
     seed: int = Field(..., description="Random seed for inpainting")
     strength: float = Field(..., description="Strength of inpainting effect", ge=0.0, le=1.0)
+    num_inference_steps: int = Field(50, description="Number of inference steps")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -82,7 +82,7 @@ def pil_to_s3_json(image: Image.Image, file_name) -> dict:
 
     unique_file_name = s3_uploader.generate_unique_file_name(file_name)
     s3_uploader.upload_file(image_bytes, unique_file_name)
-    signed_url = s3_uploader.generate_signed_url(unique_file_name, exp=43200)  # 12 hours
+    signed_url = s3_uploader.generate_signed_url(unique_file_name, exp=43200)
     return {"image_id": image_id, "url": signed_url, "file_name": unique_file_name}
 
 def _prepare_inference_inputs(
@@ -93,20 +93,19 @@ def _prepare_inference_inputs(
 
     Args:
         request (InpaintingRequest): The inpainting request.
-        image_data (dict): Dictionary containing image URL and filename.
-        mask_data (dict): Dictionary containing mask URL and filename.
+        image_data (dict): Dictionary containing image filename.
+        mask_data (dict): Dictionary containing mask filename.
 
     Returns:
         Dict[str, np.ndarray]: A dictionary of numpy arrays ready for inference.
     """
     return {
         "prompt": np.array([request.prompt.encode()], dtype=np.object_),
-        "image_url": np.array([image_data['url'].encode()], dtype=np.object_),
         "image_filename": np.array([image_data['file_name'].encode()], dtype=np.object_),
-        "mask_url": np.array([mask_data['url'].encode()], dtype=np.object_),
         "mask_filename": np.array([mask_data['file_name'].encode()], dtype=np.object_),
         "seed": np.array([request.seed], dtype=np.int32),
         "strength": np.array([request.strength], dtype=np.float32),
+        "num_inference_steps": np.array([request.num_inference_steps], dtype=np.int32),
     }
 
 app = FastAPI(
@@ -123,6 +122,7 @@ async def upload_and_inpaint(
     prompt: str = Form(...),
     seed: int = Form(...),
     strength: float = Form(...),
+    num_inference_steps: int = Form(50),
     image: UploadFile = File(...),
     mask: UploadFile = File(...),
 ) -> Dict[str, Any]:
@@ -133,6 +133,7 @@ async def upload_and_inpaint(
         prompt (str): The prompt for inpainting.
         seed (int): Random seed for inpainting.
         strength (float): Strength of inpainting effect.
+        num_inference_steps (int): Number of inference steps.
         image (UploadFile): The image file to be inpainted.
         mask (UploadFile): The mask file to guide inpainting.
 
@@ -143,35 +144,32 @@ async def upload_and_inpaint(
         raise HTTPException(status_code=500, detail="Triton client not initialized")
 
     try:
-        # Convert UploadFile to PIL Image
         image_pil = Image.open(io.BytesIO(await image.read()))
         mask_pil = Image.open(io.BytesIO(await mask.read()))
 
-        # Upload to S3 and get signed URLs and filenames
         image_data = pil_to_s3_json(image_pil, "image.png")
         mask_data = pil_to_s3_json(mask_pil, "mask.png")
 
-        # Prepare inference inputs
-        request = InpaintingRequest(prompt=prompt, seed=seed, strength=strength)
+        request = InpaintingRequest(prompt=prompt, seed=seed, strength=strength, num_inference_steps=num_inference_steps)
         inputs = _prepare_inference_inputs(request, image_data, mask_data)
 
-        # Perform inference
         result_dict = await triton_client.infer_sample(**inputs)
 
-        if "error" in result_dict:
-            error_message = result_dict["error"][0].decode()
-            raise HTTPException(status_code=400, detail=error_message)
+        if "output" not in result_dict:
+            raise HTTPException(status_code=500, detail="Unexpected response from inference server")
 
         output = result_dict["output"][0]
-        # Decode the JSON string and parse it
         output_data = json.loads(output.decode("utf-8"))
         
-        # Convert the list back to a numpy array if needed
         output_array = np.array(output_data)
+        output_image = Image.fromarray((output_array * 255).astype(np.uint8))
+        result_data = pil_to_s3_json(output_image, "result.png")
 
-        # Process the output_array as needed (e.g., convert to image, upload to S3, etc.)
-        # For now, we'll just return the data as-is
-        return {"result": output_data}
+        return {
+            "result_url": result_data["url"],
+            "result_filename": result_data["file_name"],
+            "image_id": result_data["image_id"]
+        }
     except Exception as e:
         logger.error(f"Error during inpainting: {e}")
         raise HTTPException(status_code=500, detail=f"Error during inpainting: {str(e)}")
