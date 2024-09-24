@@ -20,4 +20,4 @@ class TTI_SETTINGS(BaseSettings):
     LOG_FORMAT: str = "%(asctime)s - %(levelname)s - %(name)s: %(message)s"
     LOG_LEVEL: str = "INFO"
 
-settings = TTI_SETTINGS()
+tti_settings = TTI_SETTINGS()
