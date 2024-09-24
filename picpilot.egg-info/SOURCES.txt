@@ -11,6 +11,7 @@ scripts/__init__.py
 scripts/api_utils.py
 scripts/config.py
 scripts/controlnet_outpainting.py
+scripts/flux_inference.py
 scripts/image_to_video.py
 scripts/inpainting_pipeline.py
 scripts/load_pipeline.py
