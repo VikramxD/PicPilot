@@ -5,6 +5,7 @@ import numpy as np
 import torch
 from PIL import Image
 from diffusers import FluxInpaintPipeline
+from torchao.quantization import autoquant
 from scripts.api_utils import accelerator
 
 
@@ -37,6 +38,10 @@ class FluxInpaintingInference:
         self.pipeline = FluxInpaintPipeline.from_pretrained(
             model_name, torch_dtype=torch_dtype
         ).to(self.DEVICE)
+        self.pipeline.transformer.to(memory_format=torch.channels_last)
+        self.pipeline.transformer = torch.compile(self.pipeline.transformer, mode="max-autotune", fullgraph=True)
+        self.pipeline.transformer = autoquant(self.pipeline.transformer, error_on_unseen=False)
+
 
     @staticmethod
     def calculate_new_dimensions(

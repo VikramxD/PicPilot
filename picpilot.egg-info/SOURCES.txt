@@ -20,6 +20,3 @@ scripts/products10k_captions.py
 scripts/s3_manager.py
 scripts/sdxl_lora_inference.py
 scripts/sdxl_lora_tuner.py
-ui/__init__.py
-ui/ui.py
-ui/vars.py
