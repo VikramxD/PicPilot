@@ -7,6 +7,7 @@ from PIL import Image
 from diffusers import FluxInpaintPipeline
 from torchao.quantization import autoquant
 from scripts.api_utils import accelerator
+from optimum.quanto import freeze, qfloat8, quantize
 
 
 class FluxInpaintingInference:
@@ -20,13 +21,13 @@ class FluxInpaintingInference:
     """
 
     MAX_SEED = np.iinfo(np.int32).max
-    DEVICE = accelerator()
     IMAGE_SIZE = 1024
+    DEVICE = 'cuda'
 
     def __init__(
         self,
-        model_name: str = "black-forest-labs/FLUX.1-schnell",
-        torch_dtype=torch.float16,
+        model_name: str = "black-forest-labs/FLUX.1-dev",
+        torch_dtype=torch.bfloat16,
     ):
         """
         Initializes the FluxInpaintingInference class with a specified model and data type.
@@ -35,12 +36,16 @@ class FluxInpaintingInference:
             model_name (str): The name of the model to be loaded from Hugging Face Hub.
             torch_dtype: The data type to be used by PyTorch (e.g., torch.float16).
         """
-        self.pipeline = FluxInpaintPipeline.from_pretrained(
-            model_name, torch_dtype=torch_dtype
-        ).to(self.DEVICE)
+        self.pipeline = FluxInpaintPipeline.from_pretrained(model_name, torch_dtype=torch_dtype)
+        self.pipeline.vae.enable_slicing()
+        self.pipeline.vae.enable_tiling()
         self.pipeline.transformer.to(memory_format=torch.channels_last)
         self.pipeline.transformer = torch.compile(self.pipeline.transformer, mode="max-autotune", fullgraph=True)
-        self.pipeline.transformer = autoquant(self.pipeline.transformer, error_on_unseen=False)
+        quantize(self.pipeline.transformer,weights=qfloat8)
+        freeze(self.pipeline.transformer)
+        self.pipeline.to(self.DEVICE)
+        
+
 
 
     @staticmethod
