@@ -7,16 +7,16 @@ from config_settings import settings
 from configs.tti_settings import tti_settings
 from scripts.api_utils import accelerator, pil_to_b64_json, pil_to_s3_json
 
-DEVICE = accelerator()
+DEVICE = 'cuda:1'
 
 class SDXLLoraAPI(ls.LitAPI):
     def setup(self, device):
         self.device = device
         self.sdxl_pipeline = DiffusionPipeline.from_pretrained(
-            settings.MODEL_NAME, 
+            tti_settings.MODEL_NAME, 
             torch_dtype=torch.bfloat16
         ).to(self.device)
-        self.sdxl_pipeline.load_lora_weights(settings.ADAPTER_NAME)
+        self.sdxl_pipeline.load_lora_weights(tti_settings.ADAPTER_NAME)
         self.sdxl_pipeline.fuse_lora()
         self.sdxl_pipeline.unet.to(memory_format=torch.channels_last)
         if settings.ENABLE_COMPILE:
@@ -61,4 +61,4 @@ if __name__ == "__main__":
         max_batch_size=tti_settings.MAX_BATCH_SIZE,
         batch_timeout=tti_settings.MAX_QUEUE_DELAY_MICROSECONDS / 1e6,
     )
-    server.run(port=8001)
+    server.run(port=8000)
