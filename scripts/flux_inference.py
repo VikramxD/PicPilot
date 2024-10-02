@@ -4,15 +4,12 @@ from functools import lru_cache
 import numpy as np
 import torch
 from PIL import Image
-from diffusers import FluxInpaintPipeline
-from torchao.quantization import autoquant
-from scripts.api_utils import accelerator
-from optimum.quanto import freeze, qfloat8, quantize
-
+from diffusers import FluxInpaintPipeline, FluxTransformer2DModel
+from torchao.quantization import quantize_, int8_weight_only
 
 class FluxInpaintingInference:
     """
-    A class to perform image inpainting using the FLUX model from Hugging Face's Diffusers library.
+    A class to perform image inpainting using the FLUX model with int8 quantization for efficient inference.
 
     Attributes:
         MAX_SEED (int): The maximum value for a random seed.
@@ -22,31 +19,59 @@ class FluxInpaintingInference:
 
     MAX_SEED = np.iinfo(np.int32).max
     IMAGE_SIZE = 1024
-    DEVICE = 'cuda'
+    DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-    def __init__(
-        self,
-        model_name: str = "black-forest-labs/FLUX.1-dev",
-        torch_dtype=torch.bfloat16,
-    ):
+    _pipeline = None
+
+    @classmethod
+    @lru_cache(maxsize=1)
+    def get_pipeline(cls, model_name: str, torch_dtype):
         """
-        Initializes the FluxInpaintingInference class with a specified model and data type.
+        Loads and caches the FluxInpaintPipeline with int8 quantization.
 
         Args:
             model_name (str): The name of the model to be loaded from Hugging Face Hub.
-            torch_dtype: The data type to be used by PyTorch (e.g., torch.float16).
+            torch_dtype: The data type to be used by PyTorch.
+
+        Returns:
+            FluxInpaintPipeline: The loaded and optimized pipeline.
         """
-        self.pipeline = FluxInpaintPipeline.from_pretrained(model_name, torch_dtype=torch_dtype)
-        self.pipeline.vae.enable_slicing()
-        self.pipeline.vae.enable_tiling()
-        self.pipeline.transformer.to(memory_format=torch.channels_last)
-        self.pipeline.transformer = torch.compile(self.pipeline.transformer, mode="max-autotune", fullgraph=True)
-        quantize(self.pipeline.transformer,weights=qfloat8)
-        freeze(self.pipeline.transformer)
-        self.pipeline.to(self.DEVICE)
-        
+        if cls._pipeline is None:
+            # Load the transformer with int8 quantization
+            transformer = FluxTransformer2DModel.from_pretrained(
+                model_name, 
+                subfolder="transformer", 
+                torch_dtype=torch_dtype
+            )
+            quantize_(transformer, int8_weight_only())
 
+            # Load the rest of the pipeline
+            cls._pipeline = FluxInpaintPipeline.from_pretrained(
+                model_name, 
+                transformer=transformer, 
+                torch_dtype=torch_dtype
+            )
 
+            # Additional optimizations
+            cls._pipeline.vae.enable_slicing()
+            cls._pipeline.vae.enable_tiling()
+            cls._pipeline.to(cls.DEVICE)
+
+        return cls._pipeline
+
+    def __init__(
+        self,
+        model_name: str = "black-forest-labs/FLUX.1-schnell",
+        torch_dtype=torch.bfloat16,
+    ):
+        """
+        Initializes the FluxInpaintingInference class with a specified model and optimizations.
+
+        Args:
+            model_name (str): The name of the model to be loaded from Hugging Face Hub.
+            torch_dtype: The data type to be used by PyTorch (e.g., torch.bfloat16).
+        """
+        self.pipeline = self.get_pipeline(model_name, torch_dtype)
 
     @staticmethod
     def calculate_new_dimensions(
@@ -86,6 +111,8 @@ class FluxInpaintingInference:
         randomize_seed: bool = False,
         strength: float = 0.8,
         num_inference_steps: int = 50,
+        guidance_scale: float = 0.0,
+        max_sequence_length: int = 256,
     ) -> Image.Image:
         """
         Generates an inpainted image based on the provided inputs.
@@ -98,6 +125,8 @@ class FluxInpaintingInference:
             randomize_seed (bool, optional): Whether to randomize the seed. Defaults to False.
             strength (float, optional): Strength of the inpainting effect (0.0 to 1.0). Defaults to 0.8.
             num_inference_steps (int, optional): Number of denoising steps. Defaults to 50.
+            guidance_scale (float, optional): Scale for classifier-free guidance. Defaults to 0.0.
+            max_sequence_length (int, optional): Maximum sequence length for the transformer. Defaults to 256.
 
         Returns:
             Image.Image: The resulting inpainted image.
@@ -120,6 +149,8 @@ class FluxInpaintingInference:
             strength=strength,
             num_inference_steps=num_inference_steps,
             generator=generator,
+            guidance_scale=guidance_scale,
+            max_sequence_length=max_sequence_length,
         ).images[0]
 
         return result

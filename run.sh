@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Install necessary packages
-sudo apt-get install -y python3-venv python3-pip
-sudo apt install -y libgl1-mesa-glx
+apt-get install -y python3-venv python3-pip
+apt install -y libgl1-mesa-glx
 
 # Remove the old virtual environment if it exists and create a new one
 if [ -d ".venv" ]; then
