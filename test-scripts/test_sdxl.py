@@ -1,94 +1,113 @@
 import requests
-import base64
 import json
+import base64
 from PIL import Image
 import io
 
-def encode_image_to_base64(image_path):
+class SDXLLoraClient:
     """
-    Encode an image file to base64 string.
-
-    Args:
-        image_path (str): Path to the image file.
-
-    Returns:
-        str: Base64 encoded string of the image.
+    Client for interacting with the SDXL LoRA server.
     """
-    with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode('utf-8')
 
-def test_sdxl_lora_api(server_url, prompt, negative_prompt="", num_images=1, num_inference_steps=30, guidance_scale=7.5, mode="b64_json"):
-    """
-    Test the SDXL Lora API by sending a request and processing the response.
+    def __init__(self, base_url: str):
+        """
+        Initialize the client with the server's base URL.
 
-    Args:
-        server_url (str): URL of the SDXL Lora API server.
-        prompt (str): The prompt for image generation.
-        negative_prompt (str, optional): The negative prompt for image generation. Defaults to "".
-        num_images (int, optional): Number of images to generate. Defaults to 1.
-        num_inference_steps (int, optional): Number of inference steps. Defaults to 30.
-        guidance_scale (float, optional): Guidance scale for image generation. Defaults to 7.5.
-        mode (str, optional): Response mode ('b64_json' or 's3_json'). Defaults to "b64_json".
+        Args:
+            base_url (str): The base URL of the SDXL LoRA server.
+        """
+        self.base_url = base_url
 
-    Returns:
-        None
-    """
-    # Prepare the request payload
-    payload = {
-        "prompt": prompt,
-        "negative_prompt": negative_prompt,
-        "num_images": num_images,
-        "num_inference_steps": num_inference_steps,
-        "guidance_scale": guidance_scale,
-        "mode": mode
-    }
+    def generate_image(self, prompt: str, negative_prompt: str = "", num_images: int = 1,
+                       num_inference_steps: int = 50, guidance_scale: float = 7.5,
+                       mode: str = "b64_json") -> list:
+        """
+        Send a request to the server to generate images.
 
-    # Send POST request to the server
-    try:
-        response = requests.post(server_url, json=payload)
-        response.raise_for_status()  # Raise an exception for bad status codes
-    except requests.exceptions.RequestException as e:
-        print(f"Error sending request: {e}")
-        return
+        Args:
+            prompt (str): The prompt for image generation.
+            negative_prompt (str, optional): The negative prompt. Defaults to "".
+            num_images (int, optional): Number of images to generate. Defaults to 1.
+            num_inference_steps (int, optional): Number of inference steps. Defaults to 50.
+            guidance_scale (float, optional): Guidance scale. Defaults to 7.5.
+            mode (str, optional): Response mode ('b64_json' or 's3_json'). Defaults to "b64_json".
 
-    # Process the response
-    try:
+        Returns:
+            list: A list of generated images (as PIL Image objects) or S3 URLs.
+        """
+        payload = {
+            "prompt": prompt,
+            "negative_prompt": negative_prompt,
+            "num_images": num_images,
+            "num_inference_steps": num_inference_steps,
+            "guidance_scale": guidance_scale,
+            "mode": mode
+        }
+
+        response = requests.post(f"{self.base_url}/predict", json=payload)
+        response.raise_for_status()
+
         result = response.json()
-        print(f"Response received:")
-        if mode == "s3_json":
-            print(f"Result URL: {result['s3_url']}")
-            print(f"Filename: {result['filename']}")
-        elif mode == "b64_json":
-            print("Image received in base64 format")
-        
-        print(f"Prompt: {prompt}")
-        print(f"Negative Prompt: {negative_prompt}")
-        print(f"Num Inference Steps: {num_inference_steps}")
-        print(f"Guidance Scale: {guidance_scale}")
+        print(f"Server response: {result}")  # Debug print
 
-        # Save the result image
-        if mode == "s3_json":
-            image_response = requests.get(result['s3_url'])
-            image_response.raise_for_status()
-            result_image = Image.open(io.BytesIO(image_response.content))
-        elif mode == "b64_json":
-            image_data = base64.b64decode(result['b64_json'])
-            result_image = Image.open(io.BytesIO(image_data))
-        
-        result_image.save("sdxl_result.png")
-        print("Result image saved as 'sdxl_result.png'")
+        if isinstance(result, str):
+            print(f"Unexpected string result: {result}")
+            return [result]
 
-    except (json.JSONDecodeError, KeyError) as e:
-        print(f"Error processing response: {e}")
-        print(f"Response content: {response.text}")
+        if mode == "b64_json":
+            if isinstance(result, list):
+                return [Image.open(io.BytesIO(base64.b64decode(img["base64"]))) for img in result]
+            elif isinstance(result, dict) and "base64" in result:
+                return [Image.open(io.BytesIO(base64.b64decode(result["base64"])))]
+            else:
+                raise ValueError(f"Unexpected result format for b64_json mode: {result}")
+        elif mode == "s3_json":
+            if isinstance(result, list):
+                return [img["url"] for img in result if "url" in img]
+            elif isinstance(result, dict) and "url" in result:
+                return [result["url"]]
+            else:
+                raise ValueError(f"Unexpected result format for s3_json mode: {result}")
+        else:
+            raise ValueError("Invalid mode. Supported modes are 'b64_json' and 's3_json'.")
+
+def main():
+    """
+    Main function to demonstrate the usage of the SDXLLoraClient.
+    """
+    client = SDXLLoraClient("http://localhost:8000")
+
+    # Test case 1: Generate a single image
+    print("Generating a single image...")
+    images = client.generate_image(
+        prompt="A serene landscape with mountains and a lake",
+        negative_prompt='Low resolution , Poor Resolution',
+        mode="s3_json"
+    )
+
+    # Test case 2: Generate multiple images
+    print("\nGenerating multiple images...")
+    images = client.generate_image(
+        prompt="A futuristic cityscape at night",
+        num_images=3,
+        num_inference_steps=30,
+        guidance_scale=8.0,
+        mode="s3_json"
+    )
+    for i, img in enumerate(images):
+        if isinstance(img, Image.Image):
+            img.save(f"test_image_2_{i+1}.png")
+            print(f"Image saved as test_image_2_{i+1}.png")
+        else:
+            print(f"Unexpected result for image {i+1}: {img}")
+
+    # Test case 3: Generate image with S3 storage
+    print("\nGenerating image with S3 storage...")
+    urls = client.generate_image(
+        prompt="An abstract painting with vibrant colors",
+        mode="s3_json"
+    )
+    print(f"S3 URLS for the generated image: {urls}")
 
 if __name__ == "__main__":
-    SERVER_URL = "http://localhost:8000/predict"  # Adjust this to your server's address
-    PROMPT = "A beautiful landscape with mountains and a lake"
-    NEGATIVE_PROMPT = "ugly, blurry"
-    NUM_IMAGES = 1
-    NUM_INFERENCE_STEPS = 30
-    GUIDANCE_SCALE = 7.5
-    MODE = "b64_json"  # or "s3_json"
-
-    test_sdxl_lora_api(SERVER_URL, PROMPT, NEGATIVE_PROMPT, NUM_IMAGES, NUM_INFERENCE_STEPS, GUIDANCE_SCALE, MODE)
+    main()
