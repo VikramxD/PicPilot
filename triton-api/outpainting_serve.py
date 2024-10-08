@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 import torch
 import time
 from scripts.outpainting import Outpainter
+from scripts.api_utils import pil_to_s3_json
 
 class OutpaintingRequest(BaseModel):
     """
@@ -146,13 +147,7 @@ class OutpaintingAPI(LitAPI):
         )
 
         completion_time = time.time() - start_time
-
-        # Calculate prompt ratio (this is a placeholder, replace with actual calculation)
-        prompt_tokens = len(params['prompt_input'].split())
-        total_tokens = prompt_tokens + 77  # Assuming 77 is the default number of tokens for CLIP
-        prompt_ratio = prompt_tokens / total_tokens
-
-        return result, completion_time, prompt_ratio
+        return result, completion_time
 
     def encode_response(self, output: Tuple[Image.Image, float, float]) -> Dict[str, Any]:
         """
@@ -172,10 +167,8 @@ class OutpaintingAPI(LitAPI):
             Dict[str, Any]: A dictionary containing the base64 encoded image string,
                             completion time, prompt ratio, and image resolution.
         """
-        image, completion_time, prompt_ratio = output
-        buffered = io.BytesIO()
-        image.save(buffered, format="PNG")
-        img_str = base64.b64encode(buffered.getvalue()).decode()
+        image, completion_time = output
+        img_str = pil_to_s3_json(image,"outpainting_image")
         
         return {
             "result": img_str,

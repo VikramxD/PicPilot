@@ -4,8 +4,8 @@ import numpy as np
 from diffusers import AutoencoderKL, TCDScheduler
 from diffusers.models.model_loading_utils import load_state_dict
 from huggingface_hub import hf_hub_download
-from controlnet_union import ControlNetModel_Union
-from pipeline_fill_sd_xl import StableDiffusionXLFillPipeline
+from scripts.controlnet_union import ControlNetModel_Union
+from scripts.pipeline_fill_sd_xl import StableDiffusionXLFillPipeline
 
 class Outpainter:
     def __init__(self):
