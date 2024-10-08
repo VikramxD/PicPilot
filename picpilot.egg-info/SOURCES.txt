@@ -10,12 +10,13 @@ picpilot.egg-info/top_level.txt
 scripts/__init__.py
 scripts/api_utils.py
 scripts/config.py
-scripts/controlnet_outpainting.py
+scripts/controlnet_union.py
 scripts/flux_inference.py
 scripts/image_to_video.py
 scripts/inpainting_pipeline.py
 scripts/load_pipeline.py
 scripts/outpainting.py
+scripts/pipeline_fill_sd_xl.py
 scripts/products10k_captions.py
 scripts/s3_manager.py
 scripts/sdxl_lora_inference.py
