@@ -1,226 +1,192 @@
 import torch
-from controlnet_aux import ZoeDetector
-from PIL import Image
-from diffusers import AutoencoderKL, ControlNetModel, StableDiffusionXLControlNetPipeline, StableDiffusionXLInpaintPipeline
-from scripts.api_utils import ImageAugmentation, accelerator
-import lightning.pytorch as pl
-from rembg import remove
+from PIL import Image, ImageDraw
+import numpy as np
+from diffusers import AutoencoderKL, TCDScheduler
+from diffusers.models.model_loading_utils import load_state_dict
+from huggingface_hub import hf_hub_download
+from controlnet_union import ControlNetModel_Union
+from pipeline_fill_sd_xl import StableDiffusionXLFillPipeline
 
-pl.seed_everything(42)
+class Outpainter:
+    def __init__(self):
+        self.setup_model()
 
+    def setup_model(self):
+        config_file = hf_hub_download(
+            "xinsir/controlnet-union-sdxl-1.0",
+            filename="config_promax.json",
+        )
+        config = ControlNetModel_Union.load_config(config_file)
+        controlnet_model = ControlNetModel_Union.from_config(config)
+        model_file = hf_hub_download(
+            "xinsir/controlnet-union-sdxl-1.0",
+            filename="diffusion_pytorch_model_promax.safetensors",
+        )
+        state_dict = load_state_dict(model_file)
+        model, _, _, _, _ = ControlNetModel_Union._load_pretrained_model(
+            controlnet_model, state_dict, model_file, "xinsir/controlnet-union-sdxl-1.0"
+        )
+        model.to(device="cuda", dtype=torch.float16)
 
-class ControlNetZoeDepthOutpainting:
-    """
-    A class for processing and outpainting images using Stable Diffusion XL.
+        vae = AutoencoderKL.from_pretrained(
+            "madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch.float16
+        ).to("cuda")
 
-    This class encapsulates the entire pipeline for loading an image,
-    generating a depth map, creating a temporary background, and performing
-    the final outpainting.
-    """
+        self.pipe = StableDiffusionXLFillPipeline.from_pretrained(
+            "SG161222/RealVisXL_V5.0_Lightning",
+            torch_dtype=torch.float16,
+            vae=vae,
+            controlnet=model,
+            variant="fp16",
+        ).to("cuda")
 
-    def __init__(self, target_size: tuple[int, int] = (1024, 1024)):
-        """
-        Initialize the ImageOutpaintingProcessor with necessary models and pipelines.
+        self.pipe.scheduler = TCDScheduler.from_config(self.pipe.scheduler.config)
 
-        Args:
-            target_size (tuple[int, int]): The target size for the output image (width, height).
-        """
-        self.target_size = target_size
-        print("Initializing models and pipelines...")
-        self.vae = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch.float16).to(accelerator())
-        self.zoe = ZoeDetector.from_pretrained("lllyasviel/Annotators")
-        self.controlnets = [
-            ControlNetModel.from_pretrained("destitech/controlnet-inpaint-dreamer-sdxl", torch_dtype=torch.float16, variant="fp16"),
-            ControlNetModel.from_pretrained("diffusers/controlnet-zoe-depth-sdxl-1.0", torch_dtype=torch.float16)
-        ]
-        print("Setting up sdxl pipeline...")
-        self.controlnet_pipeline = StableDiffusionXLControlNetPipeline.from_pretrained("SG161222/RealVisXL_V4.0", torch_dtype=torch.float16, variant="fp16", controlnet=self.controlnets, vae=self.vae).to(accelerator())
-        print("Setting up inpaint pipeline...")
-        self.inpaint_pipeline = StableDiffusionXLInpaintPipeline.from_pretrained("OzzyGT/RealVisXL_V4.0_inpainting", torch_dtype=torch.float16, variant="fp16", vae=self.vae).to(accelerator())
+    def prepare_image_and_mask(self, image, width, height, overlap_percentage, resize_option, custom_resize_percentage, alignment, overlap_left, overlap_right, overlap_top, overlap_bottom):
+        target_size = (width, height)
 
-    def load_and_preprocess_image(self, image_path: str) -> tuple[Image.Image, Image.Image]:
-        """
-        Load an image from a file path and preprocess it for outpainting.
+        # Calculate the scaling factor to fit the image within the target size
+        scale_factor = min(target_size[0] / image.width, target_size[1] / image.height)
+        new_width = int(image.width * scale_factor)
+        new_height = int(image.height * scale_factor)
+        
+        # Resize the source image to fit within target size
+        source = image.resize((new_width, new_height), Image.LANCZOS)
 
-        Args:
-            image_path (str): Path of the image to process.
+        # Apply resize option
+        if resize_option == "Full":
+            resize_percentage = 100
+        elif resize_option == "50%":
+            resize_percentage = 50
+        elif resize_option == "33%":
+            resize_percentage = 33
+        elif resize_option == "25%":
+            resize_percentage = 25
+        else:  # Custom
+            resize_percentage = custom_resize_percentage
 
-        Returns:
-            tuple[Image.Image, Image.Image]: A tuple containing the resized original image and the background image.
-        """
-        original_image = Image.open(image_path).convert("RGBA")
-        original_image = remove(original_image)
-        return self.scale_and_paste(original_image, self.target_size)
+        # Calculate new dimensions based on percentage
+        resize_factor = resize_percentage / 100
+        new_width = max(int(source.width * resize_factor), 64)
+        new_height = max(int(source.height * resize_factor), 64)
 
-    def scale_and_paste(self, original_image: Image.Image, target_size: tuple[int, int], scale_factor: float = 0.95) -> tuple[Image.Image, Image.Image]:
-        """
-        Scale the original image and paste it onto a background of the target size.
+        # Resize the image
+        source = source.resize((new_width, new_height), Image.LANCZOS)
 
-        Args:
-            original_image (Image.Image): The original image to process.
-            target_size (tuple[int, int]): The target size (width, height) for the output image.
-            scale_factor (float): Factor to scale down the image to leave some padding (default: 0.95).
+        # Calculate the overlap in pixels
+        overlap_x = max(int(new_width * (overlap_percentage / 100)), 1)
+        overlap_y = max(int(new_height * (overlap_percentage / 100)), 1)
 
-        Returns:
-            tuple[Image.Image, Image.Image]: A tuple containing the resized original image and the background image.
-        """
-        target_width, target_height = target_size
-        aspect_ratio = original_image.width / original_image.height
+        # Calculate margins based on alignment
+        if alignment == "Middle":
+            margin_x = (target_size[0] - new_width) // 2
+            margin_y = (target_size[1] - new_height) // 2
+        elif alignment == "Left":
+            margin_x = 0
+            margin_y = (target_size[1] - new_height) // 2
+        elif alignment == "Right":
+            margin_x = target_size[0] - new_width
+            margin_y = (target_size[1] - new_height) // 2
+        elif alignment == "Top":
+            margin_x = (target_size[0] - new_width) // 2
+            margin_y = 0
+        elif alignment == "Bottom":
+            margin_x = (target_size[0] - new_width) // 2
+            margin_y = target_size[1] - new_height
 
-        if (target_width / target_height) < aspect_ratio:
-            new_width = int(target_width * scale_factor)
-            new_height = int(new_width / aspect_ratio)
-        else:
-            new_height = int(target_height * scale_factor)
-            new_width = int(new_height * aspect_ratio)
+        # Adjust margins to eliminate gaps
+        margin_x = max(0, min(margin_x, target_size[0] - new_width))
+        margin_y = max(0, min(margin_y, target_size[1] - new_height))
 
-        resized_original = original_image.resize((new_width, new_height), Image.LANCZOS)
-        background = Image.new("RGBA", target_size, "white")
-        x = (target_width - new_width) // 2
-        y = (target_height - new_height) // 2
-        background.paste(resized_original, (x, y), resized_original)
-        return resized_original, background
+        # Create a new background image and paste the resized source image
+        background = Image.new('RGB', target_size, (255, 255, 255))
+        background.paste(source, (margin_x, margin_y))
 
-    def generate_depth_map(self, image: Image.Image) -> Image.Image:
-        """
-        Generate a depth map for the given image using the Zoe model.
+        # Create the mask
+        mask = Image.new('L', target_size, 255)
+        white_gaps_patch = 2
 
-        Args:
-            image (Image.Image): The image to generate a depth map for.
+        left_overlap = margin_x + (overlap_x if overlap_left else white_gaps_patch)
+        right_overlap = margin_x + new_width - (overlap_x if overlap_right else white_gaps_patch)
+        top_overlap = margin_y + (overlap_y if overlap_top else white_gaps_patch)
+        bottom_overlap = margin_y + new_height - (overlap_y if overlap_bottom else white_gaps_patch)
 
-        Returns:
-            Image.Image: The generated depth map.
-        """
-        return self.zoe(image, detect_resolution=512, image_resolution=self.target_size[0])
+        # Adjust overlaps for edge alignments
+        if alignment == "Left":
+            left_overlap = margin_x + (overlap_x if overlap_left else 0)
+        elif alignment == "Right":
+            right_overlap = margin_x + new_width - (overlap_x if overlap_right else 0)
+        elif alignment == "Top":
+            top_overlap = margin_y + (overlap_y if overlap_top else 0)
+        elif alignment == "Bottom":
+            bottom_overlap = margin_y + new_height - (overlap_y if overlap_bottom else 0)
 
-    def generate_base_image(self, prompt: str, negative_prompt: str, inpaint_image: Image.Image, zoe_image: Image.Image, guidance_scale: float, controlnet_num_inference_steps: int, controlnet_conditioning_scale: float, control_guidance_end: float) -> Image.Image:
-        """
-        Generate an image using the controlnet pipeline.
+        # Draw the mask
+        mask_draw = ImageDraw.Draw(mask)
+        mask_draw.rectangle([left_overlap, top_overlap, right_overlap, bottom_overlap], fill=0)
 
-        Args:
-            prompt (str): The prompt for image generation.
-            negative_prompt (str): The negative prompt for image generation.
-            inpaint_image (Image.Image): The image to inpaint.
-            zoe_image (Image.Image): The depth map image.
-            guidance_scale (float): Guidance scale for controlnet.
-            controlnet_num_inference_steps (int): Number of inference steps for controlnet.
-            controlnet_conditioning_scale (float): Conditioning scale for controlnet.
-            control_guidance_end (float): Guidance end for controlnet.
+        return background, mask
 
-        Returns:
-            Image.Image: The generated image.
-        """
-        return self.controlnet_pipeline(
-            prompt,
-            negative_prompt=negative_prompt,
-            image=[inpaint_image, zoe_image],
-            guidance_scale=guidance_scale,
-            num_inference_steps=controlnet_num_inference_steps,
-            controlnet_conditioning_scale=controlnet_conditioning_scale,
-            control_guidance_end=control_guidance_end,
-        ).images[0]
+    def outpaint(self, image, width, height, overlap_percentage, num_inference_steps, resize_option, custom_resize_percentage, prompt_input, alignment, overlap_left, overlap_right, overlap_top, overlap_bottom):
+        background, mask = self.prepare_image_and_mask(
+            image, width, height, overlap_percentage, resize_option, 
+            custom_resize_percentage, alignment, overlap_left, overlap_right, 
+            overlap_top, overlap_bottom
+        )
+        
+        cnet_image = background.copy()
+        cnet_image.paste(0, (0, 0), mask)
 
-    def create_mask(self, image: Image.Image, segmentation_model: str, detection_model: str) -> Image.Image:
-        """
-        Create a mask for the final outpainting process.
+        final_prompt = f"{prompt_input}, high quality, 4k"
 
-        Args:
-            image (Image.Image): The original image.
-            segmentation_model (str): The segmentation model identifier.
-            detection_model (str): The detection model identifier.
+        (
+            prompt_embeds,
+            negative_prompt_embeds,
+            pooled_prompt_embeds,
+            negative_pooled_prompt_embeds,
+        ) = self.pipe.encode_prompt(final_prompt, "cuda", True)
 
-        Returns:
-            Image.Image: The created mask.
-        """
-        image_augmenter = ImageAugmentation(self.target_size[0], self.target_size[1], roi_scale=0.4)
-        mask_image = image_augmenter.generate_mask_from_bbox(image, segmentation_model, detection_model)
-        inverted_mask = image_augmenter.invert_mask(mask_image)
-        return inverted_mask
+        generator = self.pipe(
+            prompt_embeds=prompt_embeds,
+            negative_prompt_embeds=negative_prompt_embeds,
+            pooled_prompt_embeds=pooled_prompt_embeds,
+            negative_pooled_prompt_embeds=negative_pooled_prompt_embeds,
+            image=cnet_image,
+            num_inference_steps=num_inference_steps
+        )
 
-    def generate_outpainting(self, prompt: str, negative_prompt: str, image: Image.Image, mask: Image.Image, guidance_scale: float, strength: float, num_inference_steps: int) -> Image.Image:
-        """
-        Generate the final outpainted image.
+        # Iterate through the generator to get the final image
+        for output in generator:
+            final_image = output
 
-        Args:
-            prompt (str): The prompt for image generation.
-            negative_prompt (str): The negative prompt for image generation.
-            image (Image.Image): The image to outpaint.
-            mask (Image.Image): The mask for outpainting.
-            guidance_scale (float): Guidance scale for inpainting.
-            strength (float): Strength for inpainting.
-            num_inference_steps (int): Number of inference steps for inpainting.
+        final_image = final_image.convert("RGBA")
+        cnet_image.paste(final_image, (0, 0), mask)
 
-        Returns:
-            Image.Image: The final outpainted image.
-        """
-        return self.inpaint_pipeline(
-            prompt,
-            negative_prompt=negative_prompt,
-            image=image,
-            mask_image=mask,
-            guidance_scale=guidance_scale,
-            strength=strength,
-            num_inference_steps=num_inference_steps,
-        ).images[0]
+        return cnet_image
 
-    def run_pipeline(self, image_path: str, controlnet_prompt: str, controlnet_negative_prompt: str, controlnet_conditioning_scale: float, controlnet_guidance_scale: float, controlnet_num_inference_steps: int, controlnet_guidance_end: float, inpainting_prompt: str, inpainting_negative_prompt: str, inpainting_guidance_scale: float, inpainting_strength: float, inpainting_num_inference_steps: int) -> Image.Image:
-        """
-        Process an image through the entire outpainting pipeline.
-
-        Args:
-            image_path (str): Path of the image to process.
-            controlnet_prompt (str): Prompt for the controlnet image generation.
-            controlnet_negative_prompt (str): Negative prompt for controlnet image generation.
-            controlnet_conditioning_scale (float): Conditioning scale for controlnet.
-            controlnet_guidance_scale (float): Guidance scale for controlnet.
-            controlnet_num_inference_steps (int): Number of inference steps for controlnet.
-            controlnet_guidance_end (float): Guidance end for controlnet.
-            inpainting_prompt (str): Prompt for the inpainting image generation.
-            inpainting_negative_prompt (str): Negative prompt for inpainting image generation.
-            inpainting_guidance_scale (float): Guidance scale for inpainting.
-            inpainting_strength (float): Strength for inpainting.
-            inpainting_num_inference_steps (int): Number of inference steps for inpainting.
-
-        Returns:
-            Image.Image: The final outpainted image.
-        """
-        print("Loading and preprocessing image")
-        resized_img, background_image = self.load_and_preprocess_image(image_path)
-        print("Generating depth map")
-        image_zoe = self.generate_depth_map(background_image)
-        print("Generating initial image")
-        temp_image = self.generate_base_image(controlnet_prompt, controlnet_negative_prompt, background_image, image_zoe,
-                                              controlnet_guidance_scale, controlnet_num_inference_steps, controlnet_conditioning_scale, controlnet_guidance_end)
-        x = (self.target_size[0] - resized_img.width) // 2
-        y = (self.target_size[1] - resized_img.height) // 2
-        temp_image.paste(resized_img, (x, y), resized_img)
-        print("Creating mask for outpainting")
-        final_mask = self.create_mask(temp_image, "facebook/sam-vit-large", "yolov8l")
-        mask_blurred = self.inpaint_pipeline.mask_processor.blur(final_mask, blur_factor=20)
-        print("Generating final outpainted image")
-        final_image = self.generate_outpainting(inpainting_prompt, inpainting_negative_prompt, temp_image, mask_blurred,
-                                                inpainting_guidance_scale, inpainting_strength, inpainting_num_inference_steps)
-        final_image.paste(resized_img, (x, y), resized_img)
-        return final_image
-
-
-def main():
-    processor = ControlNetZoeDepthOutpainting(target_size=(1024, 1024))
-    result = processor.run_pipeline("/home/PicPilot/sample_data/example1.jpg",
-                                    "product in the kitchen",
-                                    "low resolution, Bad Resolution",
-                                     0.9,
-                                     7.5,
-                                     50,
-                                     0.6,
-                                     "Editorial Photography of the Pot in the kitchen",
-                                     "low Resolution, Bad Resolution",
-                                     8,
-                                     0.7,
-                                     30)
-    result.save("outpainted_result.png")
-    print("Outpainting complete. Result saved as 'outpainted_result.png'")
-
-
+# Usage example
 if __name__ == "__main__":
-    main()
+    outpainter = Outpainter()
+    
+    # Load an example image
+    image = Image.open("/root/PicPilot/sample_data/example4.jpg").convert("RGBA")
+    
+    # Set parameters
+    width, height = 1024, 1024
+    overlap_percentage = 10
+    num_inference_steps = 8
+    resize_option = "Full"
+    custom_resize_percentage = 100
+    prompt_input = "A Office"
+    alignment = "Left"
+    overlap_left = overlap_right = overlap_top = overlap_bottom = True
+    
+    # Run outpainting
+    result = outpainter.outpaint(
+        image, width, height, overlap_percentage, num_inference_steps,
+        resize_option, custom_resize_percentage, prompt_input, alignment,
+        overlap_left, overlap_right, overlap_top, overlap_bottom
+    )
+    
+    # Save the result
+    result.save("outpainted_image.png")

@@ -52,7 +52,7 @@ def inference(cfg: DictConfig):
     mask_image = augmenter.generate_mask_from_bbox(extended_image, cfg.segmentation_model, cfg.detection_model)
     mask_image = augmenter.invert_mask(mask_image)
     
-    # Create AutoPaintingPipeline instance with cached pipeline
+    
     painting_pipeline = AutoPaintingPipeline(
         pipeline=pipeline,
         image=extended_image,
