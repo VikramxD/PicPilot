@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.11
 
 # Set working directory in the container
 WORKDIR /app
@@ -39,4 +39,4 @@ RUN pip install --no-cache-dir -e /app
 WORKDIR /app/api
 
 # Command to run the application
-CMD ["python", "endpoints.py"]
+CMD ["python3", "picpilot.py"]
