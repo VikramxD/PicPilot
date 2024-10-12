@@ -2,7 +2,7 @@
 
 # Install necessary packages
 apt-get install -y python3-venv python3-pip
-apt install -y libgl1-mesa-glx
+
 
 # Remove the old virtual environment if it exists and create a new one
 if [ -d ".venv" ]; then
@@ -23,7 +23,7 @@ fi
 pip install uv
 
 # Change directory to api and install the required packages
-cd api || { echo "API directory not found"; exit 1; }
+cd triton-api || { echo "API directory not found"; exit 1; }
 
 
 # Ensure the uv command is available

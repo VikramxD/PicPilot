@@ -4,7 +4,6 @@ from PIL import Image
 import io
 import base64
 from pydantic import BaseModel, Field
-import torch
 import time
 from scripts.outpainting import Outpainter
 from scripts.api_utils import pil_to_s3_json

@@ -1,8 +1,6 @@
 LICENSE
 README.md
 setup.py
-api/__init__.py
-api/endpoints.py
 picpilot.egg-info/PKG-INFO
 picpilot.egg-info/SOURCES.txt
 picpilot.egg-info/dependency_links.txt

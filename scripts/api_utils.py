@@ -1,129 +1,152 @@
-import torch
-from ultralytics import YOLO
-from transformers import SamModel, SamProcessor
-import numpy as np
-from PIL import Image, ImageOps
-from scripts.config import SEGMENTATION_MODEL_NAME, DETECTION_MODEL_NAME
-from diffusers.utils import load_image
+"""
+This module provides utilities for device management, memory handling, and file operations.
+It includes functions for accelerator selection, memory clearing, and image/video processing.
+"""
+
+import os
+import platform
+import subprocess
+import sys
+from functools import lru_cache
+from typing import List, Optional, Union
 import gc
-from scripts.s3_manager import S3ManagerService
 import io
 from io import BytesIO
 import base64
 import uuid
+import torch
+from PIL import Image
+from scripts.s3_manager import S3ManagerService
 
-
-
-
-
-
-def clear_memory():
+# Device Management
+class DeviceManager:
     """
-    Clears the memory by collecting garbage and emptying the CUDA cache.
+    Manages device selection for accelerated computing.
 
-    This function is useful when dealing with memory-intensive operations in Python, especially when using libraries like PyTorch.
-
-   """
-    gc.collect()
-    torch.cuda.empty_cache()
-   
-
-
-
-
-def accelerator():
-    """
-    Determines the device accelerator to use based on availability.
-
-    Returns:
-        str: The name of the device accelerator ('cuda', 'mps', or 'cpu').
-    """
-    if torch.cuda.is_available():
-        return "cuda"
-    elif torch.backends.mps.is_available():
-        return "mps"
-    else:
-        return "cpu"
-
-class ImageAugmentation:
-    """
-    Class for centering an image on a white background using ROI.
+    This class handles the selection of appropriate computing devices (CPU, CUDA, MPS)
+    based on system availability and user preferences.
 
     Attributes:
-        target_width (int): Desired width of the extended image.
-        target_height (int): Desired height of the extended image.
-        roi_scale (float): Scale factor to determine the size of the region of interest (ROI) in the original image.
+        _accelerator (str): The type of accelerator being used.
+        _devices (Union[List[int], int]): The devices available for use.
     """
 
-    def __init__(self, target_width, target_height, roi_scale=0.6):
-        self.target_width = target_width
-        self.target_height = target_height
-        self.roi_scale = roi_scale
-
-    def extend_image(self, image: Image) -> Image:
+    def __init__(self, accelerator: str = "auto", devices: Union[List[int], int, str] = "auto"):
         """
-        Extends an image to fit within the specified target dimensions while maintaining the aspect ratio.
-        """
-        original_width, original_height = image.size
-        scale = min(self.target_width / original_width, self.target_height / original_height)
-        new_width = int(original_width * scale * self.roi_scale)
-        new_height = int(original_height * scale * self.roi_scale)
-        resized_image = image.resize((new_width, new_height))
-        extended_image = Image.new("RGB", (self.target_width, self.target_height), "white")
-        paste_x = (self.target_width - new_width) // 2
-        paste_y = (self.target_height - new_height) // 2
-        extended_image.paste(resized_image, (paste_x, paste_y))
-        return extended_image
-
-    def generate_mask_from_bbox(self,image: Image, segmentation_model: str ,detection_model) -> Image:
-        """
-        Generates a mask from the bounding box of an image using YOLO and SAM-ViT models.
+        Initialize the DeviceManager.
 
         Args:
-            image_path (str): The path to the input image.
-
-        Returns:
-            numpy.ndarray: The generated mask as a NumPy array.
+            accelerator (str): The type of accelerator to use. Defaults to "auto".
+            devices (Union[List[int], int, str]): The devices to use. Defaults to "auto".
         """
-    
-        yolo = YOLO(detection_model)
-        processor = SamProcessor.from_pretrained(segmentation_model)
-        model = SamModel.from_pretrained(segmentation_model).to(device=accelerator())
-        results = yolo(image)
-        bboxes = results[0].boxes.xyxy.tolist()
-        input_boxes = [[[bboxes[0]]]]
-        inputs = processor(load_image(image), input_boxes=input_boxes, return_tensors="pt").to("cuda")
-        with torch.no_grad():
-            outputs = model(**inputs)
-        mask = processor.image_processor.post_process_masks(
-            outputs.pred_masks.cpu(),
-            inputs["original_sizes"].cpu(),
-            inputs["reshaped_input_sizes"].cpu()
-        )[0][0][0].numpy()
-        mask_image = Image.fromarray(mask)
-        return mask_image
+        self._accelerator = self._sanitize_accelerator(accelerator)
+        self._devices = self._setup_devices(devices)
 
+    @property
+    def accelerator(self):
+        """Get the current accelerator type."""
+        return self._accelerator
 
+    @property
+    def devices(self):
+        """Get the current devices in use."""
+        return self._devices
 
-    def invert_mask(self, mask_image: np.ndarray) -> np.ndarray:
-        """
-        Inverts the given mask image.
-        """
-        
-        
-        inverted_mask_pil = ImageOps.invert(mask_image.convert("L"))
-        return inverted_mask_pil
-    
-def pil_to_b64_json(image):
+    @staticmethod
+    def _sanitize_accelerator(accelerator: Optional[str]):
+        """Sanitize the accelerator input."""
+        if isinstance(accelerator, str):
+            accelerator = accelerator.lower()
+        if accelerator not in ["auto", "cpu", "mps", "cuda", "gpu", None]:
+            raise ValueError("accelerator must be one of 'auto', 'cpu', 'mps', 'cuda', or 'gpu'")
+        return "auto" if accelerator is None else accelerator
+
+    def _setup_devices(self, devices: Union[List[int], int, str]):
+        """Set up the devices based on input and availability."""
+        if devices == "auto":
+            return self._auto_device_count()
+        elif isinstance(devices, int):
+            return min(devices, self._auto_device_count())
+        elif isinstance(devices, list):
+            return [dev for dev in devices if dev < self._auto_device_count()]
+        else:
+            raise ValueError("devices must be 'auto', an integer, or a list of integers")
+
+    def _auto_device_count(self) -> int:
+        """Automatically determine the number of available devices."""
+        if self._accelerator == "cuda":
+            return check_cuda_with_nvidia_smi()
+        elif self._accelerator == "mps":
+            return 1 
+        elif self._accelerator == "cpu":
+            return os.cpu_count() or 1
+        else:
+            return 1
+
+    def _choose_auto_accelerator(self):
+        """Choose the best available accelerator automatically."""
+        gpu_backend = self._choose_gpu_accelerator_backend()
+        return gpu_backend if gpu_backend else "cpu"
+
+    @staticmethod
+    def _choose_gpu_accelerator_backend():
+        """Choose the appropriate GPU backend if available."""
+        if check_cuda_with_nvidia_smi() > 0:
+            return "cuda"
+        if torch.backends.mps.is_available() and platform.processor() in ("arm", "arm64"):
+            return "mps"
+        return None
+
+@lru_cache(maxsize=1)
+def check_cuda_with_nvidia_smi() -> int:
     """
-    Converts a PIL image to a base64-encoded JSON object.
+    Check CUDA availability using nvidia-smi.
+
+    Returns:
+        int: The number of available CUDA devices.
+    """
+    try:
+        nvidia_smi_output = subprocess.check_output(["nvidia-smi", "-L"]).decode("utf-8").strip()
+        devices = [el for el in nvidia_smi_output.split("\n") if el.startswith("GPU")]
+        devices = [el.split(":")[0].split()[1] for el in devices]
+        visible_devices = os.environ.get("CUDA_VISIBLE_DEVICES")
+        if visible_devices:
+            devices = [el for el in devices if el in visible_devices.split(",")]
+        return len(devices)
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return 0
+
+def accelerator(devices: Union[List[int], int, str] = "auto") -> tuple:
+    """
+    Determine the device accelerator to use based on availability.
+
+    Args:
+        devices (Union[List[int], int, str]): Specifies the devices to use.
+
+    Returns:
+        tuple: A tuple containing the accelerator type and available devices.
+    """
+    device_manager = DeviceManager(accelerator="auto", devices=devices)
+    return device_manager.accelerator, device_manager.devices
+
+# Memory Management
+def clear_memory():
+    """
+    Clear memory by collecting garbage and emptying the CUDA cache.
+    """
+    gc.collect()
+    torch.cuda.empty_cache()
+
+# File Operations
+def pil_to_b64_json(image: Image.Image) -> dict:
+    """
+    Convert a PIL image to a base64-encoded JSON object.
 
     Args:
         image (PIL.Image.Image): The PIL image object to be converted.
 
     Returns:
         dict: A dictionary containing the image ID and the base64-encoded image.
-
     """
     image_id = str(uuid.uuid4())
     buffered = BytesIO()
@@ -131,10 +154,9 @@ def pil_to_b64_json(image):
     b64_image = base64.b64encode(buffered.getvalue()).decode("utf-8")
     return {"image_id": image_id, "b64_image": b64_image}
 
-
-def pil_to_s3_json(image: Image.Image, file_name) -> dict:
+def pil_to_s3_json(image: Image.Image, file_name: str) -> dict:
     """
-    Uploads a PIL image to Amazon S3 and returns a JSON object containing the image ID and the signed URL.
+    Upload a PIL image to Amazon S3 and return a JSON object with the image ID and signed URL.
 
     Args:
         image (PIL.Image.Image): The PIL image to be uploaded.
@@ -142,7 +164,6 @@ def pil_to_s3_json(image: Image.Image, file_name) -> dict:
 
     Returns:
         dict: A JSON object containing the image ID and the signed URL.
-
     """
     image_id = str(uuid.uuid4())
     s3_uploader = S3ManagerService()
@@ -152,20 +173,29 @@ def pil_to_s3_json(image: Image.Image, file_name) -> dict:
 
     unique_file_name = s3_uploader.generate_unique_file_name(file_name)
     s3_uploader.upload_file(image_bytes, unique_file_name)
-    signed_url = s3_uploader.generate_signed_url(
-        unique_file_name, exp=43200
-    )  # 12 hours
+    signed_url = s3_uploader.generate_signed_url(unique_file_name, exp=43200)  # 12 hours
     return {"image_id": image_id, "url": signed_url}
 
+def mp4_to_s3_json(video_bytes: io.BytesIO, file_name: str) -> dict:
+    """
+    Upload an MP4 video to Amazon S3 and return a JSON object with the video ID and signed URL.
 
+    Args:
+        video_bytes (io.BytesIO): The video data as bytes.
+        file_name (str): The name of the file.
 
+    Returns:
+        dict: A JSON object containing the video ID and the signed URL.
+    """
+    video_id = str(uuid.uuid4())
+    s3_uploader = S3ManagerService()
+
+    unique_file_name = s3_uploader.generate_unique_file_name(file_name)
+    s3_uploader.upload_file(video_bytes, unique_file_name)
+    signed_url = s3_uploader.generate_signed_url(unique_file_name, exp=43200)  # 12 hours
+    return {"video_id": video_id, "url": signed_url}
 
 if __name__ == "__main__":
-    augmenter = ImageAugmentation(target_width=1024, target_height=1024, roi_scale=0.5)
-    image_path = "../sample_data/example3.jpg"
-    image = Image.open(image_path)
-    extended_image = augmenter.extend_image(image)
-    mask = augmenter.generate_mask_from_bbox(extended_image, SEGMENTATION_MODEL_NAME, DETECTION_MODEL_NAME)
-    inverted_mask_image = augmenter.invert_mask(mask)
-    mask.save("mask.jpg")
-    inverted_mask_image.save("inverted_mask.jpg")
+    acc, devs = accelerator()
+    print(f"Selected accelerator: {acc}")
+    print(f"Available devices: {devs}")
