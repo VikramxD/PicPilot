@@ -12,4 +12,4 @@ sdxl_server = LitServer(SDXLLoraAPI(), api_path='/api/v2/generate/sdxl', acceler
 outpainting_server = LitServer(OutpaintingAPI(), api_path='/api/v2/painting/sdxl_outpainting', accelerator='auto', max_batch_size=4, batch_timeout=0.1)
 image2video_server = LitServer(ImageToVideoAPI(), api_path='/api/v2/image2video/cogvideox', accelerator='auto', max_batch_size=1, batch_timeout=0.1)
 
-run_all([flux_server,sdxl_server,outpainting_server,image2video_server], port=7860)
+run_all([flux_server,sdxl_server,outpainting_server,image2video_server], port=8000)
