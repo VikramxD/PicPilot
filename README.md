@@ -53,7 +53,7 @@ To use PicPilot with Docker, execute the following commands:
 
 ```bash
 docker pull vikram1202/picpilot:latest
-docker run --gpus all -p 8000:8000 YourDockerHubUsername/picpilot:latest
+docker run --gpus all -p 8000:8000 vikram1202/picpilot:latest
 ```
 
 Alternatively, if you prefer to build the Docker image locally:
