@@ -44,7 +44,7 @@ conda activate picpilot-venv
 Install Dependencies:
 
 ```bash
-pip install -r requirements.txt
+./run.sh
 ```
 
 ### 🛳️ Docker
