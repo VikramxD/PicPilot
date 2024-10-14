@@ -7,13 +7,10 @@
 [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/VikramxD/Picpilot)](https://github.com/YourGitHubUsername/picpilot/pulls)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/VikramxD/Picpilot/blob/main/LICENSE)
 
-> **IMPORTANT**
->
+
 > PicPilot is a scalable solution that leverages state-of-the-art Text to Image Models to extend and enhance images and create product photography in seconds for your brand. Whether you're working with existing product images or need to generate new visuals, PicPilot prepares your visual content to be stunning, professional, and ready for marketing applications.
 
 
-## Intro
-[Insert a short video or GIF demonstrating PicPilot in action]
 
 ## Features
 ✅ Flux Inpainting for detailed image editing  
