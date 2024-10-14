@@ -16,10 +16,8 @@
 ✅ Flux Inpainting for detailed image editing  
 ✅ SDXL (Stable Diffusion XL) with LoRA for high-quality image generation  
 ✅ SDXL Outpainting for extending images seamlessly  
-✅ Image to Video conversion using advanced AI models  
+✅ Image to Video conversion using CogvideoX
 ✅ Batch processing support with configurable batch sizes and timeouts  
-✅ Automatic GPU acceleration  
-✅ RESTful API for easy integration  
 
 ### Why PicPilot?
 Creating professional product photography and visual narratives can be time-consuming and expensive. PicPilot aims to revolutionize this process by offering an AI-powered platform where you can enhance existing images, generate new ones, or even convert images to videos, creating stunning visuals for your brand in seconds.
