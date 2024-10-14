@@ -3,7 +3,7 @@ git+https://github.com/huggingface/diffusers
 lightning
 Pillow
 pydantic
-torch
+torch>=1.4
 utils
 uvicorn
 boto3
