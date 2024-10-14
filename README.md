@@ -16,7 +16,7 @@
 ✅ Flux Inpainting for detailed image editing  
 ✅ SDXL (Stable Diffusion XL) with LoRA for high-quality image generation  
 ✅ SDXL Outpainting for extending images seamlessly  
-✅ Image to Video conversion using CogvideoX
+✅ Image to Video conversion using CogvideoX   
 ✅ Batch processing support with configurable batch sizes and timeouts  
 
 ### Why PicPilot?
