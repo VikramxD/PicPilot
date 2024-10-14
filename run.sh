@@ -23,7 +23,7 @@ fi
 pip install uv
 
 # Change directory to api and install the required packages
-cd triton-api || { echo "API directory not found"; exit 1; }
+cd api || { echo "API directory not found"; exit 1; }
 
 
 # Ensure the uv command is available
