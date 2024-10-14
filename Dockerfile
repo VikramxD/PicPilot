@@ -1,39 +1,51 @@
-FROM python:3.11
+# Use NVIDIA CUDA image as the base image
+FROM nvidia/cuda:12.2.2-cudnn8-runtime-ubuntu22.04
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/home/user/.local/bin:$PATH" \
+    PYTHONPATH=/app
 
 # Set working directory in the container
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        ffmpeg \
-        libsm6 \
-        libxext6 \
-        libgl1-mesa-glx \
+# Install system dependencies, Python, and build tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3.11 \
+    python3-pip \
+    python3.11-venv \
+    python3.11-dev \
+    ffmpeg \
+    libsm6 \
+    libxext6 \
+    libgl1-mesa-glx \
+    git \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
-
-# Copy everything from the current directory to /app in the container
-COPY . .
-
-# Install Python dependencies
-RUN pip install --no-cache-dir -r api/requirements.txt
 
 # Create a non-root user to run the application
 RUN useradd -m -u 1000 user
 
-# Set environment variables
-ENV HOME=/home/user \
-    PATH=/home/user/.local/bin:$PATH \
-    PYTHONPATH=$HOME/app/scripts
-
-# Set ownership to non-root user
-RUN chown -R user:user /app
+# Create a virtual environment and give ownership to the non-root user
+RUN python3.11 -m venv /home/user/venv && chown -R user:user /home/user/venv
+ENV PATH="/home/user/venv/bin:$PATH"
 
 # Switch to the non-root user
 USER user
 
+# Copy requirements file
+COPY --chown=user:user api/requirements.txt requirements.txt
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -U pip setuptools wheel
+RUN pip install --no-cache-dir -U -r requirements.txt
+
+# Copy the rest of the application code
+COPY --chown=user:user . .
+
 # Install the application in editable mode
-RUN pip install --no-cache-dir -e /app
+RUN pip install --no-cache-dir -e .
 
 # Set working directory for the application
 WORKDIR /app/api

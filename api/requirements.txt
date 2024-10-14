@@ -8,7 +8,7 @@ utils
 uvicorn
 boto3
 ultralytics
-transformers
+git+https://github.com/huggingface/transformers
 accelerate
 peft
 pydantic-settings
