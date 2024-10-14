@@ -91,7 +91,6 @@ PicPilot offers the following API endpoints:
    - For converting images to videos
    - Max batch size: 1, Batch timeout: 0.1 seconds
 
-Each endpoint is served by a separate LitServer instance, allowing for optimized performance and resource allocation.
 
 ## Coming Soon / Roadmap
 🎨 Integration with more AI models for diverse visual effects  
