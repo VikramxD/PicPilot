@@ -17,3 +17,4 @@ rembg
 mediapipe
 git+https://github.com/bhimrazy/LitServe.git@feat/multi-endpoints
 torchao
+runpod
