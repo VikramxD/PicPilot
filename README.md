@@ -73,22 +73,12 @@ This will start the server on port 8000 with all available API endpoints.
 
 PicPilot offers the following API endpoints:
 
-1. Flux Inpainting: `/api/v2/painting/flux`
-   - For detailed image editing and inpainting
-   - Max batch size: 4, Batch timeout: 0.1 seconds
-
-2. SDXL Generation: `/api/v2/generate/sdxl`
-   - For high-quality image generation using SDXL with LoRA
-   - Max batch size and timeout configured in `tti_settings`
-
-3. SDXL Outpainting: `/api/v2/painting/sdxl_outpainting`
-   - For extending images seamlessly
-   - Max batch size: 4, Batch timeout: 0.1 seconds
-
-4. Image to Video: `/api/v2/image2video/cogvideox`
-   - For converting images to videos
-   - Max batch size: 1, Batch timeout: 0.1 seconds
-
+| Endpoint | Path | Purpose | Max Batch Size | Batch Timeout |
+|----------|------|---------|----------------|---------------|
+| Flux Inpainting | `/api/v2/painting/flux` | Detailed image editing and inpainting | 4 | 0.1 seconds |
+| SDXL Generation | `/api/v2/generate/sdxl` | High-quality image generation using SDXL with LoRA | Configured in `tti_settings` | Configured in `tti_settings` |
+| SDXL Outpainting | `/api/v2/painting/sdxl_outpainting` | Extending images seamlessly | 4 | 0.1 seconds |
+| Image to Video | `/api/v2/image2video/cogvideox` | Converting images to videos | 1 | 0.1 seconds |
 
 ## Coming Soon / Roadmap
 🎨 Integration with more AI models for diverse visual effects  
