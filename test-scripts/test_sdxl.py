@@ -75,7 +75,7 @@ def main():
     """
     Main function to demonstrate the usage of the SDXLLoraClient.
     """
-    client = SDXLLoraClient("")
+    client = SDXLLoraClient("https://tqfdmm6n7udye4-8000.proxy.runpod.net/api/v2/generate/sdxl")
 
     # Test case 1: Generate a single image
     print("Generating a single image...")
