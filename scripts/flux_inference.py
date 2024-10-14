@@ -5,7 +5,7 @@ import numpy as np
 import torch
 from PIL import Image
 from diffusers import FluxInpaintPipeline, FluxTransformer2DModel
-from torchao.quantization import quantize_, int8_weight_only
+from torchao.ao.quantization import quantize_, int8_weight_only
 
 class FluxInpaintingInference:
     """
