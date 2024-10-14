@@ -1,13 +1,11 @@
 
-```markdown
 # 🚀 PicPilot 
 
-![PicPilot](https://github.com/user-attachments/assets/2961f39b-f554-4c5e-8b62-3cdc30fff46d)
-[![GitHub Stars](https://img.shields.io/github/stars/YourGitHubUsername/picpilot?style=social)](https://github.com/YourGitHubUsername/picpilot/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/YourGitHubUsername/picpilot?style=social)](https://github.com/YourGitHubUsername/picpilot/network/members)
-[![GitHub Issues](https://img.shields.io/github/issues/YourGitHubUsername/picpilot)](https://github.com/YourGitHubUsername/picpilot/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/YourGitHubUsername/picpilot)](https://github.com/YourGitHubUsername/picpilot/pulls)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/YourGitHubUsername/picpilot/blob/main/LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/VikramxD/Picpilot?style=social)](https://github.com/YourGitHubUsername/picpilot/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/VikramxD/Picpilot?style=social)](https://github.com/YourGitHubUsername/picpilot/network/members)
+[![GitHub Issues](https://img.shields.io/github/issues/VikramxD/Picpilot)](https://github.com/YourGitHubUsername/picpilot/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/VikramxD/Picpilot)](https://github.com/YourGitHubUsername/picpilot/pulls)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/VikramxD/Picpilot/blob/main/LICENSE)
 
 > **IMPORTANT**
 >
