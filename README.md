@@ -1,84 +1,122 @@
----
-license: mit
-sdk: docker
-emoji: 🚀
-colorFrom: blue
-colorTo: green
-pinned: false
-short_description: PicPilot Production Server
----
+
+```markdown
 # 🚀 PicPilot 
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![SDK](https://img.shields.io/badge/sdk-docker-blue.svg)
-![Color](https://img.shields.io/badge/color-blue--green-brightgreen.svg)
+![PicPilot](https://github.com/user-attachments/assets/2961f39b-f554-4c5e-8b62-3cdc30fff46d)
+[![GitHub Stars](https://img.shields.io/github/stars/YourGitHubUsername/picpilot?style=social)](https://github.com/YourGitHubUsername/picpilot/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/YourGitHubUsername/picpilot?style=social)](https://github.com/YourGitHubUsername/picpilot/network/members)
+[![GitHub Issues](https://img.shields.io/github/issues/YourGitHubUsername/picpilot)](https://github.com/YourGitHubUsername/picpilot/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/YourGitHubUsername/picpilot)](https://github.com/YourGitHubUsername/picpilot/pulls)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/YourGitHubUsername/picpilot/blob/main/LICENSE)
 
-> PicPilot: Generate Stunning Photography and Craft Visual Narratives in seconds for your Brand
-
-## 📖 Overview
-
-PicPilot is a scalable solution that leverages state-of-the-art Text to Image Models to extend and enhance images and create product photography This project has evolved through multiple iterations, addressing challenges and improving output quality at each stage.
-
-### Key Features:
-- segmentation using Segment Anything VIT Huge and YOLOv8s
-- High-quality outpainting with Controlnet + ZoeDepth
-- stable video diffusion support 
-- Batch API support and EventDriven Queue Support
-- Logging and Telemetry using LogFire
-   
-
-## 🏗 Architecture
-
-![image](https://github.com/user-attachments/assets/2961f39b-f554-4c5e-8b62-3cdc30fff46d)
-
-Current Pipeline 
-1. **Object Detection**: YOLOv8l provides accurate bounding boxes
-2. **Segmentation**: Segment Anything VIT Huge creates precise masks with ROI extension
-3. **painting**: Controlnet Zoe Depth + Realistic Vision XL
-4. **I2V GenXL**: Image to Video Generation Pipeline 
+> **IMPORTANT**
+>
+> PicPilot is a scalable solution that leverages state-of-the-art Text to Image Models to extend and enhance images and create product photography in seconds for your brand. Whether you're working with existing product images or need to generate new visuals, PicPilot prepares your visual content to be stunning, professional, and ready for marketing applications.
 
 
-## 🧠 Models used 
+## Intro
+[Insert a short video or GIF demonstrating PicPilot in action]
 
+## Features
+✅ Flux Inpainting for detailed image editing  
+✅ SDXL (Stable Diffusion XL) with LoRA for high-quality image generation  
+✅ SDXL Outpainting for extending images seamlessly  
+✅ Image to Video conversion using advanced AI models  
+✅ Batch processing support with configurable batch sizes and timeouts  
+✅ Automatic GPU acceleration  
+✅ RESTful API for easy integration  
 
-- [Stable Diffusion Inpainting](https://huggingface.co/runwayml/stable-diffusion-inpainting)
-- [Kandinsky 2.2 Decoder Inpaint](https://huggingface.co/kandinsky-community/kandinsky-2-2-decoder-inpaint)
-- [Stable Diffusion XL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0)
-- [Controlnet-Inpaint Dreamer](https://huggingface.co/destitech/controlnet-inpaint-dreamer-sdxl)
-- [Controlnet Zoe Depth](https://huggingface.co/diffusers/controlnet-zoe-depth-sdxl-1.0)
-- [Realistic Vision XL](https://huggingface.co/OzzyGT/RealVisXL_V4.0_inpainting)
-- [I2V GenXL](https://huggingface.co/ali-vilab/i2vgen-xl)
+### Why PicPilot?
+Creating professional product photography and visual narratives can be time-consuming and expensive. PicPilot aims to revolutionize this process by offering an AI-powered platform where you can enhance existing images, generate new ones, or even convert images to videos, creating stunning visuals for your brand in seconds.
 
-## 📸 Results
+## Installation
 
-Here are some impressive results from our pipeline:
+```bash
+git clone https://github.com/YourGitHubUsername/picpilot
+cd picpilot
+```
 
-<div align="center">
-  <img src="https://github.com/VikramxD/product_diffusion_api/assets/72499426/1228718b-5ef7-44a1-81f6-2953ffdc767c" width="30%" alt="Cooker Output">
-  <img src="https://github.com/VikramxD/product_diffusion_api/assets/72499426/06e12aea-cdc2-4ab8-97e0-be77bc49a238" width="30%" alt="Toaster Output">
-  <img src="https://github.com/VikramxD/product_diffusion_api/assets/72499426/65bcd04f-a715-43c3-8928-a9669f8eda85" width="30%" alt="Chair Output">
-</div>
-<div align="center">
-  <img src="https://github.com/VikramxD/product_diffusion_api/assets/72499426/dd6af644-1c07-424a-8ba6-0715a5611094" width="30%" alt="Tent Output">
-  <img src="https://github.com/VikramxD/product_diffusion_api/assets/72499426/b1b8c745-deb4-41ff-a93a-77fa06f55cc3" width="30%" alt="Cycle Output">
-</div>
+Create a Virtual Environment:
 
-## 📊 Experimentation & Improvements
+```bash
+conda create -n picpilot-venv python=3.10
+conda activate picpilot-venv
+```
 
-For detailed insights into our experimentation process, check out our [Weights & Biases Report](https://wandb.ai/vikramxd/product_placement_api/reports/Experimentation-Report---Vmlldzo3Mjg1MjQw).
+Install Dependencies:
 
-Recent improvements:
-- ✅ Deployed model as an API for batch processing
-- ✅ Implemented UI using Gradio 
-- ✅ Integrated image-to-video model pipeline using [I2V GenxL](https://huggingface.co/ali-vilab/i2vgen-xl)
+```bash
+pip install -r requirements.txt
+```
 
-## 🎥 Sample Video
+### 🛳️ Docker
 
-Check out our short demo video to see PicPilot in action:
+To use PicPilot with Docker, execute the following commands:
 
-https://github.com/VikramxD/product_diffusion_api/assets/72499426/c935ec2d-cb76-49dd-adae-8aa4feac211e
+```bash
+docker pull YourDockerHubUsername/picpilot:latest
+docker run --gpus all -p 8000:8000 YourDockerHubUsername/picpilot:latest
+```
+
+Alternatively, if you prefer to build the Docker image locally:
+
+```bash
+docker build -t picpilot .
+docker run --gpus all -p 8000:8000 picpilot
+```
+
+## Usage
+
+Run the Server:
+
+```bash
+python server.py
+```
+
+This will start the server on port 8000 with all available API endpoints.
+
+## API Endpoints
+
+PicPilot offers the following API endpoints:
+
+1. Flux Inpainting: `/api/v2/painting/flux`
+   - For detailed image editing and inpainting
+   - Max batch size: 4, Batch timeout: 0.1 seconds
+
+2. SDXL Generation: `/api/v2/generate/sdxl`
+   - For high-quality image generation using SDXL with LoRA
+   - Max batch size and timeout configured in `tti_settings`
+
+3. SDXL Outpainting: `/api/v2/painting/sdxl_outpainting`
+   - For extending images seamlessly
+   - Max batch size: 4, Batch timeout: 0.1 seconds
+
+4. Image to Video: `/api/v2/image2video/cogvideox`
+   - For converting images to videos
+   - Max batch size: 1, Batch timeout: 0.1 seconds
+
+Each endpoint is served by a separate LitServer instance, allowing for optimized performance and resource allocation.
+
+## Coming Soon / Roadmap
+🎨 Integration with more AI models for diverse visual effects  
+📊 Analytics dashboard for tracking usage and performance  
+🧠 Fine-tuning options for specific product categories  
+
+## Limitations
+- Requires a GPU for optimal performance
+- Processing time may vary depending on the complexity of the task and input size
+- Image to video conversion is limited to one image at a time
+
+## License
+PicPilot is licensed under the MIT license. See `LICENSE` for more information.
+
+## Acknowledgements
+
+This project utilizes several open-source models and libraries. We express our gratitude to the authors and contributors of:
+
+- Diffusers
+- CogVideoX
+- LitServe
+- Transformers
 
 ---
-
-📄 License: MIT
-
