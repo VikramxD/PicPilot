@@ -34,6 +34,6 @@ fi
 
 uv pip install -r requirements.txt
 
-git config --global user.name Vikramjeet Singh
-git config --global user.email singh.vikram.1782000@gmail.com
+git config --global user.name 
+git config --global user.email 
 
