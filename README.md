@@ -30,8 +30,8 @@ Creating professional product photography and visual narratives can be time-cons
 ## Installation
 
 ```bash
-git clone https://github.com/YourGitHubUsername/picpilot
-cd picpilot
+git clone https://github.com/VikramxD/Picpilot
+cd Picpilot
 ```
 
 Create a Virtual Environment:
@@ -52,7 +52,7 @@ pip install -r requirements.txt
 To use PicPilot with Docker, execute the following commands:
 
 ```bash
-docker pull YourDockerHubUsername/picpilot:latest
+docker pull vikram1202/picpilot:latest
 docker run --gpus all -p 8000:8000 YourDockerHubUsername/picpilot:latest
 ```
 
@@ -68,7 +68,8 @@ docker run --gpus all -p 8000:8000 picpilot
 Run the Server:
 
 ```bash
-python server.py
+cd api
+python picpilot.py
 ```
 
 This will start the server on port 8000 with all available API endpoints.
@@ -113,7 +114,6 @@ PicPilot is licensed under the MIT license. See `LICENSE` for more information.
 This project utilizes several open-source models and libraries. We express our gratitude to the authors and contributors of:
 
 - Diffusers
-- CogVideoX
 - LitServe
 - Transformers
 
