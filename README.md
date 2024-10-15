@@ -2,9 +2,6 @@
 # 🚀 PicPilot 
 
 [![GitHub Stars](https://img.shields.io/github/stars/VikramxD/Picpilot?style=social)](https://github.com/YourGitHubUsername/picpilot/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/VikramxD/Picpilot?style=social)](https://github.com/YourGitHubUsername/picpilot/network/members)
-[![GitHub Issues](https://img.shields.io/github/issues/VikramxD/Picpilot)](https://github.com/YourGitHubUsername/picpilot/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/VikramxD/Picpilot)](https://github.com/YourGitHubUsername/picpilot/pulls)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/VikramxD/Picpilot/blob/main/LICENSE)
 
 
@@ -86,7 +83,7 @@ PicPilot offers the following API endpoints:
 -  Support for CogvideoX finetuning
 
 ## Limitations
-- Requires a GPU for optimal performance
+- Requires Powerful GPU's to Run  for optimal performance Especially the FLUX Models 
 - Processing time may vary depending on the complexity of the task and input size
 - Image to video conversion is limited to one image at a time
 
