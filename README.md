@@ -16,7 +16,7 @@
 ✅ Flux Inpainting for detailed image editing  
 ✅ SDXL (Stable Diffusion XL) with LoRA for high-quality image generation  
 ✅ SDXL Outpainting for extending images seamlessly  
-✅ Image to Video conversion using CogvideoX   
+✅ Image to Video Generation using CogvideoX   
 ✅ Batch processing support with configurable batch sizes and timeouts  
 
 ### Why PicPilot?
@@ -80,10 +80,10 @@ PicPilot offers the following API endpoints:
 | SDXL Outpainting | `/api/v2/painting/sdxl_outpainting` | Extending images seamlessly | 4 | 0.1 seconds |
 | Image to Video | `/api/v2/image2video/cogvideox` | Converting images to videos | 1 | 0.1 seconds |
 
-## Coming Soon / Roadmap
-🎨 Integration with more AI models for diverse visual effects  
-📊 Analytics dashboard for tracking usage and performance  
-🧠 Fine-tuning options for specific product categories  
+## Next Features
+-  Support for Image Editing in FLUX Models
+-  Support for Custom Flux LORA'S 
+-  Support for CogvideoX finetuning
 
 ## Limitations
 - Requires a GPU for optimal performance
