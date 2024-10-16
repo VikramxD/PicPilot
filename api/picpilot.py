@@ -4,7 +4,7 @@ from sdxl_serve import SDXLLoraAPI
 from configs.tti_settings import tti_settings
 from outpainting_serve import OutpaintingAPI
 from image2video_serve import ImageToVideoAPI
-from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.cors import CORSMiddleware
 
 cors_middleware = (CORSMiddleware, {"allow_origins": ["*"], "allow_credentials": True, "allow_methods": ["*"], "allow_headers": ["*"],})
 
