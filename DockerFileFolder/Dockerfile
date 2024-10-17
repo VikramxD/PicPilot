@@ -35,14 +35,14 @@ ENV PATH="/home/user/venv/bin:$PATH"
 USER user
 
 # Copy requirements file
-COPY --chown=user:user api/requirements.txt requirements.txt
+COPY --chown=user:user api/requirements.txt /app/api/requirements.txt
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -U pip setuptools wheel
-RUN pip install --no-cache-dir -U -r requirements.txt
+RUN pip install --no-cache-dir -U -r /app/api/requirements.txt
 
 # Copy the rest of the application code
-COPY --chown=user:user . .
+COPY --chown=user:user . /app
 
 # Install the application in editable mode
 RUN pip install --no-cache-dir -e .
