@@ -39,7 +39,8 @@ COPY --chown=user:user . /app
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -U pip setuptools wheel
-RUN pip install --no-cache-dir -U -r /app/api/requirements.txt
+# Use find to locate requirements.txt and install dependencies
+RUN find /app -name requirements.txt -exec pip install --no-cache-dir -r {} \;
 
 # Install the application in editable mode
 RUN pip install --no-cache-dir -e .
