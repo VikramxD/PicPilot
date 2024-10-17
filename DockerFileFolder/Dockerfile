@@ -1,4 +1,3 @@
-# Use NVIDIA CUDA image as the base image
 FROM nvidia/cuda:12.2.2-cudnn8-runtime-ubuntu22.04
 
 # Set environment variables
@@ -37,17 +36,9 @@ USER user
 # Copy the entire application code
 COPY --chown=user:user . .
 
-# Debug: List contents of current directory and api directory
-RUN ls -la . && echo "Contents of api directory:" && ls -la api
-
 # Install Python dependencies
-RUN pip install --no-cache-dir -U pip setuptools wheel
-
-# Debug: Check if requirements.txt exists
-RUN if [ -f "api/requirements.txt" ]; then echo "requirements.txt exists"; else echo "requirements.txt does not exist"; fi
-
-# Attempt to install requirements
-RUN pip install --no-cache-dir -r api/requirements.txt || echo "Failed to install requirements"
+RUN pip install --no-cache-dir -U pip setuptools wheel && \
+    pip install --no-cache-dir -r api/requirements.txt
 
 # Install the application in editable mode using setup.py
 RUN pip install --no-cache-dir -e .
