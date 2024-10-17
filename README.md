@@ -26,12 +26,7 @@ git clone https://github.com/VikramxD/Picpilot
 cd Picpilot
 ```
 
-Create a Virtual Environment:
 
-```bash
-conda create -n picpilot-venv python=3.10
-conda activate picpilot-venv
-```
 
 Install Dependencies:
 
