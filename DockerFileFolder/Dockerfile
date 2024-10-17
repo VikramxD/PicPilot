@@ -35,19 +35,19 @@ ENV PATH="/home/user/venv/bin:$PATH"
 USER user
 
 # Copy the entire application code
-COPY --chown=user:user . /app
+COPY --chown=user:user . .
 
-# Debug: List contents of /app and /app/api
-RUN ls -la /app && echo "Contents of /app/api:" && ls -la /app/api
+# Debug: List contents of current directory and api directory
+RUN ls -la . && echo "Contents of api directory:" && ls -la api
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -U pip setuptools wheel
 
 # Debug: Check if requirements.txt exists
-RUN if [ -f "/app/api/requirements.txt" ]; then echo "requirements.txt exists"; else echo "requirements.txt does not exist"; fi
+RUN if [ -f "api/requirements.txt" ]; then echo "requirements.txt exists"; else echo "requirements.txt does not exist"; fi
 
 # Attempt to install requirements
-RUN pip install --no-cache-dir -r /app/api/requirements.txt || echo "Failed to install requirements"
+RUN pip install --no-cache-dir -r api/requirements.txt || echo "Failed to install requirements"
 
 # Install the application in editable mode using setup.py
 RUN pip install --no-cache-dir -e .
