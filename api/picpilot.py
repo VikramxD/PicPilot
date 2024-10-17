@@ -11,9 +11,9 @@ cors_middleware = (CORSMiddleware, {"allow_origins": ["*"], "allow_credentials":
 
 
 flux_server = LitServer(FluxInpaintingAPI(), api_path='/api/v2/painting/flux', accelerator="auto",devices='auto', max_batch_size=4, batch_timeout=0.1,middlewares=[cors_middleware])
-sdxl_server = LitServer(SDXLLoraAPI(), api_path='/api/v2/generate/sdxl', accelerator="auto",devices='auto', max_batch_size=tti_settings.MAX_BATCH_SIZE, batch_timeout=tti_settings.MAX_QUEUE_DELAY_MICROSECONDS / 1e6, middlewares=[cors_middleware])
-outpainting_server = LitServer(OutpaintingAPI(), api_path='/api/v2/painting/sdxl_outpainting', accelerator='auto',devices='auto', max_batch_size=4, batch_timeout=0.1,middlewares=[cors_middleware])
-image2video_server = LitServer(ImageToVideoAPI(), api_path='/api/v2/image2video/cogvideox', accelerator='auto',devices='auto', max_batch_size=1, batch_timeout=0.1,middlewares=[cors_middleware])
+sdxl_server = LitServer(SDXLLoraAPI(), api_path='/api/v2/generate/sdxl', accelerator="auto",devices='auto',workers_per_device=1, max_batch_size=tti_settings.MAX_BATCH_SIZE, batch_timeout=tti_settings.MAX_QUEUE_DELAY_MICROSECONDS / 1e6, middlewares=[cors_middleware])
+outpainting_server = LitServer(OutpaintingAPI(), api_path='/api/v2/painting/sdxl_outpainting', accelerator='auto',devices='auto',workers_per_device=1, max_batch_size=4, batch_timeout=0.1,middlewares=[cors_middleware])
+image2video_server = LitServer(ImageToVideoAPI(), api_path='/api/v2/image2video/cogvideox', accelerator='auto',devices='auto',workers_per_device=1, max_batch_size=1, batch_timeout=0.1,middlewares=[cors_middleware])
 
 
 if __name__ == '__main__':
