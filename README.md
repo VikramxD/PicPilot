@@ -95,4 +95,3 @@ This project utilizes several open-source models and libraries. We express our g
 
 ---
 
-<img src="Readme.svg" width="800" height="400">
