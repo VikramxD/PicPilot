@@ -1,0 +1,298 @@
+<svg fill="none" viewBox="0 0 1200 3800" width="1200" height="3800" xmlns="http://www.w3.org/2000/svg">
+  <foreignObject width="100%" height="100%">
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        :root {
+          --primary-color: #3a7bd5;
+          --secondary-color: #d0d0d0;
+          --accent-color: #f0f0f0;
+          --text-color: #e0e0e0;
+          --background-color: #000c1f;
+          --card-background: rgba(6, 20, 45, 0.6);
+          --code-background: #001433;
+        }
+
+        * {
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: 'JetBrains Mono', monospace;
+          line-height: 1.6;
+          color: var(--text-color);
+          margin: 0;
+          padding: 0;
+          background: 
+            radial-gradient(at 0% 0%, rgba(58, 123, 213, 0.3) 0, transparent 50%),
+            radial-gradient(at 100% 0%, rgba(208, 208, 208, 0.3) 0, transparent 50%),
+            radial-gradient(at 50% 100%, rgba(0, 12, 31, 0.3) 0, transparent 50%),
+            var(--background-color);
+          background-attachment: fixed;
+        }
+
+        .container {
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 40px 20px;
+        }
+
+        h1, h2, h3 {
+          color: var(--accent-color);
+        }
+
+        h1 {
+          font-size: 3em;
+          text-align: center;
+          margin-bottom: 30px;
+          background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        h2 {
+          font-size: 2em;
+          border-bottom: 2px solid var(--primary-color);
+          padding-bottom: 10px;
+          margin-top: 40px;
+        }
+
+        p {
+          margin-bottom: 15px;
+        }
+
+        a {
+          color: var(--primary-color);
+          text-decoration: none;
+          transition: color 0.3s ease;
+        }
+
+        a:hover {
+          color: var(--accent-color);
+        }
+
+        ul {
+          padding-left: 20px;
+        }
+
+        .badge {
+          display: inline-block;
+          padding: 5px 10px;
+          background-color: var(--primary-color);
+          color: var(--background-color);
+          border-radius: 15px;
+          font-size: 0.9em;
+          margin-right: 10px;
+          margin-bottom: 10px;
+        }
+
+        code {
+          background-color: var(--code-background);
+          color: var(--accent-color);
+          padding: 2px 4px;
+          border-radius: 4px;
+          font-size: 0.9em;
+        }
+
+        pre {
+          background-color: var(--code-background);
+          color: var(--text-color);
+          padding: 15px;
+          border-radius: 8px;
+          overflow-x: auto;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .features {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+          margin-top: 30px;
+        }
+
+        .feature {
+          background-color: var(--card-background);
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          backdrop-filter: blur(10px);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature h3 {
+          margin-top: 0;
+          color: var(--primary-color);
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 20px;
+          background-color: var(--card-background);
+          backdrop-filter: blur(10px);
+        }
+
+        th, td {
+          border: 1px solid var(--primary-color);
+          padding: 12px;
+          text-align: left;
+        }
+
+        th {
+          background-color: var(--primary-color);
+          color: var(--background-color);
+        }
+
+        @media (max-width: 600px) {
+          .container {
+            padding: 20px 10px;
+          }
+
+          h1 {
+            font-size: 2.5em;
+          }
+
+          h2 {
+            font-size: 1.8em;
+          }
+
+          .features {
+            grid-template-columns: 1fr;
+          }
+        }
+      </style>
+      <div class="container">
+        <h1>🚀 PicPilot</h1>
+        
+        <div>
+          <span class="badge">GitHub Stars</span>
+          <span class="badge">MIT License</span>
+        </div>
+
+        <p>PicPilot is a scalable solution that leverages state-of-the-art Text to Image Models to extend and enhance images and create product photography in seconds for your brand. Whether you're working with existing product images or need to generate new visuals, PicPilot prepares your visual content to be stunning, professional, and ready for marketing applications.</p>
+
+        <h2>Features</h2>
+        <div class="features">
+          <div class="feature">
+            <h3>Flux Inpainting</h3>
+            <p>Detailed image editing for precise enhancements.</p>
+          </div>
+          <div class="feature">
+            <h3>SDXL Generation</h3>
+            <p>High-quality image generation using SDXL with LoRA.</p>
+          </div>
+          <div class="feature">
+            <h3>SDXL Outpainting</h3>
+            <p>Extend images seamlessly for creative compositions.</p>
+          </div>
+          <div class="feature">
+            <h3>Image to Video</h3>
+            <p>Convert static images into dynamic videos with CogvideoX.</p>
+          </div>
+          <div class="feature">
+            <h3>Batch Processing</h3>
+            <p>Handle multiple images with configurable batch sizes and timeouts.</p>
+          </div>
+          <div class="feature">
+            <h3>Scalable Solution</h3>
+            <p>Built to handle your growing visual content needs.</p>
+          </div>
+        </div>
+
+        <h2>Why PicPilot?</h2>
+        <p>Creating professional product photography and visual narratives can be time-consuming and expensive. PicPilot aims to revolutionize this process by offering an AI-powered platform where you can enhance existing images, generate new ones, or even convert images to videos, creating stunning visuals for your brand in seconds.</p>
+
+        <h2>Installation</h2>
+        <pre><code>git clone https://github.com/VikramxD/Picpilot
+cd Picpilot
+./run.sh</code></pre>
+
+        <h2>Docker Support</h2>
+        <h3>Using Pre-built Docker Image</h3>
+        <pre><code>docker pull vikram1202/picpilot:latest
+docker run --gpus all -p 8000:8000 vikram1202/picpilot:latest</code></pre>
+
+        <h3>Building Docker Image Locally</h3>
+        <pre><code>docker build -t picpilot .
+docker run --gpus all -p 8000:8000 picpilot</code></pre>
+
+        <h2>Usage</h2>
+        <p>Run the Server:</p>
+        <pre><code>cd api
+python picpilot.py</code></pre>
+        <p>This will start the server on port 8000 with all available API endpoints.</p>
+
+        <h2>API Endpoints</h2>
+        <table>
+          <tr>
+            <th>Endpoint</th>
+            <th>Path</th>
+            <th>Purpose</th>
+            <th>Max Batch Size</th>
+            <th>Batch Timeout</th>
+          </tr>
+          <tr>
+            <td>Flux Inpainting</td>
+            <td>/api/v2/painting/flux</td>
+            <td>Detailed image editing and inpainting</td>
+            <td>4</td>
+            <td>0.1 seconds</td>
+          </tr>
+          <tr>
+            <td>SDXL Generation</td>
+            <td>/api/v2/generate/sdxl</td>
+            <td>High-quality image generation using SDXL with LoRA</td>
+            <td>Configured in tti_settings</td>
+            <td>Configured in tti_settings</td>
+          </tr>
+          <tr>
+            <td>SDXL Outpainting</td>
+            <td>/api/v2/painting/sdxl_outpainting</td>
+            <td>Extending images seamlessly</td>
+            <td>4</td>
+            <td>0.1 seconds</td>
+          </tr>
+          <tr>
+            <td>Image to Video</td>
+            <td>/api/v2/image2video/cogvideox</td>
+            <td>Converting images to videos</td>
+            <td>1</td>
+            <td>0.1 seconds</td>
+          </tr>
+        </table>
+
+        <h2>Next Features</h2>
+        <ul>
+          <li>Support for Image Editing in FLUX Models</li>
+          <li>Support for Custom Flux LORA'S</li>
+          <li>Support for CogvideoX finetuning</li>
+        </ul>
+
+        <h2>Limitations</h2>
+        <ul>
+          <li>Requires Powerful GPU's to Run for optimal performance Especially the FLUX Models</li>
+          <li>Processing time may vary depending on the complexity of the task and input size</li>
+          <li>Image to video conversion is limited to one image at a time</li>
+        </ul>
+
+        <h2>License</h2>
+        <p>PicPilot is licensed under the MIT license. See <a href="LICENSE">LICENSE</a> for more information.</p>
+
+        <h2>Acknowledgements</h2>
+        <p>This project utilizes several open-source models and libraries. We express our gratitude to the authors and contributors of:</p>
+        <ul>
+          <li>Diffusers</li>
+          <li>LitServe</li>
+          <li>Transformers</li>
+        </ul>
+      </div>
+    </div>
+  </foreignObject>
+</svg>
