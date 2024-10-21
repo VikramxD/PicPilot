@@ -9,7 +9,7 @@
 
 
 
-[![GitHub Stars](https://img.shields.io/github/stars/VikramxD/Picpilot?style=social)](https://github.com/YourGitHubUsername/picpilot/stargazers)
+[![GitHub Stars](https://img.shields.io/github/stars/VikramxD/Picpilot?style=social)](https://github.com/VikramxD/picpilot/stargazers)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/VikramxD/Picpilot/blob/main/LICENSE)
 
 
