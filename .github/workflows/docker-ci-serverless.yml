@@ -3,6 +3,11 @@ name: Docker Build and Push Serverless
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'serverless/**'
+      - 'api/**'
+      - 'scripts/**'
+      - '.github/workflows/**'
   pull_request:
     branches: [ "main" ]
 
@@ -12,14 +17,18 @@ jobs:
     strategy:
       matrix:
         include:
-          - functionality: text-to-image
+          - service: image-to-video
+            context: serverless/image-to-video
+            dockerfile: serverless/image-to-video/Dockerfile
+          - service: text-to-image
+            context: serverless/text-to-image
             dockerfile: serverless/text-to-image/Dockerfile
-          - functionality: outpainting
-            dockerfile: serverless/outpainting/Dockerfile
-          - functionality: inpainting
+          - service: inpainting
+            context: serverless/inpainting
             dockerfile: serverless/inpainting/Dockerfile
-          - functionality: image2video
-            dockerfile: serverless/image2video/Dockerfile
+          - service: outpainting
+            context: serverless/outpainting
+            dockerfile: serverless/outpainting/Dockerfile
 
     steps:
     - name: Checkout code
@@ -41,7 +50,7 @@ jobs:
         context: .
         file: ${{ matrix.dockerfile }}
         push: true
-        tags: ${{secrets.DOCKER_USERNAME }}/picpilot_${{ matrix.functionality }}:latest
+        tags: ${{secrets.DOCKER_USERNAME }}/picpilot_${{ matrix.service }}:latest
 
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
