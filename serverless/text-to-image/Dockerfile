@@ -31,7 +31,7 @@ COPY --chown=user:user api/ /app/api/
 COPY --chown=user:user scripts/ /app/scripts/
 COPY --chown=user:user configs/ /app/configs/
 COPY --chown=user:user setup.py /app/
-COPY --chown=user:user pyproject.toml /app/
+
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -U pip setuptools wheel && \
