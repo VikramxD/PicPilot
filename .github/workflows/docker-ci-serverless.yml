@@ -16,19 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        include:
-          - service: image-to-video
-            context: serverless/image-to-video
-            dockerfile: serverless/image-to-video/Dockerfile
-          - service: text-to-image
-            context: serverless/text-to-image
-            dockerfile: serverless/text-to-image/Dockerfile
-          - service: inpainting
-            context: serverless/inpainting
-            dockerfile: serverless/inpainting/Dockerfile
-          - service: outpainting
-            context: serverless/outpainting
-            dockerfile: serverless/outpainting/Dockerfile
+        service:
+          - image-to-video
+          - text-to-image
+          - inpainting
+          - outpainting
 
     steps:
     - name: Checkout code
@@ -48,7 +40,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
-        file: ${{ matrix.dockerfile }}
+        file: serverless/${{ matrix.service }}/Dockerfile
         push: true
         tags: ${{secrets.DOCKER_USERNAME }}/picpilot_${{ matrix.service }}:latest
 
