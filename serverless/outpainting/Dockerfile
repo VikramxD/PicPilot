@@ -6,10 +6,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PATH="/home/user/.local/bin:$PATH" \
     PYTHONPATH=/app
 
-# Set working directory in the container
 WORKDIR /app
 
-# Install system dependencies, Python, and build tools
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3.11 \
     python3-pip \
@@ -23,30 +22,28 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Create a non-root user to run the application
+# Create user
 RUN useradd -m -u 1000 user
 
-# Create a virtual environment and give ownership to the non-root user
+# Create venv
 RUN python3.11 -m venv /home/user/venv && chown -R user:user /home/user/venv
 ENV PATH="/home/user/venv/bin:$PATH"
 
-# Switch to the non-root user
+# Switch to user
 USER user
 
-# Copy required directories and files
+# Copy necessary files
+COPY --chown=user:user api/requirements.txt .
+COPY --chown=user:user setup.py .
 COPY --chown=user:user scripts/ scripts/
 COPY --chown=user:user api/ api/
-COPY --chown=user:user setup.py .
-COPY --chown=user:user api/requirements.txt api/requirements.txt
+COPY --chown=user:user serverless/outpainting/run_outpainting.py .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -U pip setuptools wheel && \
-    pip install --no-cache-dir -r api/requirements.txt && \
+    pip install --no-cache-dir -r requirements.txt && \
     pip install --no-cache-dir runpod && \
     pip install --no-cache-dir -e .
 
-# Copy the RunPod handler
-COPY --chown=user:user outpainting/run_outpainting.py .
-
-# Command to run the RunPod handler
+# Command to run the handler
 CMD ["python", "run_outpainting.py"]
