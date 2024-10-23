@@ -40,7 +40,7 @@ COPY --chown=user:user api/ /app/api/
 COPY --chown=user:user scripts/ /app/scripts/
 COPY --chown=user:user configs/ /app/configs/
 COPY --chown=user:user setup.py /app/
-COPY --chown=user:user pyproject.toml /app/
+
 
 # Set HOME for pip cache
 ENV HOME=/home/user
