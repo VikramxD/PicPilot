@@ -46,7 +46,7 @@ RUN pip install --no-cache-dir -U pip setuptools wheel && \
     pip install --no-cache-dir -e .
 
 # Copy the RunPod handler
-COPY --chown=user:user outpainting/outpainting_handler.py .
+COPY --chown=user:user outpainting/run_outpainting.py .
 
 # Command to run the RunPod handler
 CMD ["python", "run_outpainting.py"]
