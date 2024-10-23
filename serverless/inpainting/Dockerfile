@@ -52,6 +52,6 @@ RUN pip install --user --no-cache-dir -U pip setuptools wheel && \
     pip install --user --no-cache-dir -e .
 
 # Copy the handler (service-specific)
-COPY --chown=user:user serverless/IMAGE_TO_VIDEO/run_inpainting.py .
+COPY --chown=user:user serverless/inpainting/run_inpainting.py .
 
 CMD ["python", "run_inpainting.py"]

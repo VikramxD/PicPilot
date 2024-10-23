@@ -51,6 +51,6 @@ RUN pip install --user --no-cache-dir -U pip setuptools wheel && \
     pip install --user --no-cache-dir -e .
 
 # Copy the handler (service-specific)
-COPY --chown=user:user serverless/IMAGE_TO_VIDEO/run_image-to-video.py .
+COPY --chown=user:user serverless/image-to-video/run_image-to-video.py .
 
 CMD ["python", "run_image-to-video.py"]
