@@ -49,7 +49,6 @@ USER user
 
 COPY --chown=user:user serverless/text-to-image/run_text-to-image.py .
 
-# Add verification step
-RUN python -c "import runpod; print(f'RunPod version: {runpod.__version__}')"
+
 
 CMD ["/usr/bin/python3.11", "run_text-to-image.py"]

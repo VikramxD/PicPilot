@@ -49,7 +49,5 @@ USER user
 
 COPY --chown=user:user serverless/inpainting/run_inpainting.py .
 
-# Add verification step
-RUN python -c "import runpod; print(f'RunPod version: {runpod.__version__}')"
 
 CMD ["/usr/bin/python3.11", "run_inpainting.py"]
