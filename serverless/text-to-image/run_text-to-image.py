@@ -7,135 +7,124 @@ from config_settings import settings
 from configs.tti_settings import tti_settings
 from scripts.api_utils import pil_to_b64_json, pil_to_s3_json
 
-class RunPodSDXLHandler:
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+def setup_pipeline():
     """
-    RunPod handler for SDXL (Stable Diffusion XL) model with LoRA.
+    Set up and optimize the SDXL pipeline with LoRA for inference.
+
+    Returns:
+        DiffusionPipeline: Optimized SDXL pipeline ready for inference
     """
+    sdxl_pipeline = DiffusionPipeline.from_pretrained(
+        tti_settings.MODEL_NAME,
+        torch_dtype=torch.bfloat16
+    ).to(device)
     
-    def __init__(self):
-        """Initialize and optimize the SDXL pipeline with LoRA."""
-        self.device = "cuda"
-        self.setup_pipeline()
+    sdxl_pipeline.load_lora_weights(tti_settings.ADAPTER_NAME)
+    sdxl_pipeline.fuse_lora()
+    
+    sdxl_pipeline.unet.to(memory_format=torch.channels_last)
+    if tti_settings.ENABLE_COMPILE:
+        sdxl_pipeline.unet = torch.compile(
+            sdxl_pipeline.unet,
+            mode="max-autotune"
+        )
+        sdxl_pipeline.vae.decode = torch.compile(
+            sdxl_pipeline.vae.decode,
+            mode="max-autotune"
+        )
+    sdxl_pipeline.fuse_qkv_projections()
+    return sdxl_pipeline
 
-    def setup_pipeline(self) -> None:
-        """
-        Set up and optimize the SDXL pipeline with LoRA for inference.
-        """
-        self.sdxl_pipeline = DiffusionPipeline.from_pretrained(
-            tti_settings.MODEL_NAME, 
-            torch_dtype=torch.bfloat16
-        ).to(self.device)
-        
-        # Load and optimize LoRA
-        self.sdxl_pipeline.load_lora_weights(tti_settings.ADAPTER_NAME)
-        self.sdxl_pipeline.fuse_lora()
-        
-        # Memory and performance optimizations
-        self.sdxl_pipeline.unet.to(memory_format=torch.channels_last)
-        if tti_settings.ENABLE_COMPILE:
-            self.sdxl_pipeline.unet = torch.compile(
-                self.sdxl_pipeline.unet, 
-                mode="max-autotune"
-            )
-            self.sdxl_pipeline.vae.decode = torch.compile(
-                self.sdxl_pipeline.vae.decode, 
-                mode="max-autotune"
-            )
-        self.sdxl_pipeline.fuse_qkv_projections()
+pipeline = setup_pipeline()
 
-    def decode_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Decode and validate the incoming request.
+def decode_request(request: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Decode and validate the incoming request.
+    
+    Args:
+        request: Raw request data containing generation parameters
         
-        Args:
-            request: Raw request data
-            
-        Returns:
-            Processed request parameters
-        """
-        return {
-            "prompt": request["prompt"],
-            "negative_prompt": request.get("negative_prompt", ""),
-            "num_images": request.get("num_images", 1),
-            "num_inference_steps": request.get("num_inference_steps", 50),
-            "guidance_scale": request.get("guidance_scale", 7.5),
-            "mode": request.get("mode", "s3_json")
-        }
+    Returns:
+        Dict[str, Any]: Processed request parameters including prompt, negative_prompt,
+                       num_images, num_inference_steps, guidance_scale, and mode
+    """
+    return {
+        "prompt": request["prompt"],
+        "negative_prompt": request.get("negative_prompt", ""),
+        "num_images": request.get("num_images", 1),
+        "num_inference_steps": request.get("num_inference_steps", 50),
+        "guidance_scale": request.get("guidance_scale", 7.5),
+        "mode": request.get("mode", "s3_json")
+    }
 
-    def generate_images(self, params: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """
-        Generate images using the SDXL pipeline.
+def generate_images(params: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """
+    Generate images using the SDXL pipeline.
+    
+    Args:
+        params: Generation parameters including prompt, negative_prompt, num_images,
+               num_inference_steps, and guidance_scale
         
-        Args:
-            params: Generation parameters
-            
-        Returns:
-            List of generated images with their modes
-        """
-        images = self.sdxl_pipeline(
-            prompt=params["prompt"],
-            negative_prompt=params["negative_prompt"],
-            num_images_per_prompt=params["num_images"],
-            num_inference_steps=params["num_inference_steps"],
-            guidance_scale=params["guidance_scale"],
-        ).images
+    Returns:
+        List[Dict[str, Any]]: List of dictionaries containing generated images and their modes
+    """
+    images = pipeline(
+        prompt=params["prompt"],
+        negative_prompt=params["negative_prompt"],
+        num_images_per_prompt=params["num_images"],
+        num_inference_steps=params["num_inference_steps"],
+        guidance_scale=params["guidance_scale"],
+    ).images
 
-        return [{"image": img, "mode": params["mode"]} for img in images]
+    return [{"image": img, "mode": params["mode"]} for img in images]
 
-    def encode_response(self, output: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Encode the generated image based on the specified mode.
+def encode_response(output: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Encode the generated image based on the specified mode.
+    
+    Args:
+        output: Dictionary containing image and mode
         
-        Args:
-            output: Dictionary containing image and mode
-            
-        Returns:
-            Encoded response (S3 URL or base64)
-        """
-        mode = output["mode"]
-        image = output["image"]
+    Returns:
+        Dict[str, Any]: Encoded response either as S3 URL or base64 string
         
-        if mode == "s3_json":
-            return pil_to_s3_json(image, "sdxl_image")
-        elif mode == "b64_json":
-            return pil_to_b64_json(image)
-        else:
-            raise ValueError("Invalid mode. Supported modes are 'b64_json' and 's3_json'.")
-
-    def process_request(self, job: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Process a complete RunPod job request.
-        
-        Args:
-            job: RunPod job dictionary
-            
-        Returns:
-            Generated images in requested format
-        """
-        try:
-            # Decode request
-            params = self.decode_request(job['input'])
-            
-            # Generate images
-            outputs = self.generate_images(params)
-            
-            # Encode responses
-            results = [self.encode_response(output) for output in outputs]
-            
-            # Return single result or list based on num_images
-            if len(results) == 1:
-                return results[0]
-            return {"results": results}
-            
-        except Exception as e:
-            return {"error": str(e)}
+    Raises:
+        ValueError: If the specified mode is not supported
+    """
+    mode = output["mode"]
+    image = output["image"]
+    
+    if mode == "s3_json":
+        return pil_to_s3_json(image, "sdxl_image")
+    elif mode == "b64_json":
+        return pil_to_b64_json(image)
+    else:
+        raise ValueError("Invalid mode. Supported modes are 'b64_json' and 's3_json'.")
 
 def handler(job: Dict[str, Any]) -> Dict[str, Any]:
     """
-    RunPod handler function.
+    RunPod handler function for processing image generation requests.
+    
+    Args:
+        job: RunPod job dictionary containing input parameters
+        
+    Returns:
+        Dict[str, Any]: Generated images in requested format or error message
+                       Returns single result for one image or list of results for multiple images
     """
-    handler = RunPodSDXLHandler()
-    return handler.process_request(job)
+    try:
+        params = decode_request(job['input'])
+        outputs = generate_images(params)
+        results = [encode_response(output) for output in outputs]
+        
+        if len(results) == 1:
+            return results[0]
+        return {"results": results}
+        
+    except Exception as e:
+        return {"error": str(e)}
 
 if __name__ == "__main__":
     runpod.serverless.start({

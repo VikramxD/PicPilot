@@ -2,7 +2,7 @@ import io
 import base64
 import time
 import runpod
-from typing import Dict, Any
+from typing import Dict, Any, Tuple
 from PIL import Image
 from pydantic import BaseModel, Field
 from scripts.outpainting import Outpainter
@@ -26,108 +26,100 @@ class OutpaintingRequest(BaseModel):
     overlap_top: bool = Field(True, description="Apply overlap on top side")
     overlap_bottom: bool = Field(True, description="Apply overlap on bottom side")
 
-class RunPodOutpaintingHandler:
+device = "cuda"
+outpainter = Outpainter()
+
+def decode_request(request: Dict[str, Any]) -> Dict[str, Any]:
     """
-    RunPod handler for Outpainting service.
-    """
+    Decode and validate the incoming request.
     
-    def __init__(self):
-        """Initialize the Outpainting handler with model on CUDA device."""
-        self.device = "cuda"
-        self.outpainter = Outpainter()
-
-    def decode_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Decode and validate the incoming request.
+    Args:
+        request: Raw request data containing image and parameters
         
-        Args:
-            request: Raw request data dictionary
-            
-        Returns:
-            Decoded request with PIL Image and parameters
-            
-        Raises:
-            ValueError: If request is invalid or image cannot be decoded
-        """
-        try:
-            outpainting_request = OutpaintingRequest(**request)
-            image_data = base64.b64decode(outpainting_request.image)
-            image = Image.open(io.BytesIO(image_data)).convert("RGBA")
-            
-            return {
-                'image': image,
-                'params': outpainting_request.model_dump()
-            }
-        except Exception as e:
-            raise ValueError(f"Invalid request: {str(e)}")
-
-    def process_request(self, job: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Process a complete RunPod job request.
+    Returns:
+        Dict containing decoded PIL Image and validated parameters
         
-        Args:
-            job: RunPod job dictionary containing input data
-            
-        Returns:
-            Response dictionary with results or error information
-            
-        Notes:
-            Handles the complete pipeline:
-            1. Request decoding
-            2. Model inference
-            3. Result encoding and S3 upload
-        """
-        try:
-            # Decode request
-            inputs = self.decode_request(job['input'])
-            
-            # Start timing
-            start_time = time.time()
-            
-            # Run outpainting
-            result = self.outpainter.outpaint(
-                inputs['image'],
-                inputs['params']['width'],
-                inputs['params']['height'],
-                inputs['params']['overlap_percentage'],
-                inputs['params']['num_inference_steps'],
-                inputs['params']['resize_option'],
-                inputs['params']['custom_resize_percentage'],
-                inputs['params']['prompt_input'],
-                inputs['params']['alignment'],
-                inputs['params']['overlap_left'],
-                inputs['params']['overlap_right'],
-                inputs['params']['overlap_top'],
-                inputs['params']['overlap_bottom']
-            )
-            
-            # Calculate completion time
-            completion_time = time.time() - start_time
-            
-            # Encode and upload result
-            img_str = pil_to_s3_json(result, "outpainting_image")
-            
-            return {
-                "result": img_str,
-                "completion_time": round(completion_time, 2),
-                "image_resolution": f"{result.width}x{result.height}"
-            }
-            
-        except Exception as e:
-            return {"error": str(e)}
+    Raises:
+        ValueError: If request validation fails or image decoding fails
+    """
+    try:
+        outpainting_request = OutpaintingRequest(**request)
+        image_data = base64.b64decode(outpainting_request.image)
+        image = Image.open(io.BytesIO(image_data)).convert("RGBA")
+        
+        return {
+            'image': image,
+            'params': outpainting_request.model_dump()
+        }
+    except Exception as e:
+        raise ValueError(f"Invalid request: {str(e)}")
+
+def perform_outpainting(inputs: Dict[str, Any]) -> Tuple[Image.Image, float]:
+    """
+    Perform outpainting operation on the input image.
+    
+    Args:
+        inputs: Dictionary containing image and outpainting parameters
+        
+    Returns:
+        Tuple containing the outpainted image and processing time in seconds
+    """
+    start_time = time.time()
+    
+    result = outpainter.outpaint(
+        inputs['image'],
+        inputs['params']['width'],
+        inputs['params']['height'],
+        inputs['params']['overlap_percentage'],
+        inputs['params']['num_inference_steps'],
+        inputs['params']['resize_option'],
+        inputs['params']['custom_resize_percentage'],
+        inputs['params']['prompt_input'],
+        inputs['params']['alignment'],
+        inputs['params']['overlap_left'],
+        inputs['params']['overlap_right'],
+        inputs['params']['overlap_top'],
+        inputs['params']['overlap_bottom']
+    )
+    
+    completion_time = time.time() - start_time
+    return result, completion_time
+
+def format_response(result: Image.Image, completion_time: float) -> Dict[str, Any]:
+    """
+    Format the outpainting result for API response.
+    
+    Args:
+        result: Outpainted PIL Image
+        completion_time: Processing time in seconds
+        
+    Returns:
+        Dict containing S3 URL, completion time, and image resolution
+    """
+    img_str = pil_to_s3_json(result, "outpainting_image")
+    
+    return {
+        "result": img_str,
+        "completion_time": round(completion_time, 2),
+        "image_resolution": f"{result.width}x{result.height}"
+    }
 
 def handler(job: Dict[str, Any]) -> Dict[str, Any]:
     """
-    RunPod handler function.
+    RunPod handler function for processing outpainting requests.
     
     Args:
-        job: RunPod job dictionary
+        job: RunPod job dictionary containing input data
         
     Returns:
-        Processed response or error information
+        Dict containing either the processed results or error information
     """
-    handler = RunPodOutpaintingHandler()
-    return handler.process_request(job)
+    try:
+        inputs = decode_request(job['input'])
+        result, completion_time = perform_outpainting(inputs)
+        return format_response(result, completion_time)
+    except Exception as e:
+        return {"error": str(e)}
 
 if __name__ == "__main__":
     runpod.serverless.start({
