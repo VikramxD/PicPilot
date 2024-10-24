@@ -43,7 +43,7 @@ RUN pip install --no-cache-dir -U pip setuptools wheel && \
     pip install --no-cache-dir -e .
 
 # Copy the handler (change this for each service)
-COPY --chown=user:user serverless/text-to-image/run_outpainting.py .
+COPY --chown=user:user serverless/outpainting/run_outpainting.py .
 
 # Use full path to python
 CMD ["/usr/bin/python3.11", "run_outpainting.py"]
