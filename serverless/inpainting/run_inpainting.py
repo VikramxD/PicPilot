@@ -2,12 +2,14 @@ import io
 import base64
 import time
 import logging
-from typing import Dict, Any, Tuple, Optional
+import asyncio
+from typing import Dict, Any, Tuple, Optional, AsyncGenerator
 from pydantic import BaseModel, Field
 from PIL import Image
 from scripts.s3_manager import S3ManagerService
 from scripts.flux_inference import FluxInpaintingInference
 from config_settings import settings
+import runpod
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -23,29 +25,50 @@ class InpaintingRequest(BaseModel):
     input_image: str = Field(..., description="Base64 encoded input image")
     mask_image: str = Field(..., description="Base64 encoded mask image")
 
-device = "cuda"
-flux_inpainter = FluxInpaintingInference()
-s3_manager = S3ManagerService()
+# Global instances
+global_inpainter = None
+global_s3_manager = None
 
-def decode_request(request: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Decode and validate the incoming inpainting request.
+async def initialize_services():
+    """Initialize global services if not already initialized"""
+    global global_inpainter, global_s3_manager
     
-    Args:
-        request: Raw request data containing images and parameters
+    if global_inpainter is None:
+        logger.info("Initializing Flux Inpainting model...")
+        global_inpainter = FluxInpaintingInference()
+        logger.info("Flux Inpainting model initialized successfully")
         
-    Returns:
-        Dict containing decoded images and validated parameters
+    if global_s3_manager is None:
+        logger.info("Initializing S3 manager...")
+        global_s3_manager = S3ManagerService()
+        logger.info("S3 manager initialized successfully")
         
-    Raises:
-        Exception: If request validation or image decoding fails
+    return global_inpainter, global_s3_manager
+
+async def decode_request(request: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Decode and validate the incoming inpainting request asynchronously.
     """
     try:
+        logger.info("Decoding inpainting request")
         inpainting_request = InpaintingRequest(**request)
         
-        input_image = Image.open(io.BytesIO(base64.b64decode(inpainting_request.input_image)))
-        mask_image = Image.open(io.BytesIO(base64.b64decode(inpainting_request.mask_image)))
+        # Run image decoding in thread pool
+        input_image_data = await asyncio.to_thread(
+            base64.b64decode, inpainting_request.input_image
+        )
+        mask_image_data = await asyncio.to_thread(
+            base64.b64decode, inpainting_request.mask_image
+        )
         
+        input_image = await asyncio.to_thread(
+            lambda: Image.open(io.BytesIO(input_image_data))
+        )
+        mask_image = await asyncio.to_thread(
+            lambda: Image.open(io.BytesIO(mask_image_data))
+        )
+        
+        logger.info("Request decoded successfully")
         return {
             "prompt": inpainting_request.prompt,
             "input_image": input_image,
@@ -58,19 +81,15 @@ def decode_request(request: Dict[str, Any]) -> Dict[str, Any]:
         logger.error(f"Error in decode_request: {e}")
         raise
 
-def generate_inpainting(inputs: Dict[str, Any]) -> Tuple[Optional[Image.Image], Dict[str, Any]]:
+async def generate_inpainting(inputs: Dict[str, Any], inpainter: FluxInpaintingInference) -> Tuple[Optional[Image.Image], Dict[str, Any]]:
     """
-    Perform inpainting operation using the Flux model.
-    
-    Args:
-        inputs: Dictionary containing input images and parameters
-        
-    Returns:
-        Tuple containing the inpainted image and metadata
+    Perform inpainting operation using the Flux model asynchronously.
     """
     start_time = time.time()
     
-    result_image = flux_inpainter.generate_inpainting(
+    # Run inpainting in thread pool
+    result_image = await asyncio.to_thread(
+        inpainter.generate_inpainting,
         input_image=inputs["input_image"],
         mask_image=inputs["mask_image"],
         prompt=inputs["prompt"],
@@ -88,27 +107,32 @@ def generate_inpainting(inputs: Dict[str, Any]) -> Tuple[Optional[Image.Image], 
     
     return result_image, output
 
-def upload_result(image: Image.Image, metadata: Dict[str, Any]) -> Dict[str, Any]:
+async def upload_result(image: Image.Image, metadata: Dict[str, Any], s3_manager: S3ManagerService) -> Dict[str, Any]:
     """
-    Upload the generated image to S3 and prepare the response.
-    
-    Args:
-        image: Generated inpainting image
-        metadata: Dictionary containing generation metadata
-        
-    Returns:
-        Dict containing S3 URL and generation metadata
-        
-    Raises:
-        Exception: If image upload or URL generation fails
+    Upload the generated image to S3 and prepare the response asynchronously.
     """
     try:
+        # Prepare image buffer
         buffered = io.BytesIO()
-        image.save(buffered, format="PNG")
+        await asyncio.to_thread(image.save, buffered, format="PNG")
+        buffered.seek(0)
         
-        unique_filename = s3_manager.generate_unique_file_name("result.png")
-        s3_manager.upload_file(io.BytesIO(buffered.getvalue()), unique_filename)
-        signed_url = s3_manager.generate_signed_url(unique_filename, exp=43200)
+        # Generate unique filename and upload
+        unique_filename = await asyncio.to_thread(
+            s3_manager.generate_unique_file_name, "result.png"
+        )
+        await asyncio.to_thread(
+            s3_manager.upload_file,
+            io.BytesIO(buffered.getvalue()),
+            unique_filename
+        )
+        
+        # Generate signed URL
+        signed_url = await asyncio.to_thread(
+            s3_manager.generate_signed_url,
+            unique_filename,
+            exp=43200
+        )
         
         return {
             "result_url": signed_url,
@@ -120,31 +144,76 @@ def upload_result(image: Image.Image, metadata: Dict[str, Any]) -> Dict[str, Any
         logger.error(f"Error in upload_result: {e}")
         raise
 
-def handler(job: Dict[str, Any]) -> Dict[str, Any]:
+async def async_generator_handler(job: Dict[str, Any]) -> AsyncGenerator[Dict[str, Any], None]:
     """
-    RunPod handler function for processing inpainting requests.
-    
-    Args:
-        job: RunPod job dictionary containing input data
-        
-    Returns:
-        Dict containing either the processed results or error information
+    Async generator handler for RunPod with progress updates.
     """
     try:
-        inputs = decode_request(job['input'])
-        result_image, metadata = generate_inpainting(inputs)
-        
-        if result_image is None:
-            return {"error": "Failed to generate image"}
+        # Initial status
+        yield {"status": "starting", "message": "Initializing inpainting process"}
+
+        # Initialize services
+        inpainter, s3_manager = await initialize_services()
+        yield {"status": "processing", "message": "Services initialized successfully"}
+
+        # Decode request
+        try:
+            inputs = await decode_request(job['input'])
+            yield {"status": "processing", "message": "Request decoded successfully"}
+        except Exception as e:
+            logger.error(f"Request decode error: {e}")
+            yield {"status": "error", "message": f"Error decoding request: {str(e)}"}
+            return
+
+        # Generate inpainting
+        try:
+            yield {"status": "processing", "message": "Starting inpainting generation"}
+            result_image, metadata = await generate_inpainting(inputs, inpainter)
             
-        return upload_result(result_image, metadata)
-        
+            if result_image is None:
+                yield {"status": "error", "message": "Failed to generate image"}
+                return
+                
+            yield {
+                "status": "processing", 
+                "message": "Inpainting generated successfully",
+                "completion": f"{metadata['time_taken']:.2f}s"
+            }
+        except Exception as e:
+            logger.error(f"Inpainting error: {e}")
+            yield {"status": "error", "message": f"Error during inpainting: {str(e)}"}
+            return
+
+        # Upload result
+        try:
+            yield {"status": "processing", "message": "Uploading result"}
+            response = await upload_result(result_image, metadata, s3_manager)
+            yield {"status": "processing", "message": "Result uploaded successfully"}
+        except Exception as e:
+            logger.error(f"Upload error: {e}")
+            yield {"status": "error", "message": f"Error uploading result: {str(e)}"}
+            return
+
+        # Final response
+        yield {
+            "status": "completed",
+            "output": response
+        }
+
     except Exception as e:
-        logger.error(f"Error in handler: {e}")
-        return {"error": str(e)}
+        logger.error(f"Unexpected error: {e}")
+        yield {
+            "status": "error",
+            "message": f"Unexpected error: {str(e)}"
+        }
+
+# Initialize services when the service starts
+print("Initializing service...")
+asyncio.get_event_loop().run_until_complete(initialize_services())
+print("Service initialization complete")
 
 if __name__ == "__main__":
-    import runpod
     runpod.serverless.start({
-        "handler": handler
+        "handler": async_generator_handler,
+        "return_aggregate_stream": True
     })

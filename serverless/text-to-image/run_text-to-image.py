@@ -1,55 +1,63 @@
 import runpod
 import torch
-from diffusers import DiffusionPipeline
-from typing import Dict, Any, List
+import asyncio
+import logging
+from typing import Dict, Any, List, AsyncGenerator
 from PIL import Image
+from diffusers import DiffusionPipeline
 from config_settings import settings
 from configs.tti_settings import tti_settings
 from scripts.api_utils import pil_to_b64_json, pil_to_s3_json
 
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Global pipeline instance
+global_pipeline = None
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-def setup_pipeline():
+async def initialize_pipeline():
     """
-    Set up and optimize the SDXL pipeline with LoRA for inference.
-
-    Returns:
-        DiffusionPipeline: Optimized SDXL pipeline ready for inference
+    Initialize and optimize the SDXL pipeline with LoRA.
     """
-    sdxl_pipeline = DiffusionPipeline.from_pretrained(
-        tti_settings.MODEL_NAME,
-        torch_dtype=torch.bfloat16
-    ).to(device)
+    global global_pipeline
     
-    sdxl_pipeline.load_lora_weights(tti_settings.ADAPTER_NAME)
-    sdxl_pipeline.fuse_lora()
+    if global_pipeline is None:
+        logger.info("Initializing SDXL pipeline...")
+        
+        # Run model loading in thread pool
+        global_pipeline = await asyncio.to_thread(
+            DiffusionPipeline.from_pretrained,
+            tti_settings.MODEL_NAME,
+            torch_dtype=torch.bfloat16
+        )
+        global_pipeline.to(device)
+        
+        logger.info("Loading LoRA weights...")
+        await asyncio.to_thread(global_pipeline.load_lora_weights, tti_settings.ADAPTER_NAME)
+        await asyncio.to_thread(global_pipeline.fuse_lora)
+        
+        logger.info("Optimizing pipeline...")
+        global_pipeline.unet.to(memory_format=torch.channels_last)
+        if tti_settings.ENABLE_COMPILE:
+            global_pipeline.unet = await asyncio.to_thread(
+                torch.compile,
+                global_pipeline.unet,
+                mode="max-autotune"
+            )
+            global_pipeline.vae.decode = await asyncio.to_thread(
+                torch.compile,
+                global_pipeline.vae.decode,
+                mode="max-autotune"
+            )
+        await asyncio.to_thread(global_pipeline.fuse_qkv_projections)
+        logger.info("Pipeline initialization complete")
     
-    sdxl_pipeline.unet.to(memory_format=torch.channels_last)
-    if tti_settings.ENABLE_COMPILE:
-        sdxl_pipeline.unet = torch.compile(
-            sdxl_pipeline.unet,
-            mode="max-autotune"
-        )
-        sdxl_pipeline.vae.decode = torch.compile(
-            sdxl_pipeline.vae.decode,
-            mode="max-autotune"
-        )
-    sdxl_pipeline.fuse_qkv_projections()
-    return sdxl_pipeline
-
-pipeline = setup_pipeline()
+    return global_pipeline
 
 def decode_request(request: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Decode and validate the incoming request.
-    
-    Args:
-        request: Raw request data containing generation parameters
-        
-    Returns:
-        Dict[str, Any]: Processed request parameters including prompt, negative_prompt,
-                       num_images, num_inference_steps, guidance_scale, and mode
-    """
+    """Decode and validate the incoming request."""
     return {
         "prompt": request["prompt"],
         "negative_prompt": request.get("negative_prompt", ""),
@@ -59,74 +67,107 @@ def decode_request(request: Dict[str, Any]) -> Dict[str, Any]:
         "mode": request.get("mode", "s3_json")
     }
 
-def generate_images(params: Dict[str, Any]) -> List[Dict[str, Any]]:
-    """
-    Generate images using the SDXL pipeline.
-    
-    Args:
-        params: Generation parameters including prompt, negative_prompt, num_images,
-               num_inference_steps, and guidance_scale
-        
-    Returns:
-        List[Dict[str, Any]]: List of dictionaries containing generated images and their modes
-    """
-    images = pipeline(
+async def generate_images(params: Dict[str, Any], pipeline: DiffusionPipeline) -> List[Dict[str, Any]]:
+    """Generate images using the SDXL pipeline asynchronously."""
+    images = await asyncio.to_thread(
+        pipeline,
         prompt=params["prompt"],
         negative_prompt=params["negative_prompt"],
         num_images_per_prompt=params["num_images"],
         num_inference_steps=params["num_inference_steps"],
         guidance_scale=params["guidance_scale"],
-    ).images
-
-    return [{"image": img, "mode": params["mode"]} for img in images]
-
-def encode_response(output: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Encode the generated image based on the specified mode.
+    )
     
-    Args:
-        output: Dictionary containing image and mode
-        
-    Returns:
-        Dict[str, Any]: Encoded response either as S3 URL or base64 string
-        
-    Raises:
-        ValueError: If the specified mode is not supported
-    """
+    return [{"image": img, "mode": params["mode"]} for img in images.images]
+
+async def encode_response(output: Dict[str, Any]) -> Dict[str, Any]:
+    """Encode the generated image asynchronously."""
     mode = output["mode"]
     image = output["image"]
     
     if mode == "s3_json":
-        return pil_to_s3_json(image, "sdxl_image")
+        return await asyncio.to_thread(pil_to_s3_json, image, "sdxl_image")
     elif mode == "b64_json":
-        return pil_to_b64_json(image)
+        return await asyncio.to_thread(pil_to_b64_json, image)
     else:
         raise ValueError("Invalid mode. Supported modes are 'b64_json' and 's3_json'.")
 
-def handler(job: Dict[str, Any]) -> Dict[str, Any]:
+async def async_generator_handler(job: Dict[str, Any]) -> AsyncGenerator[Dict[str, Any], None]:
     """
-    RunPod handler function for processing image generation requests.
-    
-    Args:
-        job: RunPod job dictionary containing input parameters
-        
-    Returns:
-        Dict[str, Any]: Generated images in requested format or error message
-                       Returns single result for one image or list of results for multiple images
+    Async generator handler for RunPod with progress updates.
     """
     try:
-        params = decode_request(job['input'])
-        outputs = generate_images(params)
-        results = [encode_response(output) for output in outputs]
-        
-        if len(results) == 1:
-            return results[0]
-        return {"results": results}
-        
+        # Initial status
+        yield {"status": "starting", "message": "Initializing image generation process"}
+
+        # Initialize pipeline
+        pipeline = await initialize_pipeline()
+        yield {"status": "processing", "message": "Pipeline loaded successfully"}
+
+        # Decode request
+        try:
+            params = decode_request(job['input'])
+            yield {
+                "status": "processing", 
+                "message": "Request decoded successfully",
+                "params": {
+                    "prompt": params["prompt"],
+                    "num_images": params["num_images"],
+                    "steps": params["num_inference_steps"]
+                }
+            }
+        except Exception as e:
+            logger.error(f"Request decode error: {e}")
+            yield {"status": "error", "message": f"Error decoding request: {str(e)}"}
+            return
+
+        # Generate images
+        try:
+            yield {"status": "processing", "message": "Generating images"}
+            outputs = await generate_images(params, pipeline)
+            yield {"status": "processing", "message": f"Generated {len(outputs)} images successfully"}
+        except Exception as e:
+            logger.error(f"Generation error: {e}")
+            yield {"status": "error", "message": f"Error generating images: {str(e)}"}
+            return
+
+        # Encode responses
+        try:
+            yield {"status": "processing", "message": "Encoding and uploading images"}
+            results = []
+            for idx, output in enumerate(outputs, 1):
+                result = await encode_response(output)
+                results.append(result)
+                yield {
+                    "status": "processing", 
+                    "message": f"Processed image {idx}/{len(outputs)}"
+                }
+        except Exception as e:
+            logger.error(f"Encoding error: {e}")
+            yield {"status": "error", "message": f"Error encoding images: {str(e)}"}
+            return
+
+        # Final response
+        final_response = results[0] if len(results) == 1 else {"results": results}
+        yield {
+            "status": "completed",
+            "output": final_response
+        }
+
     except Exception as e:
-        return {"error": str(e)}
+        logger.error(f"Unexpected error: {e}")
+        yield {
+            "status": "error",
+            "message": f"Unexpected error: {str(e)}"
+        }
+
+# Initialize pipeline at startup
+logger.info("Initializing service...")
+asyncio.get_event_loop().run_until_complete(initialize_pipeline())
+logger.info("Service initialization complete")
 
 if __name__ == "__main__":
     runpod.serverless.start({
-        "handler": handler
+        "handler": async_generator_handler,
+        "return_aggregate_stream": True
     })
